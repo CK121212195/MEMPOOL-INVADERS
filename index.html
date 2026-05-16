@@ -3,301 +3,352 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MEMPOOL DEFENDER</title>
+<title>MEMPOOL / EDITORIAL DEFENSE</title>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&display=swap');
+/* VOGUE風のエレガントなフォント構成 */
+@import url('https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,700;1,6..96,400&family=Montserrat:wght@300;400;500;600&display=swap');
 
 :root {
-  --btc: #c8760a;
-  --btc-dim: #a05808;
-  --bg: #f5efe6;
-  --bg2: #ede4d6;
-  --border: #c9b89a;
-  --border-hi: #b09070;
-  --text: #2c1f0e;
-  --dim: #8a7060;
-  --green: #2d8a4e;
-  --red: #c0392b;
-  --cyan: #1a6e8a;
-  --accent: #8b4513; 
+  --bg-color: #F7F6F2;       /* 高級紙のような上品なオフホワイト */
+  --text-main: #1A1A1A;      /* 墨のような深い黒 */
+  --text-sub: #555555;       /* 洗練されたグレー */
+  --border-color: #1A1A1A;   /* シャープな黒ライン */
+  --accent-gold: #B89758;    /* シャンパンゴールド */
+  
+  --canvas-bg: #0D0D0D;      /* 深淵の黒 */
+  --font-serif: 'Bodoni Moda', serif;
+  --font-sans: 'Montserrat', sans-serif;
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
 body {
-  background: #f0e8d8;
-  background-image:
-    radial-gradient(ellipse at 25% 40%, rgba(200,150,80,0.10) 0%, transparent 55%),
-    radial-gradient(ellipse at 75% 70%, rgba(140,100,60,0.07) 0%, transparent 50%),
-    repeating-linear-gradient(0deg, transparent, transparent 40px, rgba(160,120,70,0.03) 40px, rgba(160,120,70,0.03) 41px);
-  color: var(--text);
-  font-family: 'Share Tech Mono', monospace;
+  background-color: var(--bg-color);
+  color: var(--text-main);
+  font-family: var(--font-sans);
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  padding: 20px 10px;
   overflow-x: hidden;
   user-select: none;
 }
 
-body > * { position: relative; z-index: 1; }
+/* ===== HEADER ===== */
+header {
+  text-align: center;
+  margin-bottom: 30px;
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 10px;
+  width: 100%;
+  max-width: 900px;
+}
 
 h1 {
-  font-family: 'Orbitron', monospace;
-  font-size: 1.25rem;
-  font-weight: 900;
-  color: var(--accent);
-  letter-spacing: 5px;
-  text-align: center;
+  font-family: var(--font-serif);
+  font-size: 3rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
   margin-bottom: 5px;
-  margin-top: 10px;
-  text-shadow: 0 1px 3px rgba(0,0,0,0.15);
 }
 
 .subtitle {
+  font-family: var(--font-sans);
   font-size: 0.65rem;
-  color: var(--dim);
-  letter-spacing: 2px;
-  text-align: center;
-  margin-bottom: 15px;
+  font-weight: 300;
+  letter-spacing: 0.3em;
+  color: var(--text-sub);
+  text-transform: uppercase;
 }
 
+/* ===== LAYOUT ===== */
 #app {
   display: flex;
-  gap: 15px;
+  gap: 30px;
   align-items: flex-start;
-  padding-bottom: 20px;
+  max-width: 1000px;
+  width: 100%;
+  justify-content: center;
 }
 
-/* ===== PANELS ===== */
+.col {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+#left-col { width: 220px; }
+#right-col { width: 220px; }
+
+/* ===== EDITORIAL PANELS ===== */
 .panel {
-  background: rgba(245,239,230,0.92);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 10px 12px;
+  background: transparent;
+  border: 1px solid var(--border-color);
+  padding: 15px;
   position: relative;
-  overflow: hidden;
-  box-shadow: 0 2px 8px rgba(100,70,30,0.12), inset 0 1px 0 rgba(255,255,255,0.6);
-  width: 190px;
 }
 
-.panel::before {
-  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(140,100,50,0.3), transparent);
+.panel-title {
+  font-family: var(--font-sans);
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 5px;
+  margin-bottom: 12px;
 }
 
-.plabel { font-size: 0.6rem; color: var(--dim); letter-spacing: 3px; text-transform: uppercase; margin-bottom: 6px; }
-.pvalue { font-family: 'Orbitron', monospace; font-size: 1.3rem; font-weight: 700; color: var(--accent); line-height: 1.1; }
-.psub { font-size: 0.6rem; color: var(--dim); margin-top: 3px; }
+.pvalue {
+  font-family: var(--font-serif);
+  font-size: 1.8rem;
+  font-weight: 400;
+  line-height: 1;
+  color: var(--text-main);
+  margin-bottom: 4px;
+}
 
-#left-col, #right-col { display: flex; flex-direction: column; gap: 10px; }
+.psub {
+  font-family: var(--font-sans);
+  font-size: 0.6rem;
+  font-weight: 300;
+  color: var(--text-sub);
+  letter-spacing: 0.05em;
+}
+
+/* ===== NEXT PANEL (BITRIS STYLE) ===== */
+#next-canvas-wrap {
+  width: 100%;
+  height: 120px;
+  background: var(--canvas-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 10px;
+  border: 1px solid var(--border-color);
+}
+#next-canvas { image-rendering: pixelated; }
+
+.tx-detail {
+  font-size: 0.65rem;
+  line-height: 1.5;
+  color: var(--text-main);
+}
+.tx-tier {
+  font-family: var(--font-serif);
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 5px;
+  font-style: italic;
+}
+.tx-amount {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 0.75rem;
+  margin-bottom: 5px;
+}
 
 /* ===== GAME CANVAS ===== */
 #game-wrap {
   position: relative;
-  border-radius: 8px;
-  padding: 4px;
-  background: rgba(201, 184, 154, 0.5);
-  box-shadow: 0 10px 30px rgba(100,70,30,0.3);
+  border: 4px solid var(--text-main);
+  background: #fff;
+  padding: 6px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.05);
 }
 
 #game-canvas {
   display: block;
-  border-radius: 4px;
-  background-color: #211408;
+  background-color: var(--canvas-bg);
   image-rendering: pixelated;
-  box-shadow: inset 0 0 30px rgba(0,0,0,0.8);
 }
 
-/* Flash overlay */
+/* FLASH OVERLAY */
 #block-flash {
   position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+  background: #fff;
   display: flex; flex-direction: column; align-items: center; justify-content: center;
-  pointer-events: none; opacity: 0; transition: opacity 0.1s; z-index: 10; border-radius: 6px;
+  pointer-events: none; opacity: 0; transition: opacity 0.1s; z-index: 10;
 }
-#block-flash.show { opacity: 1; animation: flashAnim 3s forwards; }
+#block-flash.show { opacity: 1; animation: flashAnim 4s forwards; }
 @keyframes flashAnim {
-  0% { opacity: 1; background: rgba(247,147,26,0.3); }
-  20% { opacity: 1; background: rgba(255,255,255,0.9); }
+  0% { opacity: 1; background: #fff; }
+  30% { opacity: 1; background: #F7F6F2; }
   100% { opacity: 0; background: transparent; }
 }
 
-.flash-title { font-family: 'Orbitron', monospace; font-size: 1rem; font-weight: 900; color: #fff; text-shadow: 0 0 20px var(--btc); letter-spacing: 6px; }
-.flash-height { font-family: 'Orbitron', monospace; font-size: 3rem; font-weight: 900; color: #fff; text-shadow: 0 0 40px var(--btc); margin-top: 10px; }
+.flash-title {
+  font-family: var(--font-serif); font-size: 1.5rem; font-style: italic;
+  color: var(--text-main); letter-spacing: 0.2em;
+}
+.flash-height {
+  font-family: var(--font-sans); font-size: 2.5rem; font-weight: 300;
+  color: var(--text-main); margin-top: 10px; letter-spacing: 0.1em;
+}
 
-/* ===== OVERLAYS ===== */
+/* ===== SCREEN OVERLAYS ===== */
 .screen-overlay {
   position: absolute; top: 0; left: 0; right: 0; bottom: 0;
   display: flex; flex-direction: column; align-items: center; justify-content: center;
-  background: rgba(240,232,216,0.94); border-radius: 6px; z-index: 20; text-align: center;
+  background: rgba(247,246,242,0.95); z-index: 20; text-align: center;
+  border: 6px solid transparent;
 }
-.overlay-title { font-family: 'Orbitron', monospace; font-size: 1.5rem; font-weight: 900; color: var(--accent); letter-spacing: 4px; margin-bottom: 15px; }
-.overlay-desc { font-size: 0.7rem; color: var(--dim); line-height: 2; margin-bottom: 25px; letter-spacing: 1px; }
+
+.overlay-title {
+  font-family: var(--font-serif); font-size: 2rem; font-weight: 700;
+  color: var(--text-main); letter-spacing: 0.1em; margin-bottom: 15px; text-transform: uppercase;
+}
+
+.overlay-desc {
+  font-size: 0.75rem; color: var(--text-sub); line-height: 2; margin-bottom: 30px; letter-spacing: 0.1em;
+}
 
 .btn {
-  font-family: 'Orbitron', monospace; font-size: 0.9rem; font-weight: 700; letter-spacing: 3px;
-  padding: 12px 30px; background: var(--accent); color: #fff8f0;
-  border: 2px solid var(--accent); border-radius: 6px; cursor: pointer;
-  transition: all 0.2s; box-shadow: 0 4px 12px rgba(139,69,19,0.3);
+  font-family: var(--font-sans); font-size: 0.8rem; font-weight: 500; letter-spacing: 0.2em;
+  padding: 14px 40px; background: var(--text-main); color: #fff;
+  border: 1px solid var(--text-main); cursor: pointer; transition: all 0.3s ease;
+  text-transform: uppercase;
 }
-.btn:hover { background: #a0520f; transform: translateY(-2px); }
+.btn:hover { background: #fff; color: var(--text-main); }
 
 /* ===== SHIELD BAR ===== */
-#shield-wrap { width: 100%; height: 8px; background: var(--bg3); border-radius: 4px; overflow: hidden; margin-top: 8px; border: 1px solid rgba(0,0,0,0.1); }
-#shield-bar { height: 100%; background: linear-gradient(90deg, #00e5ff, #00ff88); width: 100%; transition: width 0.2s, background 0.2s; }
-
-/* ===== TX FEED & LEGEND ===== */
-#tx-feed { font-size: 0.55rem; color: var(--dim); height: 70px; overflow: hidden; display: flex; flex-direction: column-reverse; gap: 3px; }
-.tx-line { color: var(--cyan); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; animation: slideIn 0.3s; }
-@keyframes slideIn { from { opacity: 0; transform: translateX(-10px); } to { opacity: 1; transform: translateX(0); } }
-
-.legend-row { display: flex; align-items: center; gap: 8px; font-size: 0.6rem; margin-top: 5px; }
-.legend-box { width: 10px; height: 10px; border-radius: 2px; }
+#shield-wrap {
+  width: 100%; height: 2px; background: #ddd; margin-top: 10px;
+}
+#shield-bar {
+  height: 100%; background: var(--text-main); width: 100%; transition: width 0.3s;
+}
 
 /* ===== CONTROLS ===== */
-#ctrl-area { display: flex; flex-direction: column; gap: 8px; margin-top: 5px; align-items: center; }
-.ctrl-row { display: flex; gap: 10px; width: 100%; justify-content: center; }
-.cbtn {
-  background: rgba(237,228,214,0.9); border: 1px solid var(--border); border-radius: 8px;
-  color: var(--text); font-family: 'Orbitron', monospace; font-size: 1.2rem; font-weight: 900;
-  cursor: pointer; display: flex; align-items: center; justify-content: center;
-  height: 50px; flex: 1; box-shadow: 0 3px 6px rgba(100,70,30,0.15); touch-action: manipulation;
+.ctrl-text {
+  font-size: 0.65rem; color: var(--text-sub); line-height: 2; letter-spacing: 0.05em;
 }
-.cbtn:active { background: rgba(139,69,19,0.15); border-color: var(--accent); color: var(--accent); transform: translateY(2px); }
-#btn-shoot { background: rgba(200,118,10,0.1); color: var(--btc); border-color: var(--btc); flex: 2; font-size: 1rem; letter-spacing: 2px;}
-#btn-shoot:active { background: var(--btc); color: #fff; }
+
+#mobile-controls { display: none; width: 100%; max-width: 400px; margin-top: 20px; }
+.ctrl-row { display: flex; gap: 10px; justify-content: center; }
+.cbtn {
+  background: transparent; border: 1px solid var(--border-color);
+  color: var(--text-main); font-family: var(--font-sans); font-size: 1.2rem; font-weight: 300;
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  height: 50px; flex: 1; transition: background 0.2s; touch-action: manipulation;
+}
+.cbtn:active { background: var(--border-color); color: #fff; }
+#btn-shoot { flex: 2; font-size: 0.9rem; letter-spacing: 0.1em; font-weight: 500; }
 
 /* ===== RESPONSIVE ===== */
-@media (max-width: 850px) {
-  body { padding-top: 10px; justify-content: flex-start; }
-  h1 { font-size: 1rem; }
-  .subtitle { font-size: 0.5rem; }
-  #app { flex-direction: column; align-items: center; gap: 10px; width: 100%; padding: 0 10px; }
-  #left-col, #right-col { width: 100%; flex-direction: row; flex-wrap: wrap; justify-content: center; gap: 6px; }
-  .panel { width: 48%; padding: 8px; }
-  #tx-feed { height: 40px; }
-  #game-wrap { width: 100%; max-width: 420px; }
-  #game-canvas { width: 100%; height: auto; aspect-ratio: 4/5; }
-  #mobile-controls {
-    position: fixed; bottom: 0; left: 0; right: 0; padding: 10px;
-    background: rgba(240,232,216,0.9); border-top: 1px solid var(--border); z-index: 100;
-  }
-  #ctrl-area { margin: 0; }
-  body { padding-bottom: 100px; }
+@media (max-width: 900px) {
+  h1 { font-size: 2rem; }
+  #app { flex-direction: column; align-items: center; }
+  .col { width: 100% !important; max-width: 420px; flex-direction: row; flex-wrap: wrap; }
+  .panel { flex: 1 1 45%; min-width: 150px; }
+  #game-wrap { width: 100%; max-width: 420px; order: -1; }
+  #game-canvas { width: 100%; height: auto; aspect-ratio: 3/4; }
+  #mobile-controls { display: flex; flex-direction: column; }
 }
-@media (min-width: 851px) { #mobile-controls { display: none; } }
 </style>
 </head>
 <body>
 
-<h1>MEMPOOL DEFENDER</h1>
-<p class="subtitle">Bitcoin TX → ALIEN ／ NEW BLOCK → ANNIHILATION</p>
+<header>
+  <h1>Mempool</h1>
+  <div class="subtitle">Editorial Defense</div>
+</header>
 
 <div id="app">
   <!-- LEFT COLUMN -->
-  <div id="left-col">
-    <div class="panel" style="border-color: var(--accent); box-shadow: 0 0 10px rgba(139,69,19,0.1);">
-      <div class="plabel" style="color: var(--accent);">SCORE</div>
+  <div class="col" id="left-col">
+    <div class="panel">
+      <div class="panel-title">Score</div>
       <div class="pvalue" id="score">0</div>
-      <div class="psub">LEVEL: <span id="level">1</span></div>
+      <div class="psub">Elegance & Precision</div>
+    </div>
+
+    <!-- NEXT PANEL -->
+    <div class="panel">
+      <div class="panel-title">Next Threat</div>
+      <div id="next-canvas-wrap">
+        <canvas id="next-canvas" width="100" height="100"></canvas>
+      </div>
+      <div class="tx-detail" id="next-detail">
+        <div class="tx-tier" id="nx-tier" style="color:var(--text-sub);">——</div>
+        <div class="tx-amount" id="nx-amount">Awaiting Data...</div>
+        <div id="nx-fee">fee: ——</div>
+        <div id="nx-rate">rate: ——</div>
+        <div id="nx-size" style="margin-top:4px; font-style:italic; color:var(--text-sub);">——</div>
+      </div>
     </div>
 
     <div class="panel">
-      <div class="plabel">🛡️ SHIELD</div>
-      <div class="pvalue" style="font-size:1rem;" id="shield-val">100%</div>
+      <div class="panel-title">Shield</div>
+      <div class="pvalue" style="font-size:1.4rem;" id="shield-val">100%</div>
       <div id="shield-wrap"><div id="shield-bar"></div></div>
-    </div>
-
-    <div class="panel">
-      <div class="plabel">⛏ BLOCK HEIGHT</div>
-      <div class="pvalue" style="font-size:1.1rem;" id="block-height">——</div>
-      <div class="psub" id="last-block-ago">connecting...</div>
-    </div>
-
-    <div class="panel">
-      <div class="plabel">📡 MEMPOOL</div>
-      <div class="pvalue" style="font-size:1.1rem;" id="mempool-size">——</div>
-      <div class="psub">unconfirmed TXs</div>
-    </div>
-    
-    <div class="panel">
-      <div class="plabel">⚡ THREAT LEGEND</div>
-      <div class="legend-row"><div class="legend-box" style="background:#ff3355; box-shadow:0 0 5px #ff3355;"></div> >10 BTC (Whale)</div>
-      <div class="legend-row"><div class="legend-box" style="background:#ff8800;"></div> >1 BTC (Huge)</div>
-      <div class="legend-row"><div class="legend-box" style="background:#ffee00;"></div> >0.1 BTC (Big)</div>
-      <div class="legend-row"><div class="legend-box" style="background:#00ff88;"></div> >0.05 BTC (Mid)</div>
-      <div class="legend-row"><div class="legend-box" style="background:#00e5ff;"></div> Normal TX</div>
-      <div class="legend-row"><div class="legend-box" style="background:#8a7060;"></div> Dust (Micro)</div>
     </div>
   </div>
 
   <!-- CENTER COLUMN (Game) -->
   <div id="game-wrap">
-    <canvas id="game-canvas" width="400" height="500"></canvas>
+    <!-- キャンバス: 幅広・高さを抑えて見やすく -->
+    <canvas id="game-canvas" width="420" height="560"></canvas>
 
     <div id="block-flash">
-      <div class="flash-title">⚡ NEW BLOCK MINED ⚡</div>
+      <div class="flash-title">Block Mined</div>
       <div class="flash-height" id="flash-height-val">#000000</div>
-      <div class="overlay-desc" style="color:#fff;">ANNIHILATION BONUS TRIGGERED</div>
+      <div class="overlay-desc" style="margin-top:20px; color:var(--text-main);">ANNIHILATION COMPLETE</div>
     </div>
 
     <div id="start-screen" class="screen-overlay">
-      <div class="overlay-title">MEMPOOL DEFENDER</div>
+      <div class="overlay-title">Mempool</div>
       <div class="overlay-desc">
-        Classic Formation Shooter.<br>
-        Unconfirmed TXs will stack up in the swarm.<br>
-        Hold [SPACE] to Auto-Fire. [A][D] or [←][→] to Move.<br><br>
-        Survive until the next Block is mined!
+        Eliminate the unconfirmed transactions with precision.<br>
+        Larger TXs move slowly but possess immense resilience.<br>
+        <br>
+        ← / A : Move Left<br>
+        → / D : Move Right<br>
+        SPACE : Shoot
       </div>
-      <button class="btn" id="start-btn">ENGAGE</button>
+      <button class="btn" id="start-btn">Engage</button>
     </div>
 
     <div id="go-screen" class="screen-overlay" style="display: none;">
-      <div class="overlay-title" style="color: var(--red);">SHIELD DEPLETED</div>
-      <div style="font-size:0.7rem; color:var(--dim); margin-bottom:5px;">FINAL SCORE</div>
-      <div class="pvalue" id="go-score" style="font-size:2rem; margin-bottom: 20px;">0</div>
-      <button class="btn" id="restart-btn">RETRY</button>
+      <div class="overlay-title" style="font-style: italic;">Game Over</div>
+      <div class="overlay-desc">Defenses Compromised</div>
+      <div class="pvalue" id="go-score" style="font-size:2.5rem; margin-bottom: 30px;">0</div>
+      <button class="btn" id="restart-btn">Retry</button>
     </div>
   </div>
 
   <!-- RIGHT COLUMN -->
-  <div id="right-col">
+  <div class="col" id="right-col">
     <div class="panel">
-      <div class="plabel">⚠️ LATEST THREAT</div>
-      <div id="latest-threat" style="font-family:'Orbitron', monospace; font-size:0.9rem; font-weight:700; color:var(--dim); margin-top:5px;">——</div>
-      <div id="latest-threat-sub" style="font-size:0.6rem; color:var(--dim); margin-top:3px;">Waiting for large TX...</div>
+      <div class="panel-title">Block Height</div>
+      <div class="pvalue" style="font-size:1.5rem;" id="block-height">——</div>
+      <div class="psub" id="last-block-ago">connecting...</div>
     </div>
 
     <div class="panel">
-      <div class="plabel">TX QUEUE</div>
-      <div class="pvalue" style="font-size:1.1rem;" id="queue-size">0</div>
-      <div class="psub">enemies approaching</div>
+      <div class="panel-title">Mempool Status</div>
+      <div class="pvalue" style="font-size:1.5rem;" id="mempool-size">——</div>
+      <div class="psub">Unconfirmed TXs</div>
     </div>
-
+    
     <div class="panel">
-      <div class="plabel">TX STREAM</div>
-      <div id="tx-feed"></div>
-    </div>
-
-    <div class="panel" style="display: flex; flex-direction: column; justify-content: center;">
-      <div class="plabel">CONTROLS (PC)</div>
-      <div style="font-size:0.65rem; color:var(--dim); line-height:1.8; margin-top:5px;">
-        ← / A : Move Left<br>
-        → / D : Move Right<br>
-        SPACE : Auto Fire (Hold)
+      <div class="panel-title">Controls</div>
+      <div class="ctrl-text">
+        [ ← ] [ → ] or [ A ] [ D ]<br>
+        Navigate elegant vessel.<br><br>
+        [ SPACE ]<br>
+        Hold for continuous fire.
       </div>
     </div>
   </div>
 </div>
 
 <div id="mobile-controls">
-  <div id="ctrl-area">
-    <div class="ctrl-row">
-      <div class="cbtn" id="btn-left">←</div>
-      <div class="cbtn" id="btn-shoot">SHOOT (HOLD)</div>
-      <div class="cbtn" id="btn-right">→</div>
-    </div>
+  <div class="ctrl-row">
+    <div class="cbtn" id="btn-left">←</div>
+    <div class="cbtn" id="btn-shoot">SHOOT</div>
+    <div class="cbtn" id="btn-right">→</div>
   </div>
 </div>
 
@@ -307,36 +358,28 @@ h1 {
 // ================================================================
 const canvas = document.getElementById('game-canvas');
 const ctx = canvas.getContext('2d');
+const nextCanvas = document.getElementById('next-canvas');
+const nextCtx = nextCanvas.getContext('2d');
+
 let W = canvas.width;
 let H = canvas.height;
 
-function resizeCanvas() {
-  const rect = canvas.getBoundingClientRect();
-  canvas.width = rect.width;
-  canvas.height = rect.height;
-  W = canvas.width;
-  H = canvas.height;
-}
-window.addEventListener('resize', () => { if(window.innerWidth <= 850) resizeCanvas(); });
-if(window.innerWidth <= 850) resizeCanvas();
-
 let gameOn = false;
 let score = 0;
-let level = 1;
 let shield = 100;
-let destroyedCount = 0;
 
 let player;
 let bullets = [];
+let enemies = [];
 let particles = [];
 let stars = [];
 
 let keys = {};
 let txQueue = [];
+let nextEnemyData = null; 
 let spawnTimer = 0;
-let globalTime = 0; // アニメーション用
+const MAX_ENEMIES = 4; // 画面上の敵は最大4体で余裕をもたせる
 
-// Bitcoin Stats
 let blockHeight = "----";
 let lastBlockMs = null;
 let wsConn = null;
@@ -360,62 +403,26 @@ function playSound(type) {
     
     if (type === 'shoot') {
       osc.type = 'square';
-      osc.frequency.setValueAtTime(880, t);
-      osc.frequency.exponentialRampToValueAtTime(220, t + 0.05);
-      gain.gain.setValueAtTime(0.05, t);
+      osc.frequency.setValueAtTime(1200, t);
+      osc.frequency.exponentialRampToValueAtTime(300, t + 0.05);
+      gain.gain.setValueAtTime(0.03, t);
       gain.gain.exponentialRampToValueAtTime(0.001, t + 0.05);
       osc.start(t); osc.stop(t + 0.06);
     } else if (type === 'hit') {
-      osc.type = 'sawtooth';
-      osc.frequency.setValueAtTime(150, t);
-      osc.frequency.exponentialRampToValueAtTime(50, t + 0.1);
-      gain.gain.setValueAtTime(0.08, t);
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(300, t);
+      osc.frequency.exponentialRampToValueAtTime(100, t + 0.1);
+      gain.gain.setValueAtTime(0.05, t);
       gain.gain.exponentialRampToValueAtTime(0.001, t + 0.1);
       osc.start(t); osc.stop(t + 0.1);
     } else if (type === 'boom') {
-      osc.type = 'triangle';
-      osc.frequency.setValueAtTime(100, t);
-      osc.frequency.exponentialRampToValueAtTime(20, t + 0.3);
-      gain.gain.setValueAtTime(0.2, t);
-      gain.gain.exponentialRampToValueAtTime(0.001, t + 0.3);
-      osc.start(t); osc.stop(t + 0.35);
-    } else if (type === 'damage') {
       osc.type = 'sawtooth';
-      osc.frequency.setValueAtTime(80, t);
-      osc.frequency.linearRampToValueAtTime(40, t + 0.3);
-      gain.gain.setValueAtTime(0.3, t);
-      gain.gain.linearRampToValueAtTime(0.001, t + 0.3);
-      osc.start(t); osc.stop(t + 0.35);
+      osc.frequency.setValueAtTime(150, t);
+      osc.frequency.exponentialRampToValueAtTime(20, t + 0.4);
+      gain.gain.setValueAtTime(0.2, t);
+      gain.gain.exponentialRampToValueAtTime(0.001, t + 0.4);
+      osc.start(t); osc.stop(t + 0.45);
     }
-  } catch(e) {}
-}
-
-function playBlockMinedSound() {
-  try {
-    const ac = getAudioCtx();
-    const t = ac.currentTime;
-    const osc = ac.createOscillator();
-    const gain = ac.createGain();
-    osc.connect(gain); gain.connect(ac.destination);
-    osc.type = 'sine';
-    osc.frequency.setValueAtTime(100, t);
-    osc.frequency.exponentialRampToValueAtTime(2000, t + 0.8);
-    gain.gain.setValueAtTime(0, t);
-    gain.gain.linearRampToValueAtTime(0.3, t + 0.4);
-    gain.gain.exponentialRampToValueAtTime(0.001, t + 0.9);
-    osc.start(t); osc.stop(t + 1);
-    
-    setTimeout(() => {
-      const boom = ac.createOscillator();
-      const bg = ac.createGain();
-      boom.connect(bg); bg.connect(ac.destination);
-      boom.type = 'square';
-      boom.frequency.setValueAtTime(60, ac.currentTime);
-      boom.frequency.exponentialRampToValueAtTime(20, ac.currentTime + 1.5);
-      bg.gain.setValueAtTime(0.4, ac.currentTime);
-      bg.gain.exponentialRampToValueAtTime(0.001, ac.currentTime + 1.5);
-      boom.start(ac.currentTime); boom.stop(ac.currentTime + 1.6);
-    }, 400);
   } catch(e) {}
 }
 
@@ -424,48 +431,38 @@ function playBlockMinedSound() {
 // ================================================================
 class Player {
   constructor() {
-    this.w = 30; this.h = 20;
+    this.w = 32; this.h = 24;
     this.x = W / 2 - this.w / 2;
-    this.y = H - 40;
-    this.speed = 6;
+    this.y = H - 50;
+    this.speed = 4.5;
     this.fireCooldown = 0;
   }
   update() {
     if (keys['ArrowLeft'] || keys['KeyA'] || btnStates.left) this.x -= this.speed;
     if (keys['ArrowRight'] || keys['KeyD'] || btnStates.right) this.x += this.speed;
-    this.x = Math.max(0, Math.min(W - this.w, this.x));
+    this.x = Math.max(10, Math.min(W - this.w - 10, this.x));
 
     if (this.fireCooldown > 0) this.fireCooldown--;
-    const fireRate = Math.max(3, 10 - Math.floor(level / 2)); 
-    
+    // 連射速度は控えめ（1/10のゆとり感）
     if ((keys['Space'] || btnStates.shoot) && this.fireCooldown <= 0) {
       this.shoot();
-      this.fireCooldown = fireRate;
+      this.fireCooldown = 15; // やや遅めの連射
     }
   }
   shoot() {
-    bullets.push(new Bullet(this.x + this.w / 2 - 2, this.y, 4, 12, 12, '#00ff88'));
+    bullets.push(new Bullet(this.x + this.w / 2 - 2, this.y, 4, 14, 8, '#ffffff'));
     playSound('shoot');
-    if (level >= 5) {
-      bullets.push(new Bullet(this.x + 2, this.y + 5, 3, 10, 12, '#00ff88'));
-      bullets.push(new Bullet(this.x + this.w - 5, this.y + 5, 3, 10, 12, '#00ff88'));
-    }
   }
   draw(ctx) {
-    ctx.fillStyle = '#00ff88';
-    ctx.shadowBlur = 10; ctx.shadowColor = '#00ff88';
+    ctx.fillStyle = '#ffffff';
+    // 洗練された幾何学的な自機デザイン
     ctx.beginPath();
-    ctx.moveTo(this.x, this.y + this.h);
+    ctx.moveTo(this.x + this.w/2, this.y);
     ctx.lineTo(this.x + this.w, this.y + this.h);
-    ctx.lineTo(this.x + this.w - 5, this.y + 8);
-    ctx.lineTo(this.x + this.w / 2 + 3, this.y + 8);
-    ctx.lineTo(this.x + this.w / 2 + 3, this.y);
-    ctx.lineTo(this.x + this.w / 2 - 3, this.y);
-    ctx.lineTo(this.x + this.w / 2 - 3, this.y + 8);
-    ctx.lineTo(this.x + 5, this.y + 8);
+    ctx.lineTo(this.x + this.w/2, this.y + this.h - 6);
+    ctx.lineTo(this.x, this.y + this.h);
     ctx.closePath();
     ctx.fill();
-    ctx.shadowBlur = 0;
   }
 }
 
@@ -477,178 +474,94 @@ class Bullet {
   update() { this.y -= this.speed; }
   draw(ctx) {
     ctx.fillStyle = this.color;
-    ctx.shadowBlur = 5; ctx.shadowColor = this.color;
     ctx.fillRect(this.x, this.y, this.w, this.h);
-    ctx.shadowBlur = 0;
   }
 }
 
-// 2コマアニメーション用パターン (5x5)
-const ALIEN_PATTERNS = {
-  dust: [
-    [ [0,0,0,0,0], [0,1,1,1,0], [0,1,0,1,0], [0,1,1,1,0], [0,1,0,1,0] ],
-    [ [0,0,0,0,0], [0,1,1,1,0], [0,1,0,1,0], [0,1,1,1,0], [0,0,1,0,0] ]
-  ],
-  normal: [
-    [ [1,0,1,0,1], [0,1,1,1,0], [1,1,0,1,1], [0,1,1,1,0], [1,0,0,0,1] ],
-    [ [0,1,1,1,0], [1,0,1,0,1], [1,1,0,1,1], [1,0,1,0,1], [0,1,0,1,0] ]
-  ],
-  mid: [
-    [ [0,0,1,0,0], [0,1,1,1,0], [1,0,1,0,1], [1,1,1,1,1], [1,0,1,0,1] ],
-    [ [0,0,1,0,0], [0,1,1,1,0], [1,0,1,0,1], [1,1,1,1,1], [0,1,0,1,0] ]
-  ],
-  big: [
-    [ [1,1,1,1,1], [1,0,0,0,1], [1,0,1,0,1], [1,0,0,0,1], [1,1,1,1,1] ],
-    [ [1,1,1,1,1], [1,0,0,0,1], [1,0,1,0,1], [1,0,0,0,1], [0,1,1,1,0] ]
-  ],
-  huge: [
-    [ [1,1,0,1,1], [1,1,1,1,1], [0,1,1,1,0], [1,1,0,1,1], [1,0,0,0,1] ],
-    [ [1,1,0,1,1], [1,1,1,1,1], [0,1,1,1,0], [1,1,0,1,1], [0,1,0,1,0] ]
-  ]
-};
-
-// ================================================================
-//  INVASION FLEET (フォーメーション管理)
-// ================================================================
-let fleet = {
-  cells: [],
-  x: 20, y: 50,
-  vx: 0.5,
-  spacingX: 28, spacingY: 28,
-  animStep: 0,
-  
-  init() {
-    this.cells = [];
-    this.x = 20; this.y = 50;
-    this.vx = 0.5;
-    // 初期配置 (ダミーTX: 11列 x 4行)
-    for(let row=0; row<4; row++) {
-      for(let col=0; col<11; col++) {
-        let tier = getEnemyTier(0); // normal
-        if (row === 0) tier = getEnemyTier(20000000); // 1行目は少し強い
-        this.cells.push(new Enemy(tier, col, row));
-      }
-    }
-  },
-  
-  addNewEnemy(tier) {
-    if (this.cells.length === 0) {
-      this.cells.push(new Enemy(tier, 5, 0));
-      return;
-    }
-    // 一番上の行（最小のrow）を探す
-    let minRow = 0;
-    this.cells.forEach(e => { if (e.row < minRow) minRow = e.row; });
-    
-    // その行で空いているcolを探す
-    let usedCols = new Set();
-    this.cells.forEach(e => { if (e.row === minRow) usedCols.add(e.col); });
-    
-    let freeCol = -1;
-    // 中央付近から埋めるようにする
-    const order = [5,4,6,3,7,2,8,1,9,0,10];
-    for(let c of order) {
-      if(!usedCols.has(c)) { freeCol = c; break; }
-    }
-    
-    // 空きがなければ新しい行(上)を作る
-    if (freeCol === -1) {
-      minRow--;
-      freeCol = 5;
-    }
-    this.cells.push(new Enemy(tier, freeCol, minRow));
-  },
-  
-  update() {
-    if (this.cells.length === 0) return;
-    
-    // 速度計算（敵が少ないほど速い）
-    let speed = 0.5 + (40 / Math.max(5, this.cells.length));
-    this.vx = this.vx > 0 ? speed : -speed;
-    
-    this.x += this.vx;
-    
-    // アニメーションステップ (速度に応じて切り替えを速く)
-    if (globalTime % Math.max(5, Math.floor(30 / speed)) === 0) {
-      this.animStep = 1 - this.animStep;
-    }
-    
-    // 全体の境界を計算
-    let minX = Infinity, maxX = -Infinity;
-    this.cells.forEach(e => {
-      let absX = this.x + e.col * this.spacingX;
-      if (absX < minX) minX = absX;
-      if (absX > maxX) maxX = absX;
-    });
-    
-    // 画面端で反転して下がる
-    const cellW = 20; // 敵の描画サイズ
-    if ((minX <= 5 && this.vx < 0) || (maxX + cellW >= W - 5 && this.vx > 0)) {
-      this.vx *= -1;
-      this.y += 15; // 一段下がる
-    }
-  },
-  
-  draw(ctx) {
-    this.cells.forEach(e => {
-      e.absoluteX = this.x + e.col * this.spacingX;
-      e.absoluteY = this.y + e.row * this.spacingY;
-      
-      // 画面上部（見えない領域）にいる場合は描画しない
-      if (e.absoluteY < -30) return;
-      
-      ctx.save();
-      ctx.translate(e.absoluteX, e.absoluteY);
-      ctx.fillStyle = e.hitFlash > 0 ? '#ffffff' : e.color;
-      ctx.shadowBlur = e.hitFlash > 0 ? 15 : 5;
-      ctx.shadowColor = ctx.fillStyle;
-
-      const pat = e.patterns[this.animStep];
-      const s = 20 / 5; // 描画サイズ20px
-      for(let r=0; r<5; r++){
-        for(let c=0; c<5; c++){
-          if(pat[r][c]) ctx.fillRect(c * s, r * s, s + 0.5, s + 0.5);
-        }
-      }
-      
-      if (e.maxHp > 2) {
-        ctx.shadowBlur = 0;
-        ctx.fillStyle = 'rgba(255,0,0,0.5)';
-        ctx.fillRect(0, -6, 20, 3);
-        ctx.fillStyle = '#00ff88';
-        ctx.fillRect(0, -6, 20 * (e.hp / e.maxHp), 3);
-      }
-      ctx.restore();
-      if(e.hitFlash > 0) e.hitFlash--;
-    });
-  }
+// エレガントな幾何学エイリアンパターン
+const PATTERNS = {
+  dust:   [ [0,1,0], [1,1,1], [0,1,0] ],
+  normal: [ [1,0,1], [0,1,0], [1,0,1], [1,1,1] ],
+  mid:    [ [0,1,1,0], [1,1,1,1], [1,0,0,1], [0,1,1,0] ],
+  big:    [ [1,0,0,1], [1,1,1,1], [0,1,1,0], [1,0,0,1], [0,1,1,0] ],
+  huge:   [ [1,1,0,1,1], [1,1,1,1,1], [0,1,1,1,0], [1,0,1,0,1], [1,0,0,0,1] ]
 };
 
 class Enemy {
-  constructor(tier, col, row) {
-    this.col = col;
-    this.row = row;
+  constructor(tier, x) {
+    this.tier = tier;
     this.hp = tier.hp; this.maxHp = tier.hp;
     this.color = tier.color;
     this.points = tier.pts;
-    this.patterns = ALIEN_PATTERNS[tier.pattern] || ALIEN_PATTERNS.normal;
+    this.pattern = PATTERNS[tier.pattern] || PATTERNS.normal;
+    
+    this.cols = this.pattern[0].length;
+    this.rows = this.pattern.length;
+    this.cellSize = tier.scale * 4; // スケールに応じて描画サイズ変更
+    
+    this.w = this.cols * this.cellSize;
+    this.h = this.rows * this.cellSize;
+    
+    this.x = x; 
+    this.y = -this.h;
+    
+    // スピードは1/10。大きいほどさらに遅く、重厚感を持たせる
+    this.speedX = tier.speedX * (Math.random() > 0.5 ? 1 : -1);
+    this.speedY = tier.speedY;
+    
     this.hitFlash = 0;
-    this.absoluteX = 0;
-    this.absoluteY = 0;
+  }
+  update() {
+    this.x += this.speedX;
+    this.y += this.speedY;
+    
+    // 壁で優雅にバウンド
+    if (this.x <= 10 || this.x + this.w >= W - 10) {
+      this.speedX *= -1;
+      this.x += this.speedX; // 埋まり防止
+    }
+    if (this.hitFlash > 0) this.hitFlash--;
+  }
+  draw(ctx) {
+    ctx.save();
+    ctx.translate(this.x, this.y);
+    
+    ctx.fillStyle = this.hitFlash > 0 ? '#ffffff' : this.color;
+    
+    // ネオンブルーやVOGUE風のクリーンな描画
+    if (this.hitFlash > 0) {
+      ctx.shadowBlur = 15; ctx.shadowColor = '#ffffff';
+    }
+
+    for(let r=0; r<this.rows; r++){
+      for(let c=0; c<this.cols; c++){
+        if(this.pattern[r][c]) {
+          ctx.fillRect(c * this.cellSize, r * this.cellSize, this.cellSize-1, this.cellSize-1);
+        }
+      }
+    }
+    
+    // HPが減ったときのみ細くエレガントなHPバーを表示
+    if (this.hp < this.maxHp && this.maxHp > 1) {
+      ctx.shadowBlur = 0;
+      ctx.fillStyle = 'rgba(255,255,255,0.2)';
+      ctx.fillRect(0, -5, this.w, 2);
+      ctx.fillStyle = this.color;
+      ctx.fillRect(0, -5, this.w * (this.hp / this.maxHp), 2);
+    }
+    ctx.restore();
   }
 }
 
 class Particle {
-  constructor(x, y, color, speedScale = 1) {
+  constructor(x, y, color) {
     this.x = x; this.y = y;
     const a = Math.random() * Math.PI * 2;
-    const s = (Math.random() * 3 + 1) * speedScale;
-    this.vx = Math.cos(a) * s;
-    this.vy = Math.sin(a) * s;
-    this.life = 1.0;
-    this.decay = Math.random() * 0.03 + 0.02;
+    const s = Math.random() * 2 + 0.5;
+    this.vx = Math.cos(a) * s; this.vy = Math.sin(a) * s;
+    this.life = 1.0; this.decay = Math.random() * 0.02 + 0.01;
     this.color = color;
-    this.size = Math.random() * 3 + 1;
+    this.size = Math.random() * 2 + 1;
   }
   update() { this.x += this.vx; this.y += this.vy; this.life -= this.decay; }
   draw(ctx) {
@@ -660,16 +573,104 @@ class Particle {
 }
 
 // ================================================================
-//  TIERS (敵の強さ定義)
+//  TIERS (敵の強さ・大きさ定義 - 大きく重厚に)
 // ================================================================
 function getEnemyTier(sats) {
   const btc = sats / 1e8;
-  if (btc > 10)   return { hp: 30, color: '#ff3355', pts: 2000, pattern: 'huge', name: '>10 BTC (Whale)' };
-  if (btc > 1)    return { hp: 15, color: '#ff8800', pts: 500,  pattern: 'big',  name: '>1 BTC' };
-  if (btc > 0.1)  return { hp: 6,  color: '#ffee00', pts: 100,  pattern: 'mid',  name: '>0.1 BTC' };
-  if (btc > 0.05) return { hp: 3,  color: '#00ff88', pts: 50,   pattern: 'normal', name: '>0.05 BTC' };
-  if (btc > 0.0001) return { hp: 1,  color: '#00e5ff', pts: 10, pattern: 'normal', name: 'Normal TX' };
-  return { hp: 1, color: '#8a7060', pts: 2, pattern: 'dust', name: 'Dust' };
+  // scale: セルサイズ倍率, hp: 耐久力, speed: 移動速度
+  if (btc >= 10)   return { scale: 8, hp: 50, color: '#C91A1A', pts: 2000, speedX: 0.2, speedY: 0.1, pattern: 'huge', name: '> 10 BTC (WHALE)' };
+  if (btc >= 1)    return { scale: 6, hp: 20, color: '#D4AF37', pts: 500,  speedX: 0.3, speedY: 0.15, pattern: 'huge', name: '> 1 BTC' };
+  if (btc >= 0.1)  return { scale: 5, hp: 10, color: '#4A90E2', pts: 100,  speedX: 0.4, speedY: 0.2, pattern: 'big',   name: '> 0.1 BTC' };
+  if (btc >= 0.05) return { scale: 4, hp: 5,  color: '#50E3C2', pts: 50,   speedX: 0.5, speedY: 0.25, pattern: 'mid',  name: '> 0.05 BTC' };
+  if (sats > 1000) return { scale: 3, hp: 2,  color: '#E2E2E2', pts: 10,   speedX: 0.6, speedY: 0.3, pattern: 'normal',name: 'NORMAL TX' };
+  return           { scale: 2, hp: 1,  color: '#777777', pts: 2,    speedX: 0.8, speedY: 0.4, pattern: 'dust',  name: 'DUST' };
+}
+
+// ================================================================
+//  NEXT PANEL LOGIC
+// ================================================================
+function loadNextEnemy() {
+  if (!nextEnemyData && txQueue.length > 0) {
+    nextEnemyData = txQueue.shift();
+    updateNextUI();
+  }
+}
+
+function updateNextUI() {
+  nextCtx.clearRect(0, 0, nextCanvas.width, nextCanvas.height);
+  
+  if (!nextEnemyData) {
+    document.getElementById('nx-tier').textContent = '——';
+    document.getElementById('nx-amount').textContent = 'Awaiting Data...';
+    document.getElementById('nx-fee').textContent = 'fee: ——';
+    document.getElementById('nx-rate').textContent = 'rate: ——';
+    document.getElementById('nx-size').textContent = '——';
+    return;
+  }
+
+  let sats = 0;
+  if (Array.isArray(nextEnemyData.vout)) sats = nextEnemyData.vout.reduce((s, o) => s + (o.value||0), 0);
+  const tier = getEnemyTier(sats);
+  const fee = nextEnemyData.fee || 0;
+  const vsize = nextEnemyData.weight ? Math.round(nextEnemyData.weight/4) : 0;
+  const rate = vsize > 0 ? Math.round(fee / vsize) : 0;
+  
+  // 値のフォーマット
+  let amtStr = "";
+  if (sats >= 1e8) amtStr = (sats/1e8).toFixed(4) + " BTC";
+  else if (sats > 1000) amtStr = (sats/1e5).toFixed(4) + " mBTC";
+  else amtStr = sats + " sat";
+
+  document.getElementById('nx-tier').textContent = tier.name;
+  document.getElementById('nx-tier').style.color = tier.color;
+  document.getElementById('nx-amount').textContent = amtStr;
+  document.getElementById('nx-fee').textContent = `fee: ${fee.toLocaleString()} sat`;
+  document.getElementById('nx-rate').textContent = `fee rate: ${rate} sat/vB`;
+  
+  const pat = PATTERNS[tier.pattern] || PATTERNS.normal;
+  const cols = pat[0].length;
+  const rows = pat.length;
+  document.getElementById('nx-size').textContent = `Size: ${cols}×${rows} cells (Scale ×${tier.scale})`;
+
+  // NEXT キャンバスへの描画 (中央配置)
+  const drawScale = tier.scale * 3; // プレビュー用のサイズ
+  const tw = cols * drawScale;
+  const th = rows * drawScale;
+  const ox = (nextCanvas.width - tw) / 2;
+  const oy = (nextCanvas.height - th) / 2;
+
+  nextCtx.fillStyle = tier.color;
+  nextCtx.shadowBlur = 10;
+  nextCtx.shadowColor = tier.color;
+  for(let r=0; r<rows; r++){
+    for(let c=0; c<cols; c++){
+      if(pat[r][c]) {
+        nextCtx.fillRect(ox + c * drawScale, oy + r * drawScale, drawScale-1, drawScale-1);
+      }
+    }
+  }
+  nextCtx.shadowBlur = 0;
+}
+
+function trySpawnEnemy() {
+  spawnTimer++;
+  // 画面内の敵が MAX_ENEMIES 未満のときのみ、ゆっくり(約3秒に1体)スポーン
+  if (spawnTimer > 180 && nextEnemyData && enemies.length < MAX_ENEMIES) {
+    let sats = 0;
+    if (Array.isArray(nextEnemyData.vout)) sats = nextEnemyData.vout.reduce((s, o) => s + (o.value||0), 0);
+    const tier = getEnemyTier(sats);
+    
+    // 幅の中に収まるようにX座標をランダム決定
+    const pat = PATTERNS[tier.pattern] || PATTERNS.normal;
+    const w = pat[0].length * tier.scale * 4;
+    const safeX = 10 + Math.random() * (W - w - 20);
+    
+    enemies.push(new Enemy(tier, safeX));
+    
+    nextEnemyData = null;
+    spawnTimer = 0;
+    loadNextEnemy();
+  }
 }
 
 // ================================================================
@@ -677,109 +678,68 @@ function getEnemyTier(sats) {
 // ================================================================
 function initBackground() {
   stars = [];
-  for(let i=0; i<50; i++) stars.push({ x: Math.random()*W, y: Math.random()*H, s: Math.random()*2, v: Math.random()*0.5+0.1 });
-}
-
-function spawnFromQueue() {
-  if (txQueue.length === 0) return;
-  spawnTimer++;
-  // キューが詰まってきたら高速でフォーメーションに追加
-  let interval = Math.max(2, 20 - Math.floor(txQueue.length / 5));
-  
-  if (spawnTimer >= interval) {
-    spawnTimer = 0;
-    const tx = txQueue.shift();
-    updateQueueUI();
-    
-    let sats = 0;
-    if (Array.isArray(tx.vout)) sats = tx.vout.reduce((s, o) => s + (o.value||0), 0);
-    const tier = getEnemyTier(sats);
-    
-    fleet.addNewEnemy(tier);
-    
-    if (sats >= 5000000) { 
-      document.getElementById('latest-threat').textContent = tier.name;
-      document.getElementById('latest-threat').style.color = tier.color;
-      document.getElementById('latest-threat-sub').textContent = `${(sats/1e8).toFixed(4)} BTC`;
-    }
-  }
+  for(let i=0; i<30; i++) stars.push({ x: Math.random()*W, y: Math.random()*H, s: Math.random()*1.5, v: Math.random()*0.2+0.05 });
 }
 
 function triggerBlockExplosion(height) {
-  playBlockMinedSound();
   const flashEl = document.getElementById('block-flash');
   document.getElementById('flash-height-val').textContent = `#${height.toLocaleString()}`;
   flashEl.classList.remove('show'); void flashEl.offsetWidth; flashEl.classList.add('show');
   
-  fleet.cells.forEach(e => {
+  enemies.forEach(e => {
     score += e.points * 5; 
-    for(let i=0; i<5; i++) particles.push(new Particle(e.absoluteX+10, e.absoluteY+10, e.color, 3));
+    for(let i=0; i<15; i++) particles.push(new Particle(e.x + e.w/2, e.y + e.h/2, e.color));
   });
-  fleet.cells = [];
+  enemies = [];
   txQueue = [];
+  nextEnemyData = null;
+  updateNextUI();
   updateUI();
-}
-
-function takeDamage(tier) {
-  playSound('damage');
-  canvas.style.transform = `translate(${(Math.random()-0.5)*10}px, ${(Math.random()-0.5)*10}px)`;
-  setTimeout(() => canvas.style.transform = 'none', 50);
-  
-  let dmg = 2;
-  if(tier.hp >= 30) dmg = 50;
-  else if(tier.hp >= 15) dmg = 25;
-  else if(tier.hp >= 6) dmg = 10;
-  else if(tier.hp >= 3) dmg = 5;
-  
-  shield -= dmg;
-  if(shield < 0) shield = 0;
-  updateUI();
-  if(shield === 0) gameOver();
 }
 
 function update() {
   if (!gameOn) return;
-  globalTime++;
 
   player.update();
-  spawnFromQueue();
-  fleet.update();
+  loadNextEnemy();
+  trySpawnEnemy();
 
   for (let i = bullets.length - 1; i >= 0; i--) {
     bullets[i].update();
     if (bullets[i].y < 0) bullets.splice(i, 1);
   }
 
-  // 敵との判定（防壁到達 ＆ 弾衝突）
-  for (let i = fleet.cells.length - 1; i >= 0; i--) {
-    let e = fleet.cells[i];
+  for (let i = enemies.length - 1; i >= 0; i--) {
+    let e = enemies[i];
+    e.update();
 
-    // 防壁到達（シールドダメージ）
-    if (e.absoluteY + 20 >= H - 15) {
-      takeDamage({hp: e.maxHp});
-      for(let k=0; k<10; k++) particles.push(new Particle(e.absoluteX+10, H-10, e.color, 2));
-      fleet.cells.splice(i, 1);
+    // 防壁到達
+    if (e.y + e.h >= H - 10) {
+      shield -= e.maxHp * 2; // でかいやつほど大ダメージ
+      if(shield < 0) shield = 0;
+      updateUI();
+      for(let k=0; k<10; k++) particles.push(new Particle(e.x+e.w/2, H-10, e.color));
+      enemies.splice(i, 1);
+      if(shield === 0) gameOver();
       continue;
     }
 
-    // 弾との衝突
+    // 弾衝突
     for (let j = bullets.length - 1; j >= 0; j--) {
       let b = bullets[j];
-      if (b.x < e.absoluteX + 20 && b.x + b.w > e.absoluteX && b.y < e.absoluteY + 20 && b.y + b.h > e.absoluteY) {
+      if (b.x < e.x + e.w && b.x + b.w > e.x && b.y < e.y + e.h && b.y + b.h > e.y) {
         bullets.splice(j, 1);
         e.hp--;
         e.hitFlash = 3;
         playSound('hit');
-        for(let k=0; k<2; k++) particles.push(new Particle(b.x, b.y, '#fff'));
+        for(let k=0; k<3; k++) particles.push(new Particle(b.x, b.y, '#fff'));
         
         if (e.hp <= 0) {
           score += e.points;
-          destroyedCount++;
-          if (destroyedCount % 100 === 0) level++;
           updateUI();
           playSound('boom');
-          for(let k=0; k<10; k++) particles.push(new Particle(e.absoluteX+10, e.absoluteY+10, e.color, 2));
-          fleet.cells.splice(i, 1);
+          for(let k=0; k<15; k++) particles.push(new Particle(e.x+e.w/2, e.y+e.h/2, e.color));
+          enemies.splice(i, 1);
         }
         break;
       }
@@ -794,16 +754,17 @@ function update() {
 }
 
 function draw() {
-  ctx.fillStyle = '#211408';
+  ctx.fillStyle = varColor('--canvas-bg');
   ctx.fillRect(0, 0, W, H);
   
-  ctx.strokeStyle = 'rgba(200,150,80,0.05)';
+  // 優雅な極細グリッド
+  ctx.strokeStyle = 'rgba(255,255,255,0.03)';
   ctx.lineWidth = 1; ctx.beginPath();
   for(let x=0; x<W; x+=40) { ctx.moveTo(x,0); ctx.lineTo(x,H); }
   for(let y=0; y<H; y+=40) { ctx.moveTo(0,y); ctx.lineTo(W,y); }
   ctx.stroke();
 
-  ctx.fillStyle = 'rgba(255,255,255,0.3)';
+  ctx.fillStyle = 'rgba(255,255,255,0.2)';
   stars.forEach(s => ctx.fillRect(s.x, s.y, s.s, s.s));
 
   if (!gameOn && shield === 0) {
@@ -811,15 +772,13 @@ function draw() {
     return;
   }
 
-  // 防壁
-  ctx.fillStyle = `rgba(0, 229, 255, ${shield/100 * 0.3})`;
-  ctx.fillRect(0, H - 15, W, 15);
-  ctx.strokeStyle = `rgba(0, 255, 136, ${shield/100 * 0.8})`;
-  ctx.beginPath(); ctx.moveTo(0, H - 15); ctx.lineTo(W, H - 15); ctx.stroke();
+  // 防御ライン
+  ctx.strokeStyle = `rgba(255, 255, 255, ${shield/100 * 0.5})`;
+  ctx.beginPath(); ctx.moveTo(0, H - 10); ctx.lineTo(W, H - 10); ctx.stroke();
 
   if(player) player.draw(ctx);
   bullets.forEach(b => b.draw(ctx));
-  fleet.draw(ctx);
+  enemies.forEach(e => e.draw(ctx));
   particles.forEach(p => p.draw(ctx));
 }
 
@@ -832,28 +791,19 @@ function loop() {
 // ================================================================
 //  UI & CONTROLS
 // ================================================================
+function varColor(name) {
+  return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+}
+
 function updateUI() {
   document.getElementById('score').textContent = score.toLocaleString();
-  document.getElementById('level').textContent = level;
-  
   const sBar = document.getElementById('shield-bar');
   const sVal = document.getElementById('shield-val');
   sVal.textContent = `${shield}%`;
   sBar.style.width = `${shield}%`;
   
-  if(shield > 60) { sBar.style.background = 'linear-gradient(90deg, #00e5ff, #00ff88)'; sVal.style.color = 'var(--text)'; }
-  else if(shield > 30) { sBar.style.background = '#ff8800'; sVal.style.color = '#ff8800'; }
-  else { sBar.style.background = '#ff3355'; sVal.style.color = '#ff3355'; }
-}
-
-function updateQueueUI() { document.getElementById('queue-size').textContent = txQueue.length; }
-
-function addTxFeed(msg, color) {
-  const feed = document.getElementById('tx-feed');
-  const el = document.createElement('div');
-  el.className = 'tx-line'; el.style.color = color; el.textContent = msg;
-  feed.prepend(el);
-  while(feed.children.length > 5) feed.removeChild(feed.lastChild);
+  if(shield > 50) { sBar.style.background = varColor('--text-main'); sVal.style.color = varColor('--text-main'); }
+  else { sBar.style.background = '#C91A1A'; sVal.style.color = '#C91A1A'; }
 }
 
 window.addEventListener('keydown', e => { keys[e.code] = true; if(e.code==='Space') e.preventDefault(); });
@@ -875,11 +825,11 @@ bindBtn('btn-left', 'left'); bindBtn('btn-right', 'right'); bindBtn('btn-shoot',
 function startGame() {
   document.getElementById('start-screen').style.display = 'none';
   document.getElementById('go-screen').style.display = 'none';
-  score = 0; level = 1; shield = 100; destroyedCount = 0; globalTime = 0;
+  score = 0; shield = 100;
   player = new Player();
-  fleet.init();
-  bullets = []; particles = []; txQueue = [];
-  updateUI(); updateQueueUI();
+  bullets = []; enemies = []; particles = []; txQueue = []; nextEnemyData = null;
+  spawnTimer = 0;
+  updateUI(); updateNextUI();
   
   getAudioCtx();
   gameOn = true;
@@ -891,7 +841,7 @@ function gameOver() {
   document.getElementById('go-score').textContent = score.toLocaleString();
   document.getElementById('go-screen').style.display = 'flex';
   if(player) {
-    for(let i=0; i<30; i++) particles.push(new Particle(player.x+15, player.y+10, '#00ff88', 3));
+    for(let i=0; i<30; i++) particles.push(new Particle(player.x+16, player.y+12, '#ffffff'));
     playSound('boom');
   }
 }
@@ -924,23 +874,15 @@ function connectWS() {
         document.getElementById('block-height').textContent = blockHeight.toLocaleString();
         document.getElementById('last-block-ago').textContent = "Just now";
         if (gameOn) triggerBlockExplosion(blockHeight);
-        addTxFeed(`⛏ BLOCK #${blockHeight} MINED!`, 'var(--btc)');
       }
       if (d.mempoolInfo) document.getElementById('mempool-size').textContent = d.mempoolInfo.size.toLocaleString();
       
       if (d.transactions && gameOn) {
-        let added = 0;
+        // 少数精鋭にするため、一度にキューに入れる数を制限
         for (const tx of d.transactions) {
-          if (txQueue.length > 300) break; 
+          if (txQueue.length > 20) break; 
           txQueue.push(tx);
-          added++;
-          if(Math.random() < 0.2) {
-            let sats = 0; if (Array.isArray(tx.vout)) sats = tx.vout.reduce((s, o) => s + (o.value||0), 0);
-            const tier = getEnemyTier(sats);
-            if(!tier.name.includes('Dust')) addTxFeed(`Incoming: ${(sats/1e8).toFixed(4)} BTC`, tier.color);
-          }
         }
-        if(added) updateQueueUI();
       }
     } catch(err) {}
   };
