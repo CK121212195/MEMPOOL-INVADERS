@@ -12,7 +12,10 @@
   --bg:         #d4cec8;
   --panel:      #e8e4dc;
   --panel-bdr:  #b8b0a9;
-  --game-bg:    #2a2825;
+  
+  /* ネオンが映えるようにゲーム盤面はよりダークに */
+  --game-bg:    #151311; 
+  
   --text:       #423a31;
   --text-dim:   #756b62;
   --text-mid:   #5c5246;
@@ -66,21 +69,19 @@ header{
 .dot.on{background:var(--green);box-shadow:0 0 8px var(--green);}
 .dot.err{background:#ff4d4d;}
 
-/* LAYOUT — Grid Areas (PC用) */
+/* LAYOUT — Grid Areas (PC用: Bitrisのようなスマートな配置) */
 #app{
   position:relative;z-index:10;
   display:grid;
-  grid-template-columns:220px minmax(300px, 1fr) 220px;
-  grid-template-rows: auto 1fr;
+  grid-template-columns:220px auto 220px;
   grid-template-areas: 
     "lc cc next"
     "lc cc rc";
-  gap:16px;
-  padding:16px 20px 24px;
+  gap:20px;
+  padding:24px 20px 30px;
   width:100%;max-width:1400px;
+  justify-content: center;
   align-items:start;
-  /* ヘッダーの分を引いた高さを指定し、内部を100%広げる */
-  height: calc(100vh - 65px);
 }
 
 /* PANEL */
@@ -88,7 +89,7 @@ header{
   background:var(--panel);
   border:1px solid var(--panel-bdr);
   border-radius:5px;
-  padding:10px 14px;
+  padding:12px 14px;
   box-shadow: 0 4px 10px rgba(0,0,0,0.03);
 }
 .lbl{
@@ -102,9 +103,7 @@ header{
 .vsub{font-size:.62rem;color:var(--text-dim);margin-top:2px;}
 
 /* LEFT COL */
-#lc{grid-area:lc; display:flex;flex-direction:column;gap:12px; overflow-y:auto; height:100%; padding-right:4px;}
-#lc::-webkit-scrollbar, #rc::-webkit-scrollbar { width: 4px; }
-#lc::-webkit-scrollbar-thumb, #rc::-webkit-scrollbar-thumb { background: var(--panel-bdr); border-radius: 2px; }
+#lc{grid-area:lc; display:flex;flex-direction:column;gap:12px;}
 
 .sleg{display:flex;flex-direction:column;gap:4px;margin-top:3px;}
 .srow{display:flex;align-items:center;gap:7px;font-size:.65rem;color:var(--text-mid);}
@@ -118,37 +117,24 @@ header{
 .fbar{height:5px;background:#c2bbb0;border-radius:2px;margin-top:6px;overflow:hidden;}
 .ffill{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--green),var(--gold),var(--amber),#ff4d4d);transition:width .6s;}
 
-/* CENTER COL (ここが自動で画面いっぱいに広がる) */
+/* CENTER COL (ゲーム盤面) */
 #cc{
   grid-area:cc; 
   display:flex;
   flex-direction:column;
   align-items:center;
   gap:10px;
-  height:100%;
-  min-height:0; /* Flexboxで縮小を許可する魔法のプロパティ */
 }
 
 #gw{
   position:relative;
   background:var(--game-bg);
-  border:3px solid var(--amber-dim);
+  border:2px solid var(--amber-dim);
   border-radius:6px;
-  box-shadow:0 0 25px rgba(0,0,0,.08),inset 0 0 20px rgba(0,0,0,.6);
-  width: 100%;
-  height: 100%; /* 親のスペースを100%使う */
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  overflow:hidden;
+  box-shadow:0 0 30px rgba(0,0,0,.15),inset 0 0 40px rgba(0,0,0,.8);
+  /* JSで固定ピクセル幅・高さが指定されます */
 }
-
-#gc{
-  width: 100%;
-  height: 100%;
-  object-fit: contain; /* アスペクト比を保ちながら限界まで拡大 */
-  display:block;
-}
+#gc{display:block;}
 
 #bflash{
   position:absolute;inset:0;
@@ -201,7 +187,7 @@ header{
 #mb-drop{flex:2;font-size:.8rem;letter-spacing:.14em;color:#fff;background:var(--amber);border-color:var(--amber-dim);}
 #mb-drop:active{background:var(--amber-dim);}
 
-/* NEXT PANEL (独立配置) */
+/* NEXT PANEL */
 #pnl-next{grid-area:next; margin-bottom:-4px;}
 .next-split{display:block;}
 #nwrap{
@@ -209,12 +195,12 @@ header{
   background:var(--game-bg);border-radius:4px;border:2px solid var(--panel-bdr);
   display:flex;align-items:center;justify-content:center;
   overflow:hidden;margin-bottom:6px;
-  box-shadow:inset 0 0 10px rgba(0,0,0,.4);
+  box-shadow:inset 0 0 15px rgba(0,0,0,.6);
 }
 #nwrap canvas { width: 100%; height: 100%; object-fit: contain; }
 
 /* RIGHT COL */
-#rc{grid-area:rc; display:flex;flex-direction:column;gap:12px; overflow-y:auto; height:100%; padding-right:4px;}
+#rc{grid-area:rc; display:flex;flex-direction:column;gap:12px;}
 
 .clist{display:flex;flex-direction:column;gap:5px;}
 .cri{display:flex;align-items:center;gap:7px;font-size:.62rem;color:var(--text-dim);}
@@ -258,41 +244,35 @@ header{
 /* ---- RESPONSIVE ---- */
 @media(max-width:960px){
   #app{
-    grid-template-columns:190px minmax(260px, 1fr) 190px;
-    gap:10px; padding:12px;
+    grid-template-columns:190px auto 190px;
+    gap:16px; padding:16px;
   }
 }
-@media(max-width:720px){
-  body { overflow-y: auto; }
+@media(max-width:768px){
   #app{
-    height: auto; /* スマホではスクロールを許可 */
     grid-template-columns: 1fr;
-    grid-template-rows: auto auto auto auto;
     grid-template-areas: 
       "next"
       "cc"
       "lc"
       "rc";
-    gap: 12px;
+    gap: 16px;
   }
-  #cc {
-    height: 65vh; /* スマホ画面の縦幅の65%を使って盤面を大きく表示 */
-  }
-  #lc, #rc { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; height:auto; overflow:visible;}
+  #lc, #rc { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
   
   /* スマホの時はNEXTを横並びにして上に配置 */
   #pnl-next { margin-bottom: 0; }
   .next-split { display: flex; align-items: center; justify-content: space-around; gap: 10px; }
-  #nwrap { width: 100px; height: 100px; margin-bottom: 0; }
+  #nwrap { width: 110px; height: 110px; margin-bottom: 0; }
   .next-info { text-align: left; }
   
   #mctrl{display:flex;}
   .pc-only{display:none;}
 }
-@media(max-width:400px){
-  .logo{font-size:1.2rem;}
-  header{padding:10px;}
-  #lc, #rc { grid-template-columns: 1fr; } /* 非常に狭い画面では1列に */
+@media(max-width:480px){
+  .logo{font-size:1.3rem;}
+  header{padding:10px 14px;}
+  #lc, #rc { grid-template-columns: 1fr; } 
 }
 </style>
 </head>
@@ -459,30 +439,47 @@ header{
 // ── CONSTANTS ──────────────────────────────────────────────────
 const COLS=6, ROWS=12;
 
-// ★【重要】キャンバスの「画素数」を固定し、高解像度で美しく描画する。
-// CSSの `object-fit: contain` によって画面の余白を埋めるよう自動で拡大縮小されます。
-const CELL = 70; 
+// ★ Bitrisのようなスマートな固定サイズキャンバスに調整
+function cellSz(){
+  const w = window.innerWidth;
+  if(w <= 420) return 36; // 盤面 216x432 px
+  if(w <= 768) return 42; // 盤面 252x504 px
+  return 48;              // 盤面 288x576 px (PC用最適サイズ)
+}
+let CELL = cellSz(); 
 
-const PUYO_COLORS = [
-  { id: 'red',    c1: 'rgba(255, 100, 100, 0.95)', c2: 'rgba(200, 20, 20, 0.85)' },
-  { id: 'orange', c1: 'rgba(255, 180, 80, 0.95)',  c2: 'rgba(220, 100, 0, 0.85)' },
-  { id: 'cyan',   c1: 'rgba(100, 220, 255, 0.95)', c2: 'rgba(20, 150, 200, 0.85)' },
-  { id: 'green',  c1: 'rgba(120, 255, 120, 0.95)', c2: 'rgba(30, 180, 40, 0.85)' },
-  { id: 'yellow', c1: 'rgba(255, 240, 100, 0.95)', c2: 'rgba(220, 180, 10, 0.85)' },
-  { id: 'dust',   c1: 'rgba(180, 190, 200, 0.95)', c2: 'rgba(100, 110, 120, 0.85)' }
-];
+// ★ 添付画像のような「ハイグレードな透明感＆ネオン発光」の設定
+const PUYO_COLORS = {
+  red:    { base: 'rgba(255, 30, 30, 0.4)',  glow: '#ff1111', edge: 'rgba(255, 120, 120, 0.95)' },
+  orange: { base: 'rgba(255, 80, 10, 0.4)',  glow: '#ff5500', edge: 'rgba(255, 180, 100, 0.95)' },
+  cyan:   { base: 'rgba(10, 150, 255, 0.4)', glow: '#0088ff', edge: 'rgba(120, 220, 255, 0.95)' },
+  green:  { base: 'rgba(30, 255, 30, 0.4)',  glow: '#11ff11', edge: 'rgba(150, 255, 150, 0.95)' },
+  yellow: { base: 'rgba(255, 200, 10, 0.4)', glow: '#ffcc00', edge: 'rgba(255, 250, 120, 0.95)' },
+  dust:   { base: 'rgba(100, 100, 100, 0.4)',glow: '#888888', edge: 'rgba(220, 220, 220, 0.95)' }
+};
+
 const PUYO_IDS = ['red', 'orange', 'cyan', 'green', 'yellow'];
-const C_MAP = { red: '#ff4d4d', orange: '#ff9933', cyan: '#33ccff', green: '#4dff79', yellow: '#ffdb4d', dust: '#99aabb' };
+// UI用ソリッドカラー
+const C_MAP = { red: '#ff5555', orange: '#ff8800', cyan: '#00ddff', green: '#55ff55', yellow: '#ffea00', dust: '#aaaaaa' };
 
 const canvas=document.getElementById('gc');
 const ctx=canvas.getContext('2d');
-canvas.width = COLS * CELL;   // 420px
-canvas.height = ROWS * CELL;  // 840px
-
 const nc=document.getElementById('nc');
 const nctx=nc.getContext('2d');
-nc.width = 280;  // NEXT用キャンバスも高解像度に
-nc.height = 280;
+nc.width = 240; 
+nc.height = 240;
+
+function resize(){
+  CELL = cellSz();
+  canvas.width = COLS * CELL;
+  canvas.height = ROWS * CELL;
+  const gw = document.getElementById('gw');
+  gw.style.width = canvas.width + 'px';
+  gw.style.height = canvas.height + 'px';
+  drawNext();
+}
+resize();
+window.addEventListener('resize',resize);
 
 // ── STATE ──────────────────────────────────────────────────────
 let gameOn=false,gState='IDLE';
@@ -606,14 +603,14 @@ function canPlace(cells){
   return true;
 }
 
-// ★【重要修正】ゲームが起動しなくなるバグの修正
+// ★【バグ修正済】次のピースを盤面に出しつつ、裏で即座に補充する
 function spawn(){
   if(!nextPiece) return false;
   active=nextPiece;  
   active.pr=1; active.pc=Math.floor(COLS/2);
   nextPiece=null;
   
-  loadNext(); // 必ず次のピースを補充する
+  loadNext(); // 必ずキューから補充
   updateSide();
   
   return canPlace(active.abs());
@@ -749,7 +746,7 @@ class Part{
   }
 }
 
-// ── DRAW PUYO ──────────────────────────────────────────────────
+// ── DRAW PUYO (ハイグレードなネオン＆ガラス質感) ─────────────────────────
 function getPM(cells){
   const m={};cells.forEach(c=>{if(!m[c.r])m[c.r]={};m[c.r][c.c]=c.colorId;});return m;
 }
@@ -763,45 +760,67 @@ function nbM(r,c,col,m){
 }
 
 function drawP(c,px,py,sz,colorId,nb={},al=1){
-  const colorDef = PUYO_COLORS.find(p => p.id === colorId) || PUYO_COLORS[0];
-  const rad=sz*.41,cx=px+sz/2,cy=py+sz/2;
-  c.globalAlpha=al;
+  const colorDef = PUYO_COLORS[colorId] || PUYO_COLORS.red;
+  const rad=sz*.42, cx=px+sz/2, cy=py+sz/2;
+  
+  c.globalAlpha = al;
 
-  const grad = c.createRadialGradient(cx - rad*0.25, cy - rad*0.25, rad*0.1, cx, cy, rad);
-  grad.addColorStop(0, colorDef.c1);
-  grad.addColorStop(1, colorDef.c2);
+  // 1. 全体のベース（強いグロー発光 ＋ 半透明の塗り）
+  c.shadowBlur = 22;
+  c.shadowColor = colorDef.glow;
+  c.fillStyle = colorDef.base;
+
+  c.beginPath();
+  c.arc(cx, cy, rad, 0, Math.PI*2);
+  const bw=rad*.8, h=sz/2;
+  if(nb.u) c.rect(cx-bw/2, py, bw, h+2);
+  if(nb.d) c.rect(cx-bw/2, cy-2, bw, h+2);
+  if(nb.l) c.rect(px, cy-bw/2, h+2, bw);
+  if(nb.r) c.rect(cx-2, cy-bw/2, h+2, bw);
+  c.fill();
+  c.fill(); // グローを強調するために重ね塗り
+
+  // 2. エッジのガラス感（内側から外へ向かう放射状グラデーション）
+  c.shadowBlur = 0;
+  const grad = c.createRadialGradient(cx, cy, rad*0.3, cx, cy, rad);
+  grad.addColorStop(0, 'rgba(255,255,255,0)');
+  grad.addColorStop(0.7, colorDef.edge);
+  grad.addColorStop(1, colorDef.glow);
 
   c.fillStyle = grad;
-  c.shadowBlur = 6;
-  c.shadowColor = 'rgba(0,0,0,0.25)';
+  c.beginPath();
+  c.arc(cx, cy, rad, 0, Math.PI*2);
+  // 接続部にも薄くグラデーションを乗せる
+  if(nb.u) c.rect(cx-bw/2+2, py, bw-4, h+2);
+  if(nb.d) c.rect(cx-bw/2+2, cy-2, bw-4, h+2);
+  if(nb.l) c.rect(px, cy-bw/2+2, h+2, bw-4);
+  if(nb.r) c.rect(cx-2, cy-bw/2+2, h+2, bw-4);
+  c.fill();
 
-  const bw=rad*.75,h=sz/2;
-  if(nb.u)c.fillRect(cx-bw/2,py,bw,h+2);
-  if(nb.d)c.fillRect(cx-bw/2,cy-2,bw,h+2);
-  if(nb.l)c.fillRect(px,cy-bw/2,h+2,bw);
-  if(nb.r)c.fillRect(cx-2,cy-bw/2,h+2,bw);
+  // 3. 目
+  c.globalAlpha = al * 0.95;
+  c.fillStyle = '#fff';
+  c.beginPath();c.ellipse(cx-rad*.25,cy-rad*.1,rad*.2,rad*.25,0,0,Math.PI*2);c.fill();
+  c.beginPath();c.ellipse(cx+rad*.25,cy-rad*.1,rad*.2,rad*.25,0,0,Math.PI*2);c.fill();
+  c.fillStyle = '#111';
+  c.beginPath();c.arc(cx-rad*.2,cy-rad*.08,rad*.12,0,Math.PI*2);c.fill();
+  c.beginPath();c.arc(cx+rad*.3,cy-rad*.08,rad*.12,0,Math.PI*2);c.fill();
 
-  c.beginPath();c.arc(cx,cy,rad,0,Math.PI*2);c.fill();
-  c.shadowBlur=0;
+  // 4. 強い光沢（ハイライト）
+  c.fillStyle = 'rgba(255, 255, 255, 0.9)';
+  c.beginPath();c.arc(cx-rad*.25,cy-rad*.3,rad*.1,0,Math.PI*2);c.fill();
+  c.beginPath();c.arc(cx+rad*.15,cy+rad*.25,rad*.06,0,Math.PI*2);c.fill();
 
-  c.globalAlpha=al*.92;c.fillStyle='#fff';
-  c.beginPath();c.ellipse(cx-rad*.28,cy-rad*.08,rad*.22,rad*.27,0,0,Math.PI*2);c.fill();
-  c.beginPath();c.ellipse(cx+rad*.28,cy-rad*.08,rad*.22,rad*.27,0,0,Math.PI*2);c.fill();
-  
-  c.fillStyle='#333';
-  c.beginPath();c.arc(cx-rad*.24,cy-rad*.06,rad*.13,0,Math.PI*2);c.fill();
-  c.beginPath();c.arc(cx+rad*.32,cy-rad*.06,rad*.13,0,Math.PI*2);c.fill();
-  
-  c.fillStyle='rgba(255,255,255,.65)';
-  c.beginPath();c.arc(cx-rad*.3,cy-rad*.26,rad*.13,0,Math.PI*2);c.fill();
-  c.beginPath();c.arc(cx+rad*.15,cy+rad*.25,rad*.08,0,Math.PI*2);c.fill(); 
-
-  c.globalAlpha=1;
+  c.globalAlpha = 1;
 }
 
 function draw(){
   ctx.clearRect(0,0,canvas.width,canvas.height);
-  ctx.strokeStyle='rgba(255,255,255,.03)';ctx.lineWidth=2;ctx.beginPath();
+  
+  // ネオンが映えるように、薄いグリッド線を引く
+  ctx.strokeStyle='rgba(255, 255, 255, 0.04)';
+  ctx.lineWidth=1;
+  ctx.beginPath();
   for(let x=0;x<=canvas.width;x+=CELL){ctx.moveTo(x,0);ctx.lineTo(x,canvas.height);}
   for(let y=0;y<=canvas.height;y+=CELL){ctx.moveTo(0,y);ctx.lineTo(canvas.width,y);}
   ctx.stroke();
@@ -820,7 +839,7 @@ function draw(){
       active.cells.forEach(c=>{
         const gr=gpr+c.dr,gc=active.pc+c.dc;
         if(gr>=0&&gr<ROWS&&gc>=0&&gc<COLS){
-          ctx.globalAlpha=.2;
+          ctx.globalAlpha=.15;
           ctx.fillStyle=C_MAP[c.colorId];
           ctx.beginPath();ctx.arc(gc*CELL+CELL/2,gr*CELL+CELL/2,CELL*.38,0,Math.PI*2);ctx.fill();
           ctx.globalAlpha=1;
@@ -846,7 +865,7 @@ function drawNext(){
   const minC=Math.min(...cells.map(c=>c.dc)),maxC=Math.max(...cells.map(c=>c.dc));
   const pw=maxC-minC+1,ph=maxR-minR+1;
   
-  const cs=Math.min(60,Math.floor(Math.min((nc.width-30)/pw,(nc.height-30)/ph)));
+  const cs=Math.min(50,Math.floor(Math.min((nc.width-30)/pw,(nc.height-30)/ph)));
   const ox=(nc.width-pw*cs)/2,oy=(nc.height-ph*cs)/2;
   
   const pm={};
@@ -1030,13 +1049,13 @@ function startGame(){
     board=mkB();score=0;maxCh=0;chain=0;linesCl=0;
     active=null;nextPiece=null;txQ=[];parts=[];eCells=[];
     
-    // シードデータ（すぐに遊べるように）
+    // シードデータ
     [5e5,2e6,1e4,8e7,3e5,5e8,1e3,4e6,2e3,1e5,6e4,9e8,5e3,3e4,7e5].forEach(s=>
       txQ.push({_s:s,_fee:Math.floor(s*.0001),vout:[{value:s}]}));
       
-    loadNext(); // ここで最初のピースを確定させる
+    loadNext(); 
     updateUI();
-    gAC(); // オーディオコンテキストの初期化
+    gAC(); 
     
     gameOn=true;
     gState='PLAY';
