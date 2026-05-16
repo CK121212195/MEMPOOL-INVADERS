@@ -441,7 +441,7 @@ class Player {
     ctx.fill();
 
     // 中央に Bitcoin Orange の「₿」ロゴ
-    ctx.fillStyle = 'var(--btc)';
+    ctx.fillStyle = '#f7931a';
     ctx.beginPath();
     ctx.arc(this.w/2, this.h/2 + 2, 10, 0, Math.PI*2);
     ctx.fill();
@@ -584,19 +584,20 @@ class Particle {
 }
 
 // ================================================================
-//  TIERS (BITRIS 完全準拠の閾値とカラー)
+//  TIERS (BITRIS 完全準拠の閾値と直接指定カラーコード)
 // ================================================================
 function getEnemyTier(sats) {
   const btc = sats / 1e8;
   // 大きなTXほどHPが高く、落下速度(speedMod)が遅い
-  if (btc >= 100)  return { scale: 6, hp: 150, color: 'var(--c-red)',    pts: 5000, speedMod: 0.3, shape: 'Z', name: '>100₿ 🟥' };
-  if (btc >= 10)   return { scale: 5, hp: 50,  color: 'var(--c-orange)', pts: 1000, speedMod: 0.4, shape: 'L', name: '>10₿ 🟧' };
-  if (btc >= 1)    return { scale: 4, hp: 20,  color: 'var(--c-yellow)', pts: 300,  speedMod: 0.5, shape: 'O', name: '>1₿ 🟨' };
-  if (btc >= 0.1)  return { scale: 3, hp: 8,   color: 'var(--c-green)',  pts: 100,  speedMod: 0.6, shape: 'S', name: '>0.1₿ 🟩' };
-  if (btc >= 0.05) return { scale: 2, hp: 4,   color: 'var(--c-cyan)',   pts: 50,   speedMod: 0.8, shape: 'I', name: '>0.05₿ 🟦' };
-  if (sats > 10000) return { scale: 1, hp: 2,  color: 'var(--text-sub)', pts: 10,   speedMod: 1.0, shape: ['T','J','L','S','Z'][Math.floor(Math.random()*5)], name: '<0.05₿ (Normal)' };
-  if (sats > 1000) return { scale: 1, hp: 1,  color: 'var(--c-purple)', pts: 5,    speedMod: 1.2, shape: 'domino', name: '≤0.0001₿ 🟣' };
-  return           { scale: 0.5,hp: 1,  color: 'var(--c-blue)',   pts: 2,    speedMod: 1.5, shape: 'dot',    name: 'dust ●' };
+  // ★ Canvasが認識できるようにCSS変数(var(--...))ではなく直接カラーコードを指定 ★
+  if (btc >= 100)  return { scale: 6, hp: 150, color: '#ff3355', pts: 5000, speedMod: 0.3, shape: 'Z', name: '>100₿ 🟥' };
+  if (btc >= 10)   return { scale: 5, hp: 50,  color: '#ff8800', pts: 1000, speedMod: 0.4, shape: 'L', name: '>10₿ 🟧' };
+  if (btc >= 1)    return { scale: 4, hp: 20,  color: '#ffee00', pts: 300,  speedMod: 0.5, shape: 'O', name: '>1₿ 🟨' };
+  if (btc >= 0.1)  return { scale: 3, hp: 8,   color: '#00ff88', pts: 100,  speedMod: 0.6, shape: 'S', name: '>0.1₿ 🟩' };
+  if (btc >= 0.05) return { scale: 2, hp: 4,   color: '#00e5ff', pts: 50,   speedMod: 0.8, shape: 'I', name: '>0.05₿ 🟦' };
+  if (sats > 10000) return { scale: 1, hp: 2,  color: '#666666', pts: 10,   speedMod: 1.0, shape: ['T','J','L','S','Z'][Math.floor(Math.random()*5)], name: '<0.05₿ (Normal)' };
+  if (sats > 1000) return { scale: 1, hp: 1,  color: '#cc44ff', pts: 5,    speedMod: 1.2, shape: 'domino', name: '≤0.0001₿ 🟣' };
+  return           { scale: 0.5,hp: 1,  color: '#4466ff', pts: 2,    speedMod: 1.5, shape: 'dot',    name: 'dust ●' };
 }
 
 function txSatoshis(tx) {
@@ -628,7 +629,7 @@ function updateNextUI() {
   
   if (!nextEnemyData) {
     document.getElementById('nx-tier').textContent = '——';
-    document.getElementById('nx-tier').style.color = 'var(--text-sub)';
+    document.getElementById('nx-tier').style.color = '#666666';
     document.getElementById('nx-amount').textContent = 'Awaiting Data...';
     document.getElementById('nx-fee').textContent = 'fee: —— sat';
     document.getElementById('nx-rate').textContent = 'fee rate: —— sat/vB';
@@ -773,7 +774,8 @@ function update() {
 }
 
 function draw() {
-  ctx.fillStyle = 'var(--game-bg)';
+  // ★ Canvasが認識できるよう直接カラーコード(#1A120A)を指定
+  ctx.fillStyle = '#1A120A';
   ctx.fillRect(0, 0, W, H);
   
   // うっすらとしたグリッド線
@@ -814,8 +816,8 @@ function updateUI() {
   sVal.textContent = `${shield}%`;
   sBar.style.width = `${shield}%`;
   
-  if(shield > 50) { sBar.style.background = 'var(--text-main)'; sVal.style.color = 'var(--text-main)'; }
-  else { sBar.style.background = 'var(--c-red)'; sVal.style.color = 'var(--c-red)'; }
+  if(shield > 50) { sBar.style.background = '#1A1A1A'; sVal.style.color = '#1A1A1A'; }
+  else { sBar.style.background = '#ff3355'; sVal.style.color = '#ff3355'; }
 }
 
 window.addEventListener('keydown', e => { keys[e.code] = true; if(e.code==='Space') e.preventDefault(); });
@@ -854,7 +856,7 @@ function gameOver() {
   document.getElementById('go-score').textContent = score.toLocaleString();
   document.getElementById('go-screen').style.display = 'flex';
   if(player) {
-    for(let i=0; i<30; i++) particles.push(new Particle(player.x+20, player.y+20, 'var(--btc)'));
+    for(let i=0; i<30; i++) particles.push(new Particle(player.x+20, player.y+20, '#f7931a'));
     playSound('boom');
   }
 }
