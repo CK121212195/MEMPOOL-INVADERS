@@ -3,25 +3,26 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>₿びっぷよ / EDITORIAL BLOCKS</title>
+<title>₿びっぷよ / BITCOIN CHAIN REACTION</title>
 <style>
-/* VOGUE風フォント + 美しい明朝体 + サイバーフォント */
-@import url('https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,700&family=Montserrat:wght@300;400;600&family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&family=Shippori+Mincho:wght@600;700&display=swap');
+/* VOGUE風フォント + 明朝体 + サイバーフォント */
+@import url('https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,700&family=Montserrat:wght@300;400;600&family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&family=Shippori+Mincho:wght@500;700&display=swap');
 
 :root {
   /* VOGUE Theme */
   --bg-color: #F7F6F2;
   --text-main: #1A1A1A;
-  --text-sub: #666666;
+  --text-sub: #555555;
   --border-color: #1A1A1A;
   
-  /* Tesseract Theme */
+  /* Tesseract / Neon Theme */
   --game-bg: #050505;
   
   --font-vogue: 'Bodoni Moda', 'Shippori Mincho', serif;
   --font-sans: 'Montserrat', sans-serif;
   --font-orbitron: 'Orbitron', monospace;
   --font-mono: 'Share Tech Mono', monospace;
+  --font-mincho: 'Shippori Mincho', serif;
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -34,7 +35,7 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 20px 10px;
+  padding: 15px 10px;
   overflow-x: hidden;
   user-select: none;
 }
@@ -46,7 +47,7 @@ header {
   border-bottom: 1px solid var(--border-color);
   padding-bottom: 10px;
   width: 100%;
-  max-width: 900px;
+  max-width: 950px;
 }
 h1 {
   font-family: var(--font-vogue); font-size: 2.8rem; font-weight: 700;
@@ -63,7 +64,8 @@ h1 {
   max-width: 1000px; width: 100%; justify-content: center;
 }
 .col { display: flex; flex-direction: column; gap: 15px; }
-#left-col, #right-col { width: 220px; }
+#left-col { width: 230px; }
+#right-col { width: 260px; } /* テキスト用に少し広め */
 
 /* ===== EDITORIAL PANELS ===== */
 .panel {
@@ -81,6 +83,17 @@ h1 {
 }
 .psub { font-family: var(--font-sans); font-size: 0.6rem; font-weight: 300; color: var(--text-sub); letter-spacing: 0.05em; }
 
+/* DIRECTOR'S MESSAGE */
+.message-box {
+  font-family: var(--font-mincho);
+  font-size: 0.7rem;
+  line-height: 1.6;
+  color: var(--text-main);
+  background: rgba(0,0,0,0.03);
+  padding: 10px;
+  border-left: 3px solid var(--text-main);
+}
+
 /* ===== NEXT PANEL ===== */
 #next-canvas-wrap {
   width: 100%; height: 110px; background: var(--game-bg);
@@ -88,18 +101,9 @@ h1 {
   margin-bottom: 10px; border: 1px solid var(--border-color);
 }
 #next-canvas { image-rendering: pixelated; }
-
 .tx-detail { font-family: var(--font-mono); font-size: 0.65rem; line-height: 1.4; color: var(--text-main); }
-.tx-tier {
-  font-family: var(--font-orbitron); font-size: 1.1rem; font-weight: 900;
-  margin-bottom: 3px; letter-spacing: 1px;
-}
-.tx-amount { font-size: 0.75rem; margin-bottom: 4px; color: var(--text-main); }
-
-/* ===== PIECE SIZE LEGEND ===== */
-.legend-row { display: flex; align-items: center; gap: 6px; font-family: var(--font-mono); font-size: 0.65rem; margin-bottom: 6px; }
-.l-box { font-size: 0.65rem; font-weight: 900; display: inline-block; width: 25px;}
-.l-text { color: var(--text-sub); }
+.tx-tier { font-family: var(--font-orbitron); font-size: 1.1rem; font-weight: 900; margin-bottom: 3px; letter-spacing: 1px; }
+.tx-amount { font-size: 0.75rem; margin-bottom: 4px; font-weight: bold;}
 
 /* ===== GAME CANVAS ===== */
 #game-wrap {
@@ -118,7 +122,6 @@ h1 {
 @keyframes flashAnim {
   0% { opacity: 1; background: #fff; } 30% { opacity: 1; background: #F7F6F2; } 100% { opacity: 0; background: transparent; }
 }
-
 .flash-title { font-family: var(--font-vogue); font-size: 1.5rem; font-style: italic; color: var(--text-main); letter-spacing: 0.2em; }
 .flash-height { font-family: var(--font-sans); font-size: 2.5rem; font-weight: 300; color: var(--text-main); margin-top: 10px; letter-spacing: 0.1em; }
 
@@ -139,6 +142,14 @@ h1 {
 
 /* ===== CONTROLS ===== */
 .ctrl-text { font-family: var(--font-mono); font-size: 0.65rem; color: var(--text-sub); line-height: 1.8; }
+.sound-toggle {
+  display: inline-block; margin-top: 10px; padding: 5px 10px;
+  border: 1px solid var(--border-color); font-family: var(--font-sans); font-size: 0.6rem;
+  cursor: pointer; font-weight: 600; letter-spacing: 0.1em;
+}
+.sound-toggle.off { background: #ddd; color: #999; border-color: #ddd; }
+
+/* MOBILE CONTROLS */
 #mobile-controls { display: flex; width: 100%; max-width: 420px; margin-top: 15px; flex-direction: column; gap: 8px;}
 .ctrl-row { display: flex; gap: 10px; justify-content: center; width: 100%; }
 .cbtn {
@@ -147,14 +158,7 @@ h1 {
   display: flex; align-items: center; justify-content: center; height: 50px; flex: 1; touch-action: manipulation;
 }
 .cbtn:active { background: var(--border-color); color: #fff; }
-#btn-rotate { flex: 2; font-size: 0.9rem; letter-spacing: 0.1em; font-weight: 500; }
-
-.sound-toggle {
-  display: inline-block; margin-top: 10px; padding: 5px 10px;
-  border: 1px solid var(--border-color); font-family: var(--font-sans); font-size: 0.6rem;
-  cursor: pointer; font-weight: 600; letter-spacing: 0.1em;
-}
-.sound-toggle.off { background: #ddd; color: #999; border-color: #ddd; }
+#btn-drop { flex: 2; font-size: 0.9rem; letter-spacing: 0.1em; font-weight: 500; }
 
 @media (min-width: 901px) { #mobile-controls { display: none; } }
 @media (max-width: 900px) {
@@ -162,7 +166,7 @@ h1 {
   #app { flex-direction: column; align-items: center; }
   .col { width: 100% !important; max-width: 420px; flex-direction: row; flex-wrap: wrap; }
   .panel { flex: 1 1 45%; min-width: 150px; }
-  #game-wrap { width: 100%; max-width: 320px; order: -1; }
+  #game-wrap { width: 100%; max-width: 420px; order: -1; }
   #game-canvas { width: 100%; height: auto; aspect-ratio: 1/2; }
 }
 </style>
@@ -171,7 +175,7 @@ h1 {
 
 <header>
   <h1>₿びっぷよ</h1>
-  <div class="subtitle">EDITORIAL BLOCKS</div>
+  <div class="subtitle">CHAIN REACTION</div>
 </header>
 
 <div id="app">
@@ -185,42 +189,40 @@ h1 {
       <div class="tx-detail" id="next-detail">
         <div class="tx-tier" id="nx-tier" style="color:var(--text-sub);">——</div>
         <div class="tx-amount" id="nx-amount">Awaiting Data...</div>
-        <div class="tx-amount" id="nx-size">——</div>
+        <div class="tx-amount" id="nx-desc" style="color:var(--text-sub);">——</div>
       </div>
     </div>
 
     <div class="panel">
-      <div class="panel-title">TX Tier / Shape</div>
-      <div class="legend-row"><span class="l-box" style="color:#ff3355; text-shadow:0 0 5px #ff3355;">██</span> <span class="l-text">&gt;1 BTC (Huge)</span></div>
-      <div class="legend-row"><span class="l-box" style="color:#ff8800; text-shadow:0 0 5px #ff8800;">██</span> <span class="l-text">&gt;0.1 BTC (Big)</span></div>
-      <div class="legend-row"><span class="l-box" style="color:#ffee00; text-shadow:0 0 5px #ffee00;">██</span> <span class="l-text">&gt;0.01 BTC (Normal)</span></div>
-      <div class="legend-row"><span class="l-box" style="color:#00ff88; text-shadow:0 0 5px #00ff88;">██</span> <span class="l-text">&gt;0.001 BTC (Normal)</span></div>
-      <div class="legend-row"><span class="l-box" style="color:#00e5ff; text-shadow:0 0 5px #00e5ff;">██</span> <span class="l-text">Micro (Domino)</span></div>
-      <div class="legend-row"><span class="l-box" style="color:#4466ff; text-shadow:0 0 5px #4466ff;">██</span> <span class="l-text">Dust (Dot)</span></div>
-      <div class="legend-row" style="margin-top:10px;"><span class="l-text" style="font-weight:bold;">Fill rows to clear</span></div>
+      <div class="panel-title">Controls (PC)</div>
+      <div class="ctrl-text">
+        [ ← ] [ → ] : Move<br>
+        [ ↓ ] : Soft Drop<br>
+        [ SPACE ] : Hard Drop<br>
+        [ Z ] : Rotate L<br>
+        [ X ] or [ ↑ ] : Rotate R
+      </div>
+      <div id="btn-sound" class="sound-toggle">SOUND: ON</div>
     </div>
   </div>
 
   <!-- CENTER COLUMN (Game) -->
   <div id="game-wrap">
-    <!-- BITRIS適正サイズ: 12列 x 24行 -->
+    <!-- ぷよぷよ用に広め (12x24) -->
     <canvas id="game-canvas" width="300" height="600"></canvas>
     
     <div id="block-flash">
-      <div class="flash-title">Block Mined</div>
+      <div class="flash-title">NEW BLOCK MINED</div>
       <div class="flash-height" id="flash-height-val">#000000</div>
-      <div class="overlay-desc" style="margin-top:20px; color:var(--text-main);">ANNIHILATION COMPLETE</div>
+      <div class="overlay-desc" style="margin-top:20px; color:var(--text-main); font-weight:bold;">ANNIHILATION COMPLETE<br>MASSIVE BONUS!</div>
     </div>
 
     <div id="start-screen" class="screen-overlay">
       <div class="overlay-title">₿びっぷよ</div>
       <div class="overlay-desc">
-        Complete horizontal lines to clear them.<br>
-        Larger transactions create massive blocks.<br>
-        <br>
-        ← / → : Move<br>
-        SPACE : Rotate<br>
-        ↓ : Fast Drop
+        Connect 4 or more pieces of the same color.<br>
+        Bigger TXs drop more pieces at once.<br>
+        Survive until the next block is mined!
       </div>
       <button class="btn" id="start-btn">Engage</button>
     </div>
@@ -236,31 +238,32 @@ h1 {
   <!-- RIGHT COLUMN -->
   <div class="col" id="right-col">
     <div class="panel">
-      <div class="panel-title">Score</div>
-      <div class="pvalue" id="score">0</div>
-      <div class="psub">Lines Cleared: <span id="lines">0</span></div>
+      <div class="panel-title">Director's Note</div>
+      <div class="message-box">
+        100BTC以上の送金が来た時はもう絶望！！大きすぎて笑っちゃう！！<br>
+        ただし！マイニングされて新ブロックが生成されると画面上に積み上げたものが一気に全部消える！！！爽快感！！たまらない！！<br>
+        ピンチになればなるほど願うブロック生成！！がんばれ世界中のマイナー！！！！！！次の難易度調整なんて知るか！！一刻も早く俺のためにブロック生成してくれ！！！
+      </div>
     </div>
 
     <div class="panel">
-      <div class="panel-title">Block Height</div>
-      <div class="pvalue" style="font-size:1.5rem;" id="block-height">——</div>
-      <div class="psub" id="last-block-ago">connecting...</div>
+      <div class="panel-title">Score</div>
+      <div class="pvalue" id="score">0</div>
+      <div class="psub">High Score: <span id="hi-score">0</span></div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-title">Max Chain</div>
+      <div class="pvalue" style="font-size:1.5rem;" id="max-chain">0</div>
+      <div class="psub">Consecutive Clears</div>
     </div>
 
     <div class="panel">
       <div class="panel-title">Mempool Status</div>
-      <div class="pvalue" style="font-size:1.5rem;" id="mempool-size">——</div>
+      <div class="pvalue" style="font-size:1.3rem;" id="block-height">——</div>
+      <div class="psub" id="last-block-ago" style="margin-bottom:8px;">connecting...</div>
+      <div class="pvalue" style="font-size:1.1rem;" id="mempool-size">——</div>
       <div class="psub">Unconfirmed TXs</div>
-    </div>
-    
-    <div class="panel">
-      <div class="panel-title">Controls</div>
-      <div class="ctrl-text">
-        [ ← ] [ → ] : Move<br>
-        [ ↓ ] : Fast Drop<br>
-        [ SPACE ] : Rotate
-      </div>
-      <div id="btn-sound" class="sound-toggle">SOUND: ON</div>
     </div>
   </div>
 </div>
@@ -272,7 +275,9 @@ h1 {
     <div class="cbtn" id="btn-right">→</div>
   </div>
   <div class="ctrl-row">
-    <div class="cbtn" id="btn-rotate">ROTATE</div>
+    <div class="cbtn" id="btn-rot-l">↺ Z</div>
+    <div class="cbtn" id="btn-drop">HARD DROP</div>
+    <div class="cbtn" id="btn-rot-r">X ↻</div>
   </div>
 </div>
 
@@ -288,23 +293,29 @@ const nextCtx = nextCanvas.getContext('2d');
 const W = canvas.width;
 const H = canvas.height;
 
-// TETRIS GRID CONSTANTS (BITRIS Size)
 const COLS = 12;
 const ROWS = 24; 
 const CELL = 25;
 
 let gameOn = false;
 let score = 0;
-let linesCleared = 0;
+let highScore = localStorage.getItem('bitpuyo_hi') || 0;
+document.getElementById('hi-score').textContent = parseInt(highScore).toLocaleString();
+
+let maxChain = 0;
 let soundEnabled = true;
 
 let board = [];
 for(let r=0; r<ROWS; r++) board[r] = new Array(COLS).fill(null);
 
+const STATE = { PLAY: 0, DROP: 1, ERASE_WAIT: 2 };
+let gameState = STATE.PLAY;
+
 let activePiece = null; 
 let dropTimer = 0;
-let erasingRows = [];
+let erasingCells = [];
 let eraseWaitTimer = 0;
+let currentChain = 0;
 
 let keys = {};
 let txQueue = [];
@@ -317,6 +328,9 @@ let blockHeight = "----";
 let lastBlockMs = null;
 let wsConn = null;
 
+const COLORS = ['#ff3355', '#ff8800', '#ffee00', '#00ff88', '#00e5ff'];
+function getRandomColor() { return COLORS[Math.floor(Math.random() * COLORS.length)]; }
+
 // ================================================================
 //  AUDIO ENGINE
 // ================================================================
@@ -326,7 +340,7 @@ function getAudioCtx() {
   if (audioCtx.state === 'suspended') audioCtx.resume();
   return audioCtx;
 }
-function playSound(type) {
+function playSound(type, chain = 1) {
   if (!soundEnabled) return;
   try {
     const ac = getAudioCtx();
@@ -351,11 +365,12 @@ function playSound(type) {
       osc.start(t); osc.stop(t + 0.06);
     } else if (type === 'erase') {
       osc.type = 'square';
-      osc.frequency.setValueAtTime(600, t);
-      osc.frequency.exponentialRampToValueAtTime(1200, t + 0.1);
+      const baseFreq = 400 + (chain * 50);
+      osc.frequency.setValueAtTime(baseFreq, t);
+      osc.frequency.exponentialRampToValueAtTime(baseFreq * 1.5, t + 0.15);
       gain.gain.setValueAtTime(0.1, t);
-      gain.gain.exponentialRampToValueAtTime(0.001, t + 0.2);
-      osc.start(t); osc.stop(t + 0.25);
+      gain.gain.exponentialRampToValueAtTime(0.001, t + 0.25);
+      osc.start(t); osc.stop(t + 0.3);
     } else if (type === 'boom') {
       osc.type = 'sawtooth';
       osc.frequency.setValueAtTime(150, t);
@@ -369,62 +384,48 @@ function playSound(type) {
 
 document.getElementById('btn-sound').addEventListener('click', function() {
   soundEnabled = !soundEnabled;
-  if (soundEnabled) {
-    this.textContent = "SOUND: ON";
-    this.classList.remove("off");
-    getAudioCtx();
-  } else {
-    this.textContent = "SOUND: OFF";
-    this.classList.add("off");
-  }
+  if (soundEnabled) { this.textContent = "SOUND: ON"; this.classList.remove("off"); getAudioCtx(); } 
+  else { this.textContent = "SOUND: OFF"; this.classList.add("off"); }
 });
 
 // ================================================================
-//  TIERS & SHAPES
+//  TIERS & SHAPES (ぷよ数と形の設定)
 // ================================================================
-const BASE_SHAPES = {
-  I: [[1,1,1,1]],
-  J: [[1,0,0],[1,1,1]],
-  L: [[0,0,1],[1,1,1]],
-  O: [[1,1],[1,1]],
-  S: [[0,1,1],[1,1,0]],
-  T: [[0,1,0],[1,1,1]],
-  Z: [[1,1,0],[0,1,1]],
-  domino: [[1,1]],
-  dot: [[1]]
-};
-
-// スケールアップ関数（ブロックを巨大化させる）
-function scaleShape(shape, scale) {
-  if(scale === 1) return shape;
-  let out = [];
-  for(let r=0; r<shape.length; r++){
-    for(let sr=0; sr<scale; sr++){
-      let row = [];
-      for(let c=0; c<shape[r].length; c++){
-        for(let sc=0; sc<scale; sc++){
-          row.push(shape[r][c]);
-        }
-      }
-      out.push(row);
-    }
-  }
-  return out;
-}
-
-function randomTetromino() {
-  const keys = ['I','J','L','O','S','T','Z'];
-  return keys[Math.floor(Math.random() * keys.length)];
-}
-
 function getTxTier(sats) {
   const btc = sats / 1e8;
-  if (btc > 1)     return { color: '#ff3355', scale: 3, shapeName: randomTetromino(), name: '>1 BTC 🟥' }; // Huge
-  if (btc > 0.1)   return { color: '#ff8800', scale: 2, shapeName: randomTetromino(), name: '>0.1 BTC 🟧' }; // Big
-  if (btc > 0.01)  return { color: '#ffee00', scale: 1, shapeName: randomTetromino(), name: '>0.01 BTC 🟨' }; // Normal
-  if (btc > 0.001) return { color: '#00ff88', scale: 1, shapeName: randomTetromino(), name: '>0.001 BTC 🟩' }; // Normal
-  if (btc > 0.0001)return { color: '#00e5ff', scale: 1, shapeName: 'domino', name: 'Micro 🟦' }; 
-  return           { color: '#4466ff', scale: 1, shapeName: 'dot', name: 'Dust ●' }; 
+  if (btc >= 100)   return { shape: '5x5', singleColor: true,  name: '>100₿ 絶望', color:'#ff3355', msg: "絶望的にでかいやつ(5x5)" };
+  if (btc >= 10)    return { shape: '4x4', singleColor: true,  name: '>10₿ 巨大', color:'#ff8800', msg: "超でかい(4x4)" };
+  if (btc >= 1)     return { shape: '3x3', singleColor: true,  name: '>1₿ 大型', color:'#ffee00', msg: "かなり大きい(3x3)" };
+  if (btc >= 0.1)   return { shape: '2x2', singleColor: false, name: '>0.1₿ 大', color:'#00ff88', msg: "大きい(2x2)" };
+  if (btc >= 0.05)  return { shape: 'L',   singleColor: false, name: '>0.05₿ 中', color:'#00e5ff', msg: "ちょっと大きい(L字)" };
+  if (btc >= 0.0001)return { shape: 'pair',singleColor: false, name: 'Normal', color:'#cc44ff', msg: "通常(2マス)" };
+  if (btc >= 0.00001)return{ shape: 'pair',singleColor: false, name: 'Small', color:'#4466ff', msg: "結構小さい(2マス)" };
+  return            { shape: 'dot', singleColor: false, name: 'Dust', color:'#666666', msg: "激小(1マス)" };
+}
+
+function createPieceShape(tier) {
+  let template;
+  switch(tier.shape) {
+    case '5x5': template = [[1,1,1,1,1],[1,1,1,1,1],[1,1,1,1,1],[1,1,1,1,1],[1,1,1,1,1]]; break;
+    case '4x4': template = [[1,1,1,1],[1,1,1,1],[1,1,1,1],[1,1,1,1]]; break;
+    case '3x3': template = [[1,1,1],[1,1,1],[1,1,1]]; break;
+    case '2x2': template = [[1,1],[1,1]]; break;
+    case 'L':   template = [[1,0],[1,0],[1,1]]; break;
+    case 'pair':template = [[1],[1]]; break;
+    case 'dot': template = [[1]]; break;
+  }
+  
+  let pieceShape = [];
+  let mainColor = getRandomColor(); // 巨大単色用
+  for(let r=0; r<template.length; r++) {
+    let row = [];
+    for(let c=0; c<template[r].length; c++) {
+      if(template[r][c]) row.push(tier.singleColor ? mainColor : getRandomColor());
+      else row.push(null);
+    }
+    pieceShape.push(row);
+  }
+  return pieceShape; 
 }
 
 function txSatoshis(tx) {
@@ -434,7 +435,7 @@ function txSatoshis(tx) {
 
 function loadNextTx() {
   if (!nextTxData && txQueue.length > 0) {
-    // 偏りを防ぐため、必ずしも一番大きいものを選ばず、適度にランダム抽出
+    // ランダム性を持たせつつ大きなものも引けるように
     let idx = Math.floor(Math.random() * Math.min(txQueue.length, 5));
     nextTxData = txQueue.splice(idx, 1)[0];
     updateNextUI();
@@ -442,15 +443,13 @@ function loadNextTx() {
 }
 
 // ================================================================
-//  TETRIS LOGIC
+//  PUYO LOGIC
 // ================================================================
-let blockIdCounter = 1;
-
 class Piece {
-  constructor(tier) {
-    this.id = blockIdCounter++;
-    this.color = tier.color;
-    this.shape = scaleShape(BASE_SHAPES[tier.shapeName], tier.scale);
+  constructor(txData) {
+    let sats = txSatoshis(txData);
+    this.tier = getTxTier(sats);
+    this.shape = createPieceShape(this.tier);
     this.r = 0;
     this.c = Math.floor(COLS/2 - this.shape[0].length/2);
   }
@@ -458,9 +457,7 @@ class Piece {
 
 function spawnPiece() {
   if (!nextTxData) return false;
-  let sats = txSatoshis(nextTxData);
-  let tier = getTxTier(sats);
-  activePiece = new Piece(tier);
+  activePiece = new Piece(nextTxData);
   nextTxData = null;
   loadNextTx();
   
@@ -473,7 +470,7 @@ function spawnPiece() {
 function canMove(shape, r, c) {
   for(let sr=0; sr<shape.length; sr++) {
     for(let sc=0; sc<shape[0].length; sc++) {
-      if(shape[sr][sc]) {
+      if(shape[sr][sc] !== null) {
         let nr = r + sr;
         let nc = c + sc;
         if(nc < 0 || nc >= COLS || nr >= ROWS) return false;
@@ -484,114 +481,150 @@ function canMove(shape, r, c) {
   return true;
 }
 
-function rotateShape(shape) {
+function rotateRight(shape) {
+  const rows = shape.length; const cols = shape[0].length;
   let newShape = [];
-  for(let c=0; c<shape[0].length; c++) {
+  for(let c = 0; c < cols; c++) {
     let newRow = [];
-    for(let r=shape.length-1; r>=0; r--) {
-      newRow.push(shape[r][c]);
-    }
+    for(let r = rows - 1; r >= 0; r--) newRow.push(shape[r][c]);
     newShape.push(newRow);
   }
   return newShape;
 }
 
-function rotateActive() {
-  let newShape = rotateShape(activePiece.shape);
+function rotateLeft(shape) {
+  const rows = shape.length; const cols = shape[0].length;
+  let newShape = [];
+  for(let c = cols - 1; c >= 0; c--) {
+    let newRow = [];
+    for(let r = 0; r < rows; r++) newRow.push(shape[r][c]);
+    newShape.push(newRow);
+  }
+  return newShape;
+}
+
+function tryRotate(direction) {
+  if(!activePiece) return;
+  let newShape = direction === 'right' ? rotateRight(activePiece.shape) : rotateLeft(activePiece.shape);
   if(canMove(newShape, activePiece.r, activePiece.c)) {
     activePiece.shape = newShape; playSound('rotate');
-  } else {
-    // 壁蹴り (簡易)
-    if(canMove(newShape, activePiece.r, activePiece.c - 1)) {
-      activePiece.shape = newShape; activePiece.c -= 1; playSound('rotate');
-    } else if(canMove(newShape, activePiece.r, activePiece.c + 1)) {
-      activePiece.shape = newShape; activePiece.c += 1; playSound('rotate');
-    }
+  } else if (canMove(newShape, activePiece.r, activePiece.c - 1)) {
+    activePiece.shape = newShape; activePiece.c -= 1; playSound('rotate');
+  } else if (canMove(newShape, activePiece.r, activePiece.c + 1)) {
+    activePiece.shape = newShape; activePiece.c += 1; playSound('rotate');
+  } else if (canMove(newShape, activePiece.r - 1, activePiece.c)) {
+    activePiece.shape = newShape; activePiece.r -= 1; playSound('rotate');
+  } else if (canMove(newShape, activePiece.r - 2, activePiece.c)) {
+    activePiece.shape = newShape; activePiece.r -= 2; playSound('rotate');
   }
+}
+
+function hardDrop() {
+  if(!activePiece) return;
+  while(canMove(activePiece.shape, activePiece.r + 1, activePiece.c)) {
+    activePiece.r++;
+  }
+  lockActive();
 }
 
 function lockActive() {
   for(let sr=0; sr<activePiece.shape.length; sr++) {
     for(let sc=0; sc<activePiece.shape[0].length; sc++) {
-      if(activePiece.shape[sr][sc]) {
+      if(activePiece.shape[sr][sc] !== null) {
         let nr = activePiece.r + sr;
         let nc = activePiece.c + sc;
         if(nr >= 0) {
-          board[nr][nc] = { id: activePiece.id, color: activePiece.color };
+          board[nr][nc] = activePiece.shape[sr][sc]; // 色をセット
         }
       }
     }
   }
   playSound('drop');
-  checkLines();
   activePiece = null;
+  gameState = STATE.DROP;
 }
 
-function checkLines() {
-  erasingRows = [];
-  for(let r=0; r<ROWS; r++) {
-    let full = true;
-    for(let c=0; c<COLS; c++) {
-      if(board[r][c] === null) { full = false; break; }
+function applyGravity() {
+  let dropped = false;
+  for(let c = 0; c < COLS; c++) {
+    for(let r = ROWS - 2; r >= 0; r--) {
+      if(board[r][c] !== null) {
+        let bottom = r;
+        while(bottom + 1 < ROWS && board[bottom + 1][c] === null) {
+          bottom++;
+        }
+        if(bottom !== r) {
+          board[bottom][c] = board[r][c];
+          board[r][c] = null;
+          dropped = true;
+        }
+      }
     }
-    if(full) erasingRows.push(r);
   }
-  
-  if(erasingRows.length > 0) {
-    eraseWaitTimer = 15;
-    playSound('erase');
-  }
+  return dropped;
 }
 
-function removeLines() {
-  score += (erasingRows.length * erasingRows.length) * 100;
-  linesCleared += erasingRows.length;
-  updateUI();
+function checkErase() {
+  let visited = Array(ROWS).fill(0).map(()=>Array(COLS).fill(false));
+  let toErase = [];
   
-  // パーティクル発生
-  erasingRows.forEach(r => {
-    for(let c=0; c<COLS; c++) {
-      if(board[r][c]) {
-        for(let i=0; i<3; i++) particles.push(new Particle(c*CELL + CELL/2, r*CELL + CELL/2, board[r][c].color));
+  for(let r = 0; r < ROWS; r++) {
+    for(let c = 0; c < COLS; c++) {
+      if(board[r][c] !== null && !visited[r][c]) {
+        let group = [];
+        let color = board[r][c];
+        let q = [{r, c}];
+        visited[r][c] = true;
+        let head = 0;
+        
+        while(head < q.length) {
+          let curr = q[head++];
+          group.push(curr);
+          const dirs = [[-1,0],[1,0],[0,-1],[0,1]];
+          for(let d of dirs) {
+            let nr = curr.r + d[0], nc = curr.c + d[1];
+            if(nr>=0 && nr<ROWS && nc>=0 && nc<COLS && !visited[nr][nc] && board[nr][nc] === color) {
+              visited[nr][nc] = true;
+              q.push({r: nr, c: nc});
+            }
+          }
+        }
+        if(group.length >= 4) toErase.push(...group);
       }
     }
-  });
-
-  // 上の行を下へ詰める
-  for(let i=0; i<erasingRows.length; i++) {
-    let rowToRemove = erasingRows[i];
-    for(let r=rowToRemove; r>0; r--) {
-      for(let c=0; c<COLS; c++) {
-        board[r][c] = board[r-1][c];
-      }
-    }
-    for(let c=0; c<COLS; c++) board[0][c] = null;
   }
-  erasingRows = [];
+  return toErase;
 }
 
 // ================================================================
-//  DRAWING (サイバーワイヤーフレーム)
+//  DRAWING (スライム状のワイヤーフレーム表現)
 // ================================================================
-// 同じブロックIDのセル同士は境界線を引かない
-function drawWireframeCell(ctx, r, c, x, y, size, cellObj, isErasing) {
-  let id = cellObj.id;
-  let color = cellObj.color;
-  
-  let u = (r>0 && board[r-1][c]?.id === id);
-  let d = (r<ROWS-1 && board[r+1][c]?.id === id);
-  let l = (c>0 && board[r][c-1]?.id === id);
-  let rig = (c<COLS-1 && board[r][c+1]?.id === id);
+function drawWireframeCell(ctx, r, c, x, y, size, color, isErasing, shapeContext = null) {
+  let u=false, d=false, l=false, rig=false;
+
+  if (shapeContext) {
+    // 落下中の塊の内部でのみスライム連結（他の色とは繋がらない）
+    u = (r>0 && shapeContext[r-1][c] === color);
+    d = (r<shapeContext.length-1 && shapeContext[r+1][c] === color);
+    l = (c>0 && shapeContext[r][c-1] === color);
+    rig = (c<shapeContext[0].length-1 && shapeContext[r][c+1] === color);
+  } else {
+    // ボード上のぷよ同士の連結
+    u = (r>0 && board[r-1][c] === color);
+    d = (r<ROWS-1 && board[r+1][c] === color);
+    l = (c>0 && board[r][c-1] === color);
+    rig = (c<COLS-1 && board[r][c+1] === color);
+  }
 
   ctx.strokeStyle = color;
   ctx.lineWidth = 1.5;
   
   ctx.fillStyle = color;
-  ctx.globalAlpha = isErasing ? 0.9 : 0.15;
+  ctx.globalAlpha = isErasing ? 0.9 : 0.2;
   ctx.fillRect(x, y, size, size);
 
   ctx.globalAlpha = 1.0;
-  ctx.shadowBlur = isErasing ? 25 : 8;
+  ctx.shadowBlur = isErasing ? 20 : 5;
   ctx.shadowColor = color;
 
   ctx.beginPath();
@@ -602,54 +635,10 @@ function drawWireframeCell(ctx, r, c, x, y, size, cellObj, isErasing) {
   ctx.stroke();
 
   // 中央コア
-  ctx.globalAlpha = 0.6;
+  ctx.globalAlpha = 0.8;
   ctx.fillRect(x + size/2 - 2, y + size/2 - 2, 4, 4);
-
-  ctx.globalAlpha = 1.0;
   ctx.shadowBlur = 0;
-}
-
-function drawActivePiece(ctx) {
-  if (!activePiece) return;
-  const s = CELL;
-  
-  for(let sr=0; sr<activePiece.shape.length; sr++) {
-    for(let sc=0; sc<activePiece.shape[0].length; sc++) {
-      if(activePiece.shape[sr][sc]) {
-        let x = (activePiece.c + sc) * s;
-        let y = (activePiece.r + sr) * s;
-        
-        // 仮想的な cellObj を作って drawWireframeCell に渡す
-        let mockObj = { id: 'active', color: activePiece.color };
-        
-        // アクティブピース内の連結判定
-        let u = (sr>0 && activePiece.shape[sr-1][sc]);
-        let d = (sr<activePiece.shape.length-1 && activePiece.shape[sr+1][sc]);
-        let l = (sc>0 && activePiece.shape[sr][sc-1]);
-        let rig = (sc<activePiece.shape[0].length-1 && activePiece.shape[sr][sc+1]);
-
-        ctx.strokeStyle = mockObj.color;
-        ctx.lineWidth = 1.5;
-        ctx.fillStyle = mockObj.color;
-        ctx.globalAlpha = 0.3;
-        ctx.fillRect(x, y, s, s);
-
-        ctx.globalAlpha = 1.0;
-        ctx.shadowBlur = 12; ctx.shadowColor = mockObj.color;
-
-        ctx.beginPath();
-        if(!u) { ctx.moveTo(x, y); ctx.lineTo(x+s, y); }
-        if(!d) { ctx.moveTo(x, y+s); ctx.lineTo(x+s, y+s); }
-        if(!l) { ctx.moveTo(x, y); ctx.lineTo(x, y+s); }
-        if(!rig) { ctx.moveTo(x+s, y); ctx.lineTo(x+s, y+s); }
-        ctx.stroke();
-
-        ctx.globalAlpha = 0.8;
-        ctx.fillRect(x + s/2 - 2, y + s/2 - 2, 4, 4);
-        ctx.shadowBlur = 0;
-      }
-    }
-  }
+  ctx.globalAlpha = 1.0;
 }
 
 class Particle {
@@ -660,7 +649,7 @@ class Particle {
     this.vx = Math.cos(a) * s; this.vy = Math.sin(a) * s;
     this.life = 1.0; this.decay = Math.random() * 0.03 + 0.02;
     this.color = color;
-    this.size = Math.random() * 3 + 1;
+    this.size = Math.random() * 3 + 2;
   }
   update() { this.x += this.vx; this.y += this.vy; this.life -= this.decay; }
   draw(ctx) {
@@ -680,57 +669,64 @@ function updateNextUI() {
 
   const sats = txSatoshis(nextTxData);
   const tier = getTxTier(sats);
-  const shape = scaleShape(BASE_SHAPES[tier.shapeName], tier.scale);
+  const shape = createPieceShape(tier);
   
   let cx = nextCanvas.width / 2;
   let cy = nextCanvas.height / 2;
-  let s = 10; // プレビュー用のセルサイズ
+  let s = 12; // プレビュー用のセルサイズ
   
   let w = shape[0].length * s;
   let h = shape.length * s;
   let ox = cx - w/2;
   let oy = cy - h/2;
 
-  nextCtx.shadowBlur = 10; nextCtx.shadowColor = tier.color;
-  nextCtx.fillStyle = tier.color;
   for(let r=0; r<shape.length; r++) {
     for(let c=0; c<shape[0].length; c++) {
-      if(shape[r][c]) nextCtx.fillRect(ox + c*s, oy + r*s, s-1, s-1);
+      if(shape[r][c]) {
+        drawWireframeCell(nextCtx, r, c, ox + c*s, oy + r*s, s, shape[r][c], false, shape);
+      }
     }
   }
-  nextCtx.shadowBlur = 0;
 
   let amtStr = sats >= 1e8 ? (sats/1e8).toFixed(4) + " ₿" :
                sats > 1000 ? (sats/1e5).toFixed(4) + " mBTC" : sats + " sat";
   
   document.getElementById('nx-amount').textContent = amtStr;
-  document.getElementById('nx-tier').textContent = tier.name.split(' ')[0];
+  document.getElementById('nx-tier').textContent = tier.name;
   document.getElementById('nx-tier').style.color = tier.color;
   document.getElementById('nx-tier').style.textShadow = `0 0 10px ${tier.color}`;
-  
-  document.getElementById('nx-size').textContent = `×${tier.scale} (${shape[0].length}×${shape.length} cells)`;
+  document.getElementById('nx-desc').textContent = tier.msg;
 }
 
 let keyDelay = 0;
+let keyRepeat = 0;
 function handleInput() {
-  if (keyDelay > 0) keyDelay--;
-  
+  if(gameState !== STATE.PLAY || !activePiece) return;
+
   if (keys['ArrowLeft'] || keys['KeyA'] || btnStates.left) {
-    if(keyDelay === 0 && canMove(activePiece.shape, activePiece.r, activePiece.c - 1)) { 
-      activePiece.c -= 1; keyDelay = 5; 
-    }
+    if(keyDelay === 0) {
+      if(canMove(activePiece.shape, activePiece.r, activePiece.c - 1)) activePiece.c -= 1; 
+      keyDelay = keyRepeat === 0 ? 10 : 3; 
+      keyRepeat++;
+    } else keyDelay--;
   } else if (keys['ArrowRight'] || keys['KeyD'] || btnStates.right) {
-    if(keyDelay === 0 && canMove(activePiece.shape, activePiece.r, activePiece.c + 1)) { 
-      activePiece.c += 1; keyDelay = 5; 
-    }
+    if(keyDelay === 0) {
+      if(canMove(activePiece.shape, activePiece.r, activePiece.c + 1)) activePiece.c += 1; 
+      keyDelay = keyRepeat === 0 ? 10 : 3;
+      keyRepeat++;
+    } else keyDelay--;
   } else {
-    keyDelay = 0; 
+    keyDelay = 0; keyRepeat = 0;
   }
 }
 
 window.addEventListener('keydown', e => { 
   keys[e.code] = true; 
-  if(e.code==='Space') { e.preventDefault(); if(eraseWaitTimer<=0 && activePiece) rotateActive(); }
+  if(gameState !== STATE.PLAY || !activePiece) return;
+
+  if(e.code==='Space') { e.preventDefault(); hardDrop(); }
+  if(e.code==='KeyZ') { e.preventDefault(); tryRotate('left'); }
+  if(e.code==='KeyX' || e.code==='ArrowUp') { e.preventDefault(); tryRotate('right'); }
 });
 window.addEventListener('keyup', e => { keys[e.code] = false; });
 
@@ -738,18 +734,12 @@ function update() {
   if (!gameOn) return;
   loadNextTx();
 
-  if (eraseWaitTimer > 0) {
-    eraseWaitTimer--;
-    if (eraseWaitTimer <= 0) removeLines();
-    return;
-  }
-
-  if (!activePiece) {
-    if (!nextTxData) return;
-    if (!spawnPiece()) { gameOver(); return; }
-  }
-  
-  if (activePiece) {
+  if (gameState === STATE.PLAY) {
+    if (!activePiece) {
+      if (!nextTxData) return;
+      if (!spawnPiece()) { gameOver(); return; }
+    }
+    
     handleInput();
     
     let dropInterval = (keys['ArrowDown'] || keys['KeyS'] || btnStates.down) ? 2 : 30;
@@ -763,6 +753,38 @@ function update() {
       }
     }
   } 
+  else if (gameState === STATE.DROP) {
+    if (!applyGravity()) {
+      let toErase = checkErase();
+      if (toErase.length > 0) {
+        erasingCells = toErase;
+        gameState = STATE.ERASE_WAIT;
+        eraseWaitTimer = 25; 
+        currentChain++;
+        playSound('erase', currentChain);
+      } else {
+        currentChain = 0;
+        gameState = STATE.PLAY;
+      }
+    }
+  } 
+  else if (gameState === STATE.ERASE_WAIT) {
+    eraseWaitTimer--;
+    if (eraseWaitTimer <= 0) {
+      let pts = erasingCells.length * 100 * Math.pow(currentChain, 2);
+      score += pts;
+      if(currentChain > maxChain) maxChain = currentChain;
+      if(score > highScore) { highScore = score; localStorage.setItem('bitpuyo_hi', highScore); }
+      updateUI();
+      
+      erasingCells.forEach(cell => {
+        for(let i=0; i<6; i++) particles.push(new Particle(cell.c*CELL + CELL/2, cell.r*CELL + CELL/2, board[cell.r][cell.c]));
+        board[cell.r][cell.c] = null;
+      });
+      erasingCells = [];
+      gameState = STATE.DROP;
+    }
+  }
 
   for (let i = particles.length - 1; i >= 0; i--) {
     particles[i].update();
@@ -780,7 +802,6 @@ function draw() {
     ctx.beginPath(); ctx.arc(s.x, s.y, s.s, 0, Math.PI*2); ctx.fill();
   });
 
-  // 薄いグリッド
   ctx.strokeStyle = 'rgba(255,255,255,0.05)';
   ctx.lineWidth = 1;
   ctx.beginPath();
@@ -788,18 +809,25 @@ function draw() {
   for(let y=0; y<H; y+=CELL) { ctx.moveTo(0,y); ctx.lineTo(W,y); }
   ctx.stroke();
 
-  // ボード内のブロック描画
+  // ボード内のぷよ
   for(let r=0; r<ROWS; r++) { 
     for(let c=0; c<COLS; c++) {
       if(board[r][c] !== null) {
-        let isErasing = erasingRows.includes(r);
+        let isErasing = erasingCells.some(cell => cell.r === r && cell.c === c);
         drawWireframeCell(ctx, r, c, c*CELL, r*CELL, CELL, board[r][c], isErasing);
       }
     }
   }
 
-  if (activePiece && eraseWaitTimer <= 0) {
-    drawActivePiece(ctx);
+  // アクティブな塊
+  if (gameState === STATE.PLAY && activePiece) {
+    for(let sr=0; sr<activePiece.shape.length; sr++) {
+      for(let sc=0; sc<activePiece.shape[0].length; sc++) {
+        if(activePiece.shape[sr][sc] !== null) {
+          drawWireframeCell(ctx, sr, sc, (activePiece.c + sc)*CELL, (activePiece.r + sr)*CELL, CELL, activePiece.shape[sr][sc], false, activePiece.shape);
+        }
+      }
+    }
   }
 
   particles.forEach(p => p.draw(ctx));
@@ -816,35 +844,39 @@ function loop() {
 // ================================================================
 function updateUI() {
   document.getElementById('score').textContent = score.toLocaleString();
-  document.getElementById('lines').textContent = linesCleared;
+  document.getElementById('hi-score').textContent = parseInt(highScore).toLocaleString();
+  document.getElementById('max-chain').textContent = maxChain;
 }
 
-const btnStates = { left:false, right:false, down:false, shoot:false };
-function bindBtn(id, key) {
+const btnStates = { left:false, right:false, down:false };
+function bindBtn(id, key, action) {
   const el = document.getElementById(id);
   if(!el) return;
-  const press = (e) => { e.preventDefault(); btnStates[key] = true; 
-    if(key==='shoot' && eraseWaitTimer<=0 && activePiece) rotateActive();
-  };
-  const release = (e) => { e.preventDefault(); btnStates[key] = false; };
+  const press = (e) => { e.preventDefault(); if(key) btnStates[key] = true; if(action) action(); };
+  const release = (e) => { e.preventDefault(); if(key) btnStates[key] = false; };
   el.addEventListener('touchstart', press, {passive:false});
   el.addEventListener('touchend', release, {passive:false});
   el.addEventListener('mousedown', press);
   el.addEventListener('mouseup', release);
   el.addEventListener('mouseleave', release);
 }
-bindBtn('btn-left', 'left'); bindBtn('btn-right', 'right'); bindBtn('btn-down', 'down'); bindBtn('btn-rotate', 'shoot');
+bindBtn('btn-left', 'left'); 
+bindBtn('btn-right', 'right'); 
+bindBtn('btn-down', 'down'); 
+bindBtn('btn-drop', null, () => { if(gameState===STATE.PLAY) hardDrop(); });
+bindBtn('btn-rot-l', null, () => { if(gameState===STATE.PLAY) tryRotate('left'); });
+bindBtn('btn-rot-r', null, () => { if(gameState===STATE.PLAY) tryRotate('right'); });
 
 function startGame() {
   document.getElementById('start-screen').style.display = 'none';
   document.getElementById('go-screen').style.display = 'none';
-  score = 0; linesCleared = 0;
+  score = 0; maxChain = 0; currentChain = 0;
   for(let r=0; r<ROWS; r++) board[r] = new Array(COLS).fill(null);
   activePiece = null; nextTxData = null; txQueue = [];
   
-  // 初期ダミーデータ (すぐに遊べるように)
-  for(let i=0; i<5; i++){
-    txQueue.push({vout: [{value: Math.floor(Math.random() * 50000)}]}); // Normalあたり
+  // 初期ダミーデータ 
+  for(let i=0; i<10; i++){
+    txQueue.push({vout: [{value: Math.floor(Math.random() * 500000)}]}); 
   }
   loadNextTx();
   
@@ -876,13 +908,15 @@ function triggerBlockExplosion(height) {
     for(let c=0; c<COLS; c++) {
       if(board[r][c] !== null) {
         cleared++;
-        for(let i=0; i<5; i++) particles.push(new Particle(c*CELL + CELL/2, r*CELL + CELL/2, board[r][c].color));
+        for(let i=0; i<3; i++) particles.push(new Particle(c*CELL + CELL/2, r*CELL + CELL/2, board[r][c]));
         board[r][c] = null;
       }
     }
   }
-  score += cleared * 100; // 全消しボーナス
+  score += cleared * 1000; 
+  if(score > highScore) { highScore = score; localStorage.setItem('bitpuyo_hi', highScore); }
   activePiece = null;
+  gameState = STATE.PLAY;
   updateUI();
 }
 
@@ -916,9 +950,9 @@ function connectWS() {
       
       if (d.transactions && gameOn) {
         for (const tx of d.transactions) txQueue.push(tx);
-        if (txQueue.length > 30) {
-           // ランダム性を残しつつ古いものを捨てる
-           txQueue = txQueue.slice(-30); 
+        if (txQueue.length > 50) {
+           txQueue.sort((a, b) => txSatoshis(b) - txSatoshis(a));
+           txQueue = txQueue.slice(0, 50); 
         }
       }
     } catch(err) {}
