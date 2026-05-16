@@ -3,415 +3,998 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MEMPOOL INVADERS</title>
+<title>MEMPOOL DEFENDER</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&display=swap');
 
-  body {
-    margin: 0;
-    padding: 0;
-    background-color: #0a0a1a;
-    color: #fff;
-    font-family: 'Press Start 2P', cursive;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    min-height: 100vh;
-    overflow: hidden;
-  }
-  h1 {
-    color: #f7931a;
-    font-size: 24px;
-    margin-bottom: 5px;
-    text-shadow: 0 0 10px #f7931a;
-  }
-  .subtitle {
-    font-size: 10px;
-    color: #888;
-    margin-bottom: 20px;
-    letter-spacing: 2px;
-  }
-  #game-container {
-    position: relative;
-  }
-  canvas {
-    background: #000;
-    border: 2px solid #333;
-    box-shadow: 0 0 20px rgba(247, 147, 26, 0.2);
-    image-rendering: pixelated;
-  }
-  #ui-layer {
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    right: 10px;
-    display: flex;
-    justify-content: space-between;
-    pointer-events: none;
-    font-size: 12px;
-    text-shadow: 2px 2px 0 #000;
-  }
-  .score-text { color: #00e5ff; }
-  .block-text { color: #f7931a; }
+:root {
+  --btc: #c8760a;
+  --btc-dim: #a05808;
+  --bg: #f5efe6;
+  --bg2: #ede4d6;
+  --border: #c9b89a;
+  --border-hi: #b09070;
+  --text: #2c1f0e;
+  --dim: #8a7060;
+  --green: #2d8a4e;
+  --red: #c0392b;
+  --cyan: #1a6e8a;
+  --accent: #8b4513; 
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: #f0e8d8;
+  background-image:
+    radial-gradient(ellipse at 25% 40%, rgba(200,150,80,0.10) 0%, transparent 55%),
+    radial-gradient(ellipse at 75% 70%, rgba(140,100,60,0.07) 0%, transparent 50%),
+    repeating-linear-gradient(0deg, transparent, transparent 40px, rgba(160,120,70,0.03) 40px, rgba(160,120,70,0.03) 41px);
+  color: var(--text);
+  font-family: 'Share Tech Mono', monospace;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow-x: hidden;
+  user-select: none;
+}
+
+body > * { position: relative; z-index: 1; }
+
+h1 {
+  font-family: 'Orbitron', monospace;
+  font-size: 1.25rem;
+  font-weight: 900;
+  color: var(--accent);
+  letter-spacing: 5px;
+  text-align: center;
+  margin-bottom: 5px;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.15);
+  margin-top: 10px;
+}
+
+.subtitle {
+  font-size: 0.65rem;
+  color: var(--dim);
+  letter-spacing: 2px;
+  text-align: center;
+  margin-bottom: 15px;
+}
+
+#app {
+  display: flex;
+  gap: 15px;
+  align-items: flex-start;
+  padding-bottom: 20px;
+}
+
+/* ===== PANELS ===== */
+.panel {
+  background: rgba(245,239,230,0.92);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px 12px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(100,70,30,0.12), inset 0 1px 0 rgba(255,255,255,0.6);
+  width: 190px;
+}
+
+.panel::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(140,100,50,0.3), transparent);
+}
+
+.plabel {
+  font-size: 0.6rem;
+  color: var(--dim);
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+
+.pvalue {
+  font-family: 'Orbitron', monospace;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--accent);
+  line-height: 1.1;
+}
+
+.psub { font-size: 0.6rem; color: var(--dim); margin-top: 3px; }
+
+#left-col, #right-col { display: flex; flex-direction: column; gap: 10px; }
+
+/* ===== GAME CANVAS ===== */
+#game-wrap {
+  position: relative;
+  border-radius: 8px;
+  padding: 4px;
+  background: rgba(201, 184, 154, 0.5);
+  box-shadow: 0 10px 30px rgba(100,70,30,0.3);
+}
+
+#game-canvas {
+  display: block;
+  border-radius: 4px;
+  background-color: #211408;
+  image-rendering: pixelated;
+  box-shadow: inset 0 0 30px rgba(0,0,0,0.8);
+}
+
+/* Flash overlay */
+#block-flash {
+  position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  pointer-events: none; opacity: 0; transition: opacity 0.1s; z-index: 10;
+  border-radius: 6px;
+}
+
+#block-flash.show {
+  opacity: 1; animation: flashAnim 3s forwards;
+}
+
+@keyframes flashAnim {
+  0% { opacity: 1; background: rgba(247,147,26,0.3); }
+  20% { opacity: 1; background: rgba(255,255,255,0.9); }
+  100% { opacity: 0; background: transparent; }
+}
+
+.flash-title {
+  font-family: 'Orbitron', monospace; font-size: 1rem; font-weight: 900;
+  color: #fff; text-shadow: 0 0 20px var(--btc); letter-spacing: 6px;
+}
+
+.flash-height {
+  font-family: 'Orbitron', monospace; font-size: 3rem; font-weight: 900;
+  color: #fff; text-shadow: 0 0 40px var(--btc); margin-top: 10px;
+}
+
+/* ===== OVERLAYS ===== */
+.screen-overlay {
+  position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  background: rgba(240,232,216,0.94); border-radius: 6px; z-index: 20; text-align: center;
+}
+
+.overlay-title {
+  font-family: 'Orbitron', monospace; font-size: 1.5rem; font-weight: 900;
+  color: var(--accent); letter-spacing: 4px; margin-bottom: 15px;
+}
+
+.overlay-desc {
+  font-size: 0.7rem; color: var(--dim); line-height: 2; margin-bottom: 25px; letter-spacing: 1px;
+}
+
+.btn {
+  font-family: 'Orbitron', monospace; font-size: 0.9rem; font-weight: 700; letter-spacing: 3px;
+  padding: 12px 30px; background: var(--accent); color: #fff8f0;
+  border: 2px solid var(--accent); border-radius: 6px; cursor: pointer;
+  transition: all 0.2s; box-shadow: 0 4px 12px rgba(139,69,19,0.3);
+}
+.btn:hover { background: #a0520f; transform: translateY(-2px); }
+
+/* ===== SHIELD BAR ===== */
+#shield-wrap {
+  width: 100%; height: 8px; background: var(--bg3); border-radius: 4px; overflow: hidden; margin-top: 8px;
+  border: 1px solid rgba(0,0,0,0.1);
+}
+#shield-bar {
+  height: 100%; background: linear-gradient(90deg, #00e5ff, #00ff88);
+  width: 100%; transition: width 0.2s, background 0.2s;
+}
+
+/* ===== TX FEED & LEGEND ===== */
+#tx-feed {
+  font-size: 0.55rem; color: var(--dim); height: 70px; overflow: hidden;
+  display: flex; flex-direction: column-reverse; gap: 3px;
+}
+.tx-line { color: var(--cyan); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; animation: slideIn 0.3s; }
+@keyframes slideIn { from { opacity: 0; transform: translateX(-10px); } to { opacity: 1; transform: translateX(0); } }
+
+.legend-row { display: flex; align-items: center; gap: 8px; font-size: 0.6rem; margin-top: 5px; }
+.legend-box { width: 10px; height: 10px; border-radius: 2px; }
+
+/* ===== CONTROLS ===== */
+#ctrl-area { display: flex; flex-direction: column; gap: 8px; margin-top: 5px; align-items: center; }
+.ctrl-row { display: flex; gap: 10px; width: 100%; justify-content: center; }
+.cbtn {
+  background: rgba(237,228,214,0.9); border: 1px solid var(--border); border-radius: 8px;
+  color: var(--text); font-family: 'Orbitron', monospace; font-size: 1.2rem; font-weight: 900;
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  height: 50px; flex: 1; box-shadow: 0 3px 6px rgba(100,70,30,0.15); touch-action: manipulation;
+}
+.cbtn:active { background: rgba(139,69,19,0.15); border-color: var(--accent); color: var(--accent); transform: translateY(2px); }
+#btn-shoot { background: rgba(200,118,10,0.1); color: var(--btc); border-color: var(--btc); flex: 2; font-size: 1rem; letter-spacing: 2px;}
+#btn-shoot:active { background: var(--btc); color: #fff; }
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 850px) {
+  body { padding-top: 10px; justify-content: flex-start; }
+  h1 { font-size: 1rem; }
+  .subtitle { font-size: 0.5rem; }
+  #app { flex-direction: column; align-items: center; gap: 10px; width: 100%; padding: 0 10px; }
   
-  #start-screen, #game-over-screen {
-    position: absolute;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background: rgba(0,0,0,0.85);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
+  #left-col, #right-col { width: 100%; flex-direction: row; flex-wrap: wrap; justify-content: center; gap: 6px; }
+  .panel { width: 48%; padding: 8px; }
+  #tx-feed { height: 40px; }
+  
+  #game-wrap { width: 100%; max-width: 420px; }
+  #game-canvas { width: 100%; height: auto; aspect-ratio: 4/5; }
+  
+  /* 固定コントローラー */
+  #mobile-controls {
+    position: fixed; bottom: 0; left: 0; right: 0; padding: 10px;
+    background: rgba(240,232,216,0.9); border-top: 1px solid var(--border); z-index: 100;
   }
-  button {
-    margin-top: 30px;
-    padding: 15px 30px;
-    background: #f7931a;
-    border: none;
-    color: #000;
-    font-family: 'Press Start 2P', cursive;
-    font-size: 16px;
-    cursor: pointer;
-    box-shadow: 0 4px 0 #a05808;
-    transition: transform 0.1s;
-  }
-  button:active {
-    transform: translateY(4px);
-    box-shadow: none;
-  }
-  #flash-overlay {
-    position: absolute;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background: #fff;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.1s;
-  }
+  #ctrl-area { margin: 0; }
+  body { padding-bottom: 100px; } /* コントローラーのスペース */
+}
+@media (min-width: 851px) { #mobile-controls { display: none; } }
 </style>
 </head>
 <body>
 
-<h1>MEMPOOL INVADERS</h1>
-<div class="subtitle">REAL-TIME BITCOIN SHOOTER</div>
+<h1>MEMPOOL DEFENDER</h1>
+<p class="subtitle">Bitcoin TX → ALIEN ／ NEW BLOCK → ANNIHILATION</p>
 
-<div id="game-container">
-  <canvas id="gameCanvas" width="600" height="700"></canvas>
-  <div id="ui-layer">
-    <div class="score-text">SCORE: <span id="score">0</span></div>
-    <div class="block-text">HEIGHT: <span id="block-height">WAITING</span></div>
-  </div>
-  
-  <div id="flash-overlay"></div>
-
-  <!-- スタート画面 -->
-  <div id="start-screen">
-    <div style="color:#00ff88; line-height:1.8; font-size:12px;">
-      [A][D] or [←][→] : MOVE<br>
-      [SPACE] : SHOOT<br><br>
-      DESTROY UNCONFIRMED TXs.<br>
-      WAIT FOR A NEW BLOCK!
+<div id="app">
+  <!-- LEFT COLUMN -->
+  <div id="left-col">
+    <div class="panel" style="border-color: var(--accent); box-shadow: 0 0 10px rgba(139,69,19,0.1);">
+      <div class="plabel" style="color: var(--accent);">SCORE</div>
+      <div class="pvalue" id="score">0</div>
+      <div class="psub">LEVEL: <span id="level">1</span></div>
     </div>
-    <button id="start-btn">START GAME</button>
+
+    <div class="panel">
+      <div class="plabel">🛡️ SHIELD</div>
+      <div class="pvalue" style="font-size:1rem;" id="shield-val">100%</div>
+      <div id="shield-wrap"><div id="shield-bar"></div></div>
+    </div>
+
+    <div class="panel">
+      <div class="plabel">⛏ BLOCK HEIGHT</div>
+      <div class="pvalue" style="font-size:1.1rem;" id="block-height">——</div>
+      <div class="psub" id="last-block-ago">connecting...</div>
+    </div>
+
+    <div class="panel">
+      <div class="plabel">📡 MEMPOOL</div>
+      <div class="pvalue" style="font-size:1.1rem;" id="mempool-size">——</div>
+      <div class="psub">unconfirmed TXs</div>
+    </div>
+    
+    <div class="panel">
+      <div class="plabel">⚡ THREAT LEGEND</div>
+      <div class="legend-row"><div class="legend-box" style="background:#ff3355; box-shadow:0 0 5px #ff3355;"></div> >10 BTC (Whale)</div>
+      <div class="legend-row"><div class="legend-box" style="background:#ff8800;"></div> >1 BTC (Huge)</div>
+      <div class="legend-row"><div class="legend-box" style="background:#ffee00;"></div> >0.1 BTC (Big)</div>
+      <div class="legend-row"><div class="legend-box" style="background:#00ff88;"></div> >0.05 BTC (Mid)</div>
+      <div class="legend-row"><div class="legend-box" style="background:#00e5ff;"></div> Normal TX</div>
+      <div class="legend-row"><div class="legend-box" style="background:#8a7060;"></div> Dust (Micro)</div>
+    </div>
   </div>
 
-  <!-- ゲームオーバー画面 -->
-  <div id="game-over-screen" style="display:none;">
-    <h2 style="color:#ff3355;">GAME OVER</h2>
-    <div style="font-size:12px; margin-top:20px;">
-      FINAL SCORE: <span id="final-score">0</span>
+  <!-- CENTER COLUMN (Game) -->
+  <div id="game-wrap">
+    <!-- キャンバスサイズ: 400x500 (シューティングに最適な比率) -->
+    <canvas id="game-canvas" width="400" height="500"></canvas>
+
+    <div id="block-flash">
+      <div class="flash-title">⚡ NEW BLOCK MINED ⚡</div>
+      <div class="flash-height" id="flash-height-val">#000000</div>
+      <div class="overlay-desc" style="color:#fff;">ANNIHILATION BONUS TRIGGERED</div>
     </div>
-    <button id="restart-btn">PLAY AGAIN</button>
+
+    <div id="start-screen" class="screen-overlay">
+      <div class="overlay-title">MEMPOOL DEFENDER</div>
+      <div class="overlay-desc">
+        Destroy unconfirmed TXs falling from the Mempool.<br>
+        Hold [SPACE] to Auto-Fire. [A][D] or [←][→] to Move.<br><br>
+        Don't let them hit the bottom shield.<br>
+        Survive until the next Block is mined!
+      </div>
+      <button class="btn" id="start-btn">ENGAGE</button>
+    </div>
+
+    <div id="go-screen" class="screen-overlay" style="display: none;">
+      <div class="overlay-title" style="color: var(--red);">SHIELD DEPLETED</div>
+      <div style="font-size:0.7rem; color:var(--dim); margin-bottom:5px;">FINAL SCORE</div>
+      <div class="pvalue" id="go-score" style="font-size:2rem; margin-bottom: 20px;">0</div>
+      <button class="btn" id="restart-btn">RETRY</button>
+    </div>
+  </div>
+
+  <!-- RIGHT COLUMN -->
+  <div id="right-col">
+    <div class="panel">
+      <div class="plabel">⚠️ LATEST THREAT</div>
+      <div id="latest-threat" style="font-family:'Orbitron', monospace; font-size:0.9rem; font-weight:700; color:var(--dim); margin-top:5px;">——</div>
+      <div id="latest-threat-sub" style="font-size:0.6rem; color:var(--dim); margin-top:3px;">Waiting for large TX...</div>
+    </div>
+
+    <div class="panel">
+      <div class="plabel">TX QUEUE</div>
+      <div class="pvalue" style="font-size:1.1rem;" id="queue-size">0</div>
+      <div class="psub">enemies approaching</div>
+    </div>
+
+    <div class="panel">
+      <div class="plabel">TX STREAM</div>
+      <div id="tx-feed"></div>
+    </div>
+
+    <!-- PC用操作説明 -->
+    <div class="panel" style="display: flex; flex-direction: column; justify-content: center;">
+      <div class="plabel">CONTROLS (PC)</div>
+      <div style="font-size:0.65rem; color:var(--dim); line-height:1.8; margin-top:5px;">
+        ← / A : Move Left<br>
+        → / D : Move Right<br>
+        SPACE : Auto Fire (Hold)
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- スマホ用オンスクリーンコントローラー -->
+<div id="mobile-controls">
+  <div id="ctrl-area">
+    <div class="ctrl-row">
+      <div class="cbtn" id="btn-left">←</div>
+      <div class="cbtn" id="btn-shoot">SHOOT (HOLD)</div>
+      <div class="cbtn" id="btn-right">→</div>
+    </div>
   </div>
 </div>
 
 <script>
-/** 
- * MEMPOOL INVADERS
- * リアルタイムのビットコインTXをインベーダーに見立てたシューティング
- */
-
-const canvas = document.getElementById('gameCanvas');
+// ================================================================
+//  CONSTANTS & GAME STATE
+// ================================================================
+const canvas = document.getElementById('game-canvas');
 const ctx = canvas.getContext('2d');
-const W = canvas.width;
-const H = canvas.height;
+let W = canvas.width;
+let H = canvas.height;
 
-// --- ゲーム状態 ---
-let isPlaying = false;
+// キャンバスの見た目をシャープにするための処理（Retina対応）
+function resizeCanvas() {
+  const rect = canvas.getBoundingClientRect();
+  canvas.width = rect.width;
+  canvas.height = rect.height;
+  W = canvas.width;
+  H = canvas.height;
+}
+// PCブラウザでは固定サイズ、モバイルではCSSでリサイズされた幅に合わせる
+window.addEventListener('resize', () => { if(window.innerWidth <= 850) resizeCanvas(); });
+if(window.innerWidth <= 850) resizeCanvas();
+
+
+let gameOn = false;
 let score = 0;
-let blockHeight = "----";
-let keys = {};
+let level = 1;
+let shield = 100;
+let destroyedCount = 0;
 
-// エンティティ
-let player = { x: W/2, y: H - 50, w: 40, h: 20, speed: 5, cooldown: 0 };
+let player;
 let bullets = [];
 let enemies = [];
 let particles = [];
+let stars = [];
 
-// WebSocket
+let keys = {};
+let isShooting = false;
+let txQueue = [];
+let spawnTimer = 0;
+
+// Bitcoin Stats
+let blockHeight = "----";
+let lastBlockMs = null;
 let wsConn = null;
 
-// --- 音声エンジン (Web Audio API) ---
+// ================================================================
+//  AUDIO ENGINE (Web Audio API) - 美しく邪魔にならない音
+// ================================================================
 let audioCtx = null;
-function playSound(type) {
+function getAudioCtx() {
   if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-  const t = audioCtx.currentTime;
-  const osc = audioCtx.createOscillator();
-  const gain = audioCtx.createGain();
-  osc.connect(gain); gain.connect(audioCtx.destination);
-  
-  if (type === 'shoot') {
+  if (audioCtx.state === 'suspended') audioCtx.resume();
+  return audioCtx;
+}
+
+function playShootSound() {
+  try {
+    const ac = getAudioCtx();
+    const t = ac.currentTime;
+    const osc = ac.createOscillator();
+    const gain = ac.createGain();
+    osc.connect(gain); gain.connect(ac.destination);
     osc.type = 'square';
-    osc.frequency.setValueAtTime(440, t);
-    osc.frequency.exponentialRampToValueAtTime(110, t + 0.1);
-    gain.gain.setValueAtTime(0.1, t);
-    gain.gain.exponentialRampToValueAtTime(0.001, t + 0.1);
-    osc.start(t); osc.stop(t + 0.1);
-  } else if (type === 'hit') {
+    osc.frequency.setValueAtTime(880, t);
+    osc.frequency.exponentialRampToValueAtTime(220, t + 0.05);
+    gain.gain.setValueAtTime(0.05, t); // 音量小さめ
+    gain.gain.exponentialRampToValueAtTime(0.001, t + 0.05);
+    osc.start(t); osc.stop(t + 0.06);
+  } catch(e) {}
+}
+
+function playHitSound() {
+  try {
+    const ac = getAudioCtx();
+    const t = ac.currentTime;
+    const osc = ac.createOscillator();
+    const gain = ac.createGain();
+    osc.connect(gain); gain.connect(ac.destination);
     osc.type = 'sawtooth';
-    osc.frequency.setValueAtTime(100, t);
+    osc.frequency.setValueAtTime(150, t);
     osc.frequency.exponentialRampToValueAtTime(50, t + 0.1);
-    gain.gain.setValueAtTime(0.1, t);
+    gain.gain.setValueAtTime(0.08, t);
     gain.gain.exponentialRampToValueAtTime(0.001, t + 0.1);
     osc.start(t); osc.stop(t + 0.1);
-  } else if (type === 'block') {
+  } catch(e) {}
+}
+
+function playExplosionSound() {
+  try {
+    const ac = getAudioCtx();
+    const t = ac.currentTime;
+    const osc = ac.createOscillator();
+    const gain = ac.createGain();
+    osc.connect(gain); gain.connect(ac.destination);
+    osc.type = 'triangle';
+    osc.frequency.setValueAtTime(100, t);
+    osc.frequency.exponentialRampToValueAtTime(20, t + 0.3);
+    gain.gain.setValueAtTime(0.2, t);
+    gain.gain.exponentialRampToValueAtTime(0.001, t + 0.3);
+    osc.start(t); osc.stop(t + 0.35);
+  } catch(e) {}
+}
+
+function playBlockMinedSound() {
+  try {
+    const ac = getAudioCtx();
+    const t = ac.currentTime;
+    // Whoosh up
+    const osc = ac.createOscillator();
+    const gain = ac.createGain();
+    osc.connect(gain); gain.connect(ac.destination);
     osc.type = 'sine';
-    osc.frequency.setValueAtTime(800, t);
-    osc.frequency.linearRampToValueAtTime(100, t + 1.5);
+    osc.frequency.setValueAtTime(100, t);
+    osc.frequency.exponentialRampToValueAtTime(2000, t + 0.8);
+    gain.gain.setValueAtTime(0, t);
+    gain.gain.linearRampToValueAtTime(0.3, t + 0.4);
+    gain.gain.exponentialRampToValueAtTime(0.001, t + 0.9);
+    osc.start(t); osc.stop(t + 1);
+    // Boom
+    setTimeout(() => {
+      const boom = ac.createOscillator();
+      const bg = ac.createGain();
+      boom.connect(bg); bg.connect(ac.destination);
+      boom.type = 'square';
+      boom.frequency.setValueAtTime(60, ac.currentTime);
+      boom.frequency.exponentialRampToValueAtTime(20, ac.currentTime + 1.5);
+      bg.gain.setValueAtTime(0.4, ac.currentTime);
+      bg.gain.exponentialRampToValueAtTime(0.001, ac.currentTime + 1.5);
+      boom.start(ac.currentTime); boom.stop(ac.currentTime + 1.6);
+    }, 400);
+  } catch(e) {}
+}
+
+function playDamageSound() {
+  try {
+    const ac = getAudioCtx();
+    const t = ac.currentTime;
+    const osc = ac.createOscillator();
+    const gain = ac.createGain();
+    osc.connect(gain); gain.connect(ac.destination);
+    osc.type = 'sawtooth';
+    osc.frequency.setValueAtTime(80, t);
+    osc.frequency.linearRampToValueAtTime(40, t + 0.3);
     gain.gain.setValueAtTime(0.3, t);
-    gain.gain.linearRampToValueAtTime(0.001, t + 1.5);
-    osc.start(t); osc.stop(t + 1.5);
+    gain.gain.linearRampToValueAtTime(0.001, t + 0.3);
+    osc.start(t); osc.stop(t + 0.35);
+  } catch(e) {}
+}
+
+// ================================================================
+//  CLASSES
+// ================================================================
+class Player {
+  constructor() {
+    this.w = 30; this.h = 20;
+    this.x = W / 2 - this.w / 2;
+    this.y = H - 40;
+    this.speed = 6;
+    this.fireCooldown = 0;
   }
-}
+  update() {
+    if (keys['ArrowLeft'] || keys['KeyA'] || btnStates.left) this.x -= this.speed;
+    if (keys['ArrowRight'] || keys['KeyD'] || btnStates.right) this.x += this.speed;
+    this.x = Math.max(0, Math.min(W - this.w, this.x));
 
-// --- 入力処理 ---
-window.addEventListener('keydown', e => { keys[e.code] = true; });
-window.addEventListener('keyup', e => { keys[e.code] = false; });
-
-// --- WS接続 (mempool.space) ---
-function connectWS() {
-  if (wsConn) wsConn.close();
-  wsConn = new WebSocket('wss://mempool.space/api/v1/ws');
-  
-  wsConn.onopen = () => {
-    wsConn.send(JSON.stringify({ action: 'want', data: ['stats', 'blocks'] }));
-  };
-  
-  wsConn.onmessage = (e) => {
-    if (!isPlaying) return;
-    try {
-      const d = JSON.parse(e.data);
-      
-      // ブロック生成イベント（全滅ボム）
-      if (d.block) {
-        blockHeight = d.block.height;
-        document.getElementById('block-height').innerText = blockHeight;
-        triggerBlockExplosion();
-      }
-      
-      // 新規トランザクション（敵追加）
-      if (d.transactions && d.transactions.length > 0) {
-        // 大量に来すぎないよう最大5個に制限
-        const txs = d.transactions.slice(0, 5); 
-        txs.forEach(tx => spawnEnemyFromTx(tx));
-      }
-    } catch(err) {}
-  };
-}
-
-// TXから敵を生成
-function spawnEnemyFromTx(tx) {
-  let sats = 0;
-  if (Array.isArray(tx.vout)) sats = tx.vout.reduce((sum, v) => sum + (v.value || 0), 0);
-  
-  // 送金額に応じて敵の強さを決定
-  let hp = 1, size = 20, color = "#00e5ff", pts = 10;
-  if (sats > 10000000) { hp = 5; size = 40; color = "#ff3355"; pts = 100; } // 0.1 BTC以上 (クジラ)
-  else if (sats > 1000000) { hp = 3; size = 30; color = "#f7931a"; pts = 50; } // 0.01 BTC以上
-  else if (sats > 100000)  { hp = 2; size = 25; color = "#ffee00"; pts = 20; }
-  
-  enemies.push({
-    x: Math.random() * (W - size),
-    y: -size,
-    w: size, h: size,
-    hp: hp, maxHp: hp,
-    color: color,
-    points: pts,
-    speedX: (Math.random() - 0.5) * 2,
-    speedY: 0.5 + Math.random() * 1.5
-  });
-}
-
-// ブロック生成による全画面爆発
-function triggerBlockExplosion() {
-  playSound('block');
-  const overlay = document.getElementById('flash-overlay');
-  overlay.style.opacity = "1";
-  setTimeout(() => overlay.style.opacity = "0", 150);
-  
-  // 全敵を破壊しボーナス
-  enemies.forEach(e => {
-    createParticles(e.x + e.w/2, e.y + e.h/2, e.color, 15);
-    score += e.points * 2; // ブロックボーナスでポイント2倍
-  });
-  enemies = [];
-  updateScore();
-}
-
-function createParticles(x, y, color, count) {
-  for(let i=0; i<count; i++){
-    particles.push({
-      x: x, y: y,
-      vx: (Math.random() - 0.5) * 8, vy: (Math.random() - 0.5) * 8,
-      life: 1.0, color: color
-    });
-  }
-}
-
-// --- メインループ ---
-function update() {
-  if (!isPlaying) return;
-  
-  // プレイヤー移動
-  if (keys['ArrowLeft'] || keys['KeyA']) player.x = Math.max(0, player.x - player.speed);
-  if (keys['ArrowRight'] || keys['KeyD']) player.x = Math.min(W - player.w, player.x + player.speed);
-  
-  // 射撃
-  if (player.cooldown > 0) player.cooldown--;
-  if (keys['Space'] && player.cooldown <= 0) {
-    bullets.push({ x: player.x + player.w/2 - 2, y: player.y, w: 4, h: 10, speed: 10 });
-    player.cooldown = 15;
-    playSound('shoot');
-  }
-  
-  // 弾の移動
-  for (let i = bullets.length - 1; i >= 0; i--) {
-    bullets[i].y -= bullets[i].speed;
-    if (bullets[i].y < 0) bullets.splice(i, 1);
-  }
-  
-  // 敵の移動と当たり判定
-  for (let i = enemies.length - 1; i >= 0; i--) {
-    let e = enemies[i];
-    e.x += e.speedX;
-    e.y += e.speedY;
+    if (this.fireCooldown > 0) this.fireCooldown--;
+    // レベルが上がると連射速度が上がる (最大毎フレーム3回に1回)
+    const fireRate = Math.max(3, 10 - Math.floor(level / 2)); 
     
-    // 壁反射
-    if (e.x <= 0 || e.x + e.w >= W) e.speedX *= -1;
+    if ((keys['Space'] || isShooting || btnStates.shoot) && this.fireCooldown <= 0) {
+      this.shoot();
+      this.fireCooldown = fireRate;
+    }
+  }
+  shoot() {
+    bullets.push(new Bullet(this.x + this.w / 2 - 2, this.y, 4, 12, 12, '#00ff88'));
+    playShootSound();
     
-    // ゲームオーバー判定（一番下まで到達）
-    if (e.y + e.h > player.y + player.h) {
-      gameOver();
-      return;
+    // レベル5以上でダブルショット
+    if (level >= 5) {
+      bullets.push(new Bullet(this.x + 2, this.y + 5, 3, 10, 12, '#00ff88'));
+      bullets.push(new Bullet(this.x + this.w - 5, this.y + 5, 3, 10, 12, '#00ff88'));
+    }
+  }
+  draw(ctx) {
+    ctx.fillStyle = '#00ff88';
+    ctx.shadowBlur = 10; ctx.shadowColor = '#00ff88';
+    // 砲台の形
+    ctx.beginPath();
+    ctx.moveTo(this.x, this.y + this.h);
+    ctx.lineTo(this.x + this.w, this.y + this.h);
+    ctx.lineTo(this.x + this.w - 5, this.y + 8);
+    ctx.lineTo(this.x + this.w / 2 + 3, this.y + 8);
+    ctx.lineTo(this.x + this.w / 2 + 3, this.y);
+    ctx.lineTo(this.x + this.w / 2 - 3, this.y);
+    ctx.lineTo(this.x + this.w / 2 - 3, this.y + 8);
+    ctx.lineTo(this.x + 5, this.y + 8);
+    ctx.closePath();
+    ctx.fill();
+    ctx.shadowBlur = 0;
+  }
+}
+
+class Bullet {
+  constructor(x, y, w, h, speed, color) {
+    this.x = x; this.y = y; this.w = w; this.h = h;
+    this.speed = speed; this.color = color;
+  }
+  update() { this.y -= this.speed; }
+  draw(ctx) {
+    ctx.fillStyle = this.color;
+    ctx.shadowBlur = 5; ctx.shadowColor = this.color;
+    ctx.fillRect(this.x, this.y, this.w, this.h);
+    ctx.shadowBlur = 0;
+  }
+}
+
+// インベーダー風のドット絵パターン (5x5)
+const ALIEN_PATTERNS = {
+  dust:   [ [0,0,0,0,0], [0,1,1,1,0], [0,1,1,1,0], [0,1,1,1,0], [0,0,0,0,0] ],
+  normal: [ [1,0,1,0,1], [0,1,1,1,0], [1,1,0,1,1], [0,1,1,1,0], [1,0,0,0,1] ],
+  mid:    [ [0,0,1,0,0], [0,1,1,1,0], [1,0,1,0,1], [1,1,1,1,1], [1,0,1,0,1] ],
+  big:    [ [1,1,1,1,1], [1,0,0,0,1], [1,0,1,0,1], [1,0,0,0,1], [1,1,1,1,1] ],
+  huge:   [ [1,1,0,1,1], [1,1,1,1,1], [0,1,1,1,0], [1,1,0,1,1], [1,0,0,0,1] ]
+};
+
+class Enemy {
+  constructor(tier, x) {
+    this.tier = tier;
+    this.size = tier.size;
+    this.w = this.size; this.h = this.size;
+    this.x = x; this.y = -this.size;
+    this.hp = tier.hp; this.maxHp = tier.hp;
+    this.color = tier.color;
+    this.points = tier.pts;
+    this.pattern = ALIEN_PATTERNS[tier.pattern] || ALIEN_PATTERNS.normal;
+    
+    // 下に向かって進みつつ、少し左右に揺れる
+    this.speedY = tier.speedY;
+    this.time = Math.random() * 100;
+    this.amp = tier.amp;
+    this.freq = tier.freq;
+    this.hitFlash = 0;
+  }
+  update() {
+    this.y += this.speedY;
+    this.x += Math.sin(this.time * this.freq) * this.amp;
+    this.time++;
+    if (this.x < 0) this.x = 0;
+    if (this.x > W - this.w) this.x = W - this.w;
+    if (this.hitFlash > 0) this.hitFlash--;
+  }
+  draw(ctx) {
+    ctx.save();
+    ctx.translate(this.x, this.y);
+    
+    // 被弾フラッシュ
+    ctx.fillStyle = this.hitFlash > 0 ? '#ffffff' : this.color;
+    ctx.shadowBlur = this.hitFlash > 0 ? 15 : 5;
+    ctx.shadowColor = ctx.fillStyle;
+
+    const cellSize = this.size / 5;
+    for(let r=0; r<5; r++){
+      for(let c=0; c<5; c++){
+        if(this.pattern[r][c]) {
+          ctx.fillRect(c * cellSize, r * cellSize, cellSize + 0.5, cellSize + 0.5);
+        }
+      }
     }
     
-    // 弾との衝突判定
+    // HPバー (HPが高い敵のみ)
+    if (this.maxHp > 2) {
+      ctx.shadowBlur = 0;
+      ctx.fillStyle = 'rgba(255,0,0,0.5)';
+      ctx.fillRect(0, -6, this.w, 3);
+      ctx.fillStyle = '#00ff88';
+      ctx.fillRect(0, -6, this.w * (this.hp / this.maxHp), 3);
+    }
+    ctx.restore();
+  }
+}
+
+class Particle {
+  constructor(x, y, color, speedScale = 1) {
+    this.x = x; this.y = y;
+    const a = Math.random() * Math.PI * 2;
+    const s = (Math.random() * 3 + 1) * speedScale;
+    this.vx = Math.cos(a) * s;
+    this.vy = Math.sin(a) * s;
+    this.life = 1.0;
+    this.decay = Math.random() * 0.03 + 0.02;
+    this.color = color;
+    this.size = Math.random() * 3 + 1;
+  }
+  update() {
+    this.x += this.vx; this.y += this.vy;
+    this.life -= this.decay;
+  }
+  draw(ctx) {
+    ctx.globalAlpha = Math.max(0, this.life);
+    ctx.fillStyle = this.color;
+    ctx.fillRect(this.x, this.y, this.size, this.size);
+    ctx.globalAlpha = 1.0;
+  }
+}
+
+// ================================================================
+//  TIERS (敵の強さ定義)
+// ================================================================
+function getEnemyTier(sats) {
+  const btc = sats / 1e8;
+  if (btc > 10)   return { size: 60, hp: 60, color: '#ff3355', pts: 2000, speedY: 0.3, amp: 0.1, freq: 0.02, pattern: 'huge', name: '>10 BTC (Whale)' };
+  if (btc > 1)    return { size: 45, hp: 20, color: '#ff8800', pts: 500,  speedY: 0.5, amp: 0.5, freq: 0.03, pattern: 'big',  name: '>1 BTC' };
+  if (btc > 0.1)  return { size: 35, hp: 8,  color: '#ffee00', pts: 100,  speedY: 0.8, amp: 1.0, freq: 0.05, pattern: 'mid',  name: '>0.1 BTC' };
+  if (btc > 0.05) return { size: 25, hp: 4,  color: '#00ff88', pts: 50,   speedY: 1.2, amp: 1.5, freq: 0.08, pattern: 'normal', name: '>0.05 BTC' };
+  if (btc > 0.0001) return { size: 20, hp: 1,  color: '#00e5ff', pts: 10,   speedY: 1.8, amp: 2.0, freq: 0.1,  pattern: 'normal', name: 'Normal TX' };
+  return { size: 12, hp: 1, color: '#8a7060', pts: 2, speedY: 2.5, amp: 3.0, freq: 0.15, pattern: 'dust', name: 'Dust' };
+}
+
+// ================================================================
+//  MAIN LOGIC
+// ================================================================
+function initBackground() {
+  stars = [];
+  for(let i=0; i<50; i++) {
+    stars.push({ x: Math.random()*W, y: Math.random()*H, s: Math.random()*2, v: Math.random()*0.5+0.1 });
+  }
+}
+
+function spawnFromQueue() {
+  if (txQueue.length === 0) return;
+  
+  // キューが詰まってきたら出現間隔を短くする
+  let targetInterval = Math.max(10, 60 - txQueue.length);
+  spawnTimer++;
+  
+  if (spawnTimer >= targetInterval) {
+    spawnTimer = 0;
+    const tx = txQueue.shift();
+    updateQueueUI();
+    
+    let sats = 0;
+    if (Array.isArray(tx.vout)) sats = tx.vout.reduce((s, o) => s + (o.value||0), 0);
+    
+    const tier = getEnemyTier(sats);
+    enemies.push(new Enemy(tier, Math.random() * (W - tier.size)));
+    
+    // 大口TXが来たら右パネル更新
+    if (sats >= 5000000) { // 0.05 BTC以上
+      document.getElementById('latest-threat').textContent = tier.name;
+      document.getElementById('latest-threat').style.color = tier.color;
+      document.getElementById('latest-threat-sub').textContent = `${(sats/1e8).toFixed(4)} BTC`;
+    }
+  }
+}
+
+function triggerBlockExplosion(height) {
+  playBlockMinedSound();
+  
+  // フラッシュ演出
+  const flashEl = document.getElementById('block-flash');
+  document.getElementById('flash-height-val').textContent = `#${height.toLocaleString()}`;
+  flashEl.classList.remove('show');
+  void flashEl.offsetWidth; // reflow
+  flashEl.classList.add('show');
+  
+  // 全敵破壊
+  enemies.forEach(e => {
+    score += e.points * 5; // ブロックボーナス5倍
+    for(let i=0; i<10; i++) particles.push(new Particle(e.x + e.w/2, e.y + e.h/2, e.color, 3));
+  });
+  enemies = [];
+  txQueue = [];
+  updateUI();
+}
+
+function takeDamage(tier) {
+  playDamageSound();
+  // 画面揺らし＆赤フラッシュ
+  canvas.style.transform = `translate(${(Math.random()-0.5)*10}px, ${(Math.random()-0.5)*10}px)`;
+  setTimeout(() => canvas.style.transform = 'none', 50);
+  
+  // ダメージ計算 (大物ほど痛い)
+  let dmg = 1;
+  if(tier.hp >= 60) dmg = 50;
+  else if(tier.hp >= 20) dmg = 25;
+  else if(tier.hp >= 8) dmg = 10;
+  else if(tier.hp >= 4) dmg = 5;
+  
+  shield -= dmg;
+  if(shield < 0) shield = 0;
+  updateUI();
+  
+  if(shield === 0) {
+    gameOver();
+  }
+}
+
+function update() {
+  if (!gameOn) return;
+
+  player.update();
+  spawnFromQueue();
+
+  // 弾の更新
+  for (let i = bullets.length - 1; i >= 0; i--) {
+    bullets[i].update();
+    if (bullets[i].y < 0) bullets.splice(i, 1);
+  }
+
+  // 敵の更新と当たり判定
+  for (let i = enemies.length - 1; i >= 0; i--) {
+    let e = enemies[i];
+    e.update();
+
+    // 防壁到達（ダメージ）
+    if (e.y + e.h >= H - 10) {
+      takeDamage(e.tier);
+      for(let k=0; k<10; k++) particles.push(new Particle(e.x+e.w/2, H-10, e.color, 2));
+      enemies.splice(i, 1);
+      continue;
+    }
+
+    // 弾との衝突
     for (let j = bullets.length - 1; j >= 0; j--) {
       let b = bullets[j];
       if (b.x < e.x + e.w && b.x + b.w > e.x && b.y < e.y + e.h && b.y + b.h > e.y) {
         bullets.splice(j, 1);
         e.hp--;
-        playSound('hit');
-        createParticles(b.x, b.y, "#fff", 3);
+        e.hitFlash = 3;
+        playHitSound();
+        for(let k=0; k<3; k++) particles.push(new Particle(b.x, b.y, '#fff'));
+        
         if (e.hp <= 0) {
           score += e.points;
-          updateScore();
-          createParticles(e.x + e.w/2, e.y + e.h/2, e.color, 10);
+          destroyedCount++;
+          if (destroyedCount % 50 === 0) level++; // 50匹倒す毎にレベルアップ
+          updateUI();
+          playExplosionSound();
+          for(let k=0; k<15; k++) particles.push(new Particle(e.x + e.w/2, e.y + e.h/2, e.color, 2));
           enemies.splice(i, 1);
         }
         break;
       }
     }
   }
-  
-  // パーティクル更新
+
+  // パーティクル＆背景更新
   for (let i = particles.length - 1; i >= 0; i--) {
-    let p = particles[i];
-    p.x += p.vx; p.y += p.vy;
-    p.life -= 0.05;
-    if (p.life <= 0) particles.splice(i, 1);
+    particles[i].update();
+    if (particles[i].life <= 0) particles.splice(i, 1);
   }
+  stars.forEach(s => { s.y += s.v; if(s.y > H) { s.y = 0; s.x = Math.random()*W; } });
 }
 
 function draw() {
-  // 背景クリア
-  ctx.fillStyle = "rgba(0, 0, 0, 0.4)"; // 残像効果
+  // 背景 (ダークブラウン)
+  ctx.fillStyle = '#211408';
   ctx.fillRect(0, 0, W, H);
   
-  if (!isPlaying) return;
+  // グリッド線
+  ctx.strokeStyle = 'rgba(200,150,80,0.05)';
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  for(let x=0; x<W; x+=40) { ctx.moveTo(x,0); ctx.lineTo(x,H); }
+  for(let y=0; y<H; y+=40) { ctx.moveTo(0,y); ctx.lineTo(W,y); }
+  ctx.stroke();
 
-  // プレイヤー描画 (砲台)
-  ctx.fillStyle = "#00ff88";
-  ctx.fillRect(player.x, player.y, player.w, player.h);
-  ctx.fillRect(player.x + 15, player.y - 10, 10, 10);
-  
-  // 弾描画
-  ctx.fillStyle = "#fff";
-  bullets.forEach(b => ctx.fillRect(b.x, b.y, b.w, b.h));
-  
-  // 敵描画
-  enemies.forEach(e => {
-    ctx.fillStyle = e.color;
-    ctx.fillRect(e.x, e.y, e.w, e.h);
-    // HPバー
-    if (e.maxHp > 1) {
-      ctx.fillStyle = "red";
-      ctx.fillRect(e.x, e.y - 6, e.w, 4);
-      ctx.fillStyle = "lime";
-      ctx.fillRect(e.x, e.y - 6, e.w * (e.hp / e.maxHp), 4);
-    }
-  });
-  
-  // パーティクル描画
-  particles.forEach(p => {
-    ctx.fillStyle = p.color;
-    ctx.globalAlpha = p.life;
-    ctx.fillRect(p.x, p.y, 4, 4);
-  });
-  ctx.globalAlpha = 1.0;
+  // 星
+  ctx.fillStyle = 'rgba(255,255,255,0.3)';
+  stars.forEach(s => ctx.fillRect(s.x, s.y, s.s, s.s));
+
+  if (!gameOn && shield === 0) {
+    // ゲームオーバー時も残骸を描画
+    particles.forEach(p => p.draw(ctx));
+    return;
+  }
+
+  // 防壁（シールドウォール）
+  ctx.fillStyle = `rgba(0, 229, 255, ${shield/100 * 0.3})`;
+  ctx.fillRect(0, H - 15, W, 15);
+  ctx.strokeStyle = `rgba(0, 255, 136, ${shield/100 * 0.8})`;
+  ctx.beginPath(); ctx.moveTo(0, H - 15); ctx.lineTo(W, H - 15); ctx.stroke();
+
+  if(player) player.draw(ctx);
+  bullets.forEach(b => b.draw(ctx));
+  enemies.forEach(e => e.draw(ctx));
+  particles.forEach(p => p.draw(ctx));
 }
 
 function loop() {
   update();
   draw();
-  if(isPlaying) requestAnimationFrame(loop);
+  requestAnimationFrame(loop);
 }
 
-// --- ゲーム制御 ---
+// ================================================================
+//  UI & CONTROLS
+// ================================================================
+function updateUI() {
+  document.getElementById('score').textContent = score.toLocaleString();
+  document.getElementById('level').textContent = level;
+  
+  const sBar = document.getElementById('shield-bar');
+  const sVal = document.getElementById('shield-val');
+  sVal.textContent = `${shield}%`;
+  sBar.style.width = `${shield}%`;
+  
+  if(shield > 60) { sBar.style.background = 'linear-gradient(90deg, #00e5ff, #00ff88)'; sVal.style.color = 'var(--text)'; }
+  else if(shield > 30) { sBar.style.background = '#ff8800'; sVal.style.color = '#ff8800'; }
+  else { sBar.style.background = '#ff3355'; sVal.style.color = '#ff3355'; }
+}
+
+function updateQueueUI() {
+  document.getElementById('queue-size').textContent = txQueue.length;
+}
+
+function addTxFeed(msg, color) {
+  const feed = document.getElementById('tx-feed');
+  const el = document.createElement('div');
+  el.className = 'tx-line';
+  el.style.color = color;
+  el.textContent = msg;
+  feed.prepend(el);
+  while(feed.children.length > 5) feed.removeChild(feed.lastChild);
+}
+
+// キーボード
+window.addEventListener('keydown', e => { keys[e.code] = true; if(e.code==='Space') e.preventDefault(); });
+window.addEventListener('keyup', e => { keys[e.code] = false; });
+
+// モバイルボタン
+const btnStates = { left:false, right:false, shoot:false };
+function bindBtn(id, key) {
+  const el = document.getElementById(id);
+  const press = (e) => { e.preventDefault(); btnStates[key] = true; };
+  const release = (e) => { e.preventDefault(); btnStates[key] = false; };
+  el.addEventListener('touchstart', press, {passive:false});
+  el.addEventListener('touchend', release, {passive:false});
+  el.addEventListener('mousedown', press);
+  el.addEventListener('mouseup', release);
+  el.addEventListener('mouseleave', release);
+}
+bindBtn('btn-left', 'left');
+bindBtn('btn-right', 'right');
+bindBtn('btn-shoot', 'shoot');
+
 function startGame() {
   document.getElementById('start-screen').style.display = 'none';
-  document.getElementById('game-over-screen').style.display = 'none';
+  document.getElementById('go-screen').style.display = 'none';
+  score = 0; level = 1; shield = 100; destroyedCount = 0;
+  player = new Player();
+  bullets = []; enemies = []; particles = []; txQueue = [];
+  updateUI(); updateQueueUI();
   
-  score = 0;
-  updateScore();
-  player.x = W/2;
-  bullets = [];
-  enemies = [];
-  particles = [];
-  isPlaying = true;
-  
-  // AudioContextの初期化（ユーザーアクション起点）
-  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-  
-  connectWS();
-  loop();
+  getAudioCtx(); // 音声許可
+  gameOn = true;
+  if(!wsConn) connectWS();
 }
 
 function gameOver() {
-  isPlaying = false;
-  if (wsConn) wsConn.close();
-  document.getElementById('final-score').innerText = score;
-  document.getElementById('game-over-screen').style.display = 'flex';
-}
-
-function updateScore() {
-  document.getElementById('score').innerText = score;
+  gameOn = false;
+  document.getElementById('go-score').textContent = score.toLocaleString();
+  document.getElementById('go-screen').style.display = 'flex';
+  // プレイヤー爆発
+  if(player) {
+    for(let i=0; i<30; i++) particles.push(new Particle(player.x+15, player.y+10, '#00ff88', 3));
+    playExplosionSound();
+  }
 }
 
 document.getElementById('start-btn').addEventListener('click', startGame);
 document.getElementById('restart-btn').addEventListener('click', startGame);
 
+// ================================================================
+//  WEBSOCKET (mempool.space)
+// ================================================================
+function fmtAgo(ms) {
+  const diff = Date.now() - ms;
+  const m = Math.floor(diff/60000);
+  const s = Math.floor((diff%60000)/1000);
+  return m>0 ? `${m}m ${s}s ago` : `${s}s ago`;
+}
+
+setInterval(() => {
+  if (lastBlockMs) document.getElementById('last-block-ago').textContent = fmtAgo(lastBlockMs);
+}, 1000);
+
+function connectWS() {
+  wsConn = new WebSocket('wss://mempool.space/api/v1/ws');
+  
+  wsConn.onopen = () => {
+    wsConn.send(JSON.stringify({ action:'want', data:['stats','blocks'] }));
+  };
+  
+  wsConn.onmessage = e => {
+    try {
+      const d = JSON.parse(e.data);
+      
+      // ブロック生成
+      if (d.block) {
+        blockHeight = d.block.height;
+        lastBlockMs = d.block.timestamp * 1000;
+        document.getElementById('block-height').textContent = blockHeight.toLocaleString();
+        document.getElementById('last-block-ago').textContent = "Just now";
+        if (gameOn) triggerBlockExplosion(blockHeight);
+        addTxFeed(`⛏ BLOCK #${blockHeight} MINED!`, 'var(--btc)');
+      }
+      
+      // TX情報取得
+      if (d.mempoolInfo) {
+        document.getElementById('mempool-size').textContent = d.mempoolInfo.size.toLocaleString();
+      }
+      
+      if (d.transactions && gameOn) {
+        let added = 0;
+        for (const tx of d.transactions) {
+          if (txQueue.length > 200) break; // キュー溢れ防止
+          txQueue.push(tx);
+          added++;
+          
+          // 一部のTXだけフィードに流す
+          if(Math.random() < 0.2) {
+            let sats = 0; if (Array.isArray(tx.vout)) sats = tx.vout.reduce((s, o) => s + (o.value||0), 0);
+            const tier = getEnemyTier(sats);
+            if(!tier.name.includes('Dust')) addTxFeed(`Incoming: ${(sats/1e8).toFixed(4)} BTC`, tier.color);
+          }
+        }
+        if(added) updateQueueUI();
+      }
+    } catch(err) {}
+  };
+  
+  wsConn.onclose = () => { setTimeout(connectWS, 3000); };
+}
+
+// Fetch current block height on load
+fetch('https://mempool.space/api/blocks/tip/height')
+  .then(r => r.json())
+  .then(h => {
+    blockHeight = h;
+    document.getElementById('block-height').textContent = h.toLocaleString();
+  }).catch(()=>{});
+
+initBackground();
+loop();
 </script>
 </body>
 </html>
