@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MEMPOOL INVADERS</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+  body {
+    margin: 0;
+    padding: 0;
+    background-color: #0a0a1a;
+    color: #fff;
+    font-family: 'Press Start 2P', cursive;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    overflow: hidden;
+  }
+  h1 {
+    color: #f7931a;
+    font-size: 24px;
+    margin-bottom: 5px;
+    text-shadow: 0 0 10px #f7931a;
+  }
+  .subtitle {
+    font-size: 10px;
+    color: #888;
+    margin-bottom: 20px;
+    letter-spacing: 2px;
+  }
+  #game-container {
+    position: relative;
+  }
+  canvas {
+    background: #000;
+    border: 2px solid #333;
+    box-shadow: 0 0 20px rgba(247, 147, 26, 0.2);
+    image-rendering: pixelated;
+  }
+  #ui-layer {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    right: 10px;
+    display: flex;
+    justify-content: space-between;
+    pointer-events: none;
+    font-size: 12px;
+    text-shadow: 2px 2px 0 #000;
+  }
+  .score-text { color: #00e5ff; }
+  .block-text { color: #f7931a; }
+  
+  #start-screen, #game-over-screen {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.85);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+  button {
+    margin-top: 30px;
+    padding: 15px 30px;
+    background: #f7931a;
+    border: none;
+    color: #000;
+    font-family: 'Press Start 2P', cursive;
+    font-size: 16px;
+    cursor: pointer;
+    box-shadow: 0 4px 0 #a05808;
+    transition: transform 0.1s;
+  }
+  button:active {
+    transform: translateY(4px);
+    box-shadow: none;
+  }
+  #flash-overlay {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: #fff;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.1s;
+  }
+</style>
+</head>
+<body>
+
+<h1>MEMPOOL INVADERS</h1>
+<div class="subtitle">REAL-TIME BITCOIN SHOOTER</div>
+
+<div id="game-container">
+  <canvas id="gameCanvas" width="600" height="700"></canvas>
+  <div id="ui-layer">
+    <div class="score-text">SCORE: <span id="score">0</span></div>
+    <div class="block-text">HEIGHT: <span id="block-height">WAITING</span></div>
+  </div>
+  
+  <div id="flash-overlay"></div>
+
+  <!-- スタート画面 -->
+  <div id="start-screen">
+    <div style="color:#00ff88; line-height:1.8; font-size:12px;">
+      [A][D] or [←][→] : MOVE<br>
+      [SPACE] : SHOOT<br><br>
+      DESTROY UNCONFIRMED TXs.<br>
+      WAIT FOR A NEW BLOCK!
+    </div>
+    <button id="start-btn">START GAME</button>
+  </div>
+
+  <!-- ゲームオーバー画面 -->
+  <div id="game-over-screen" style="display:none;">
+    <h2 style="color:#ff3355;">GAME OVER</h2>
+    <div style="font-size:12px; margin-top:20px;">
+      FINAL SCORE: <span id="final-score">0</span>
+    </div>
+    <button id="restart-btn">PLAY AGAIN</button>
+  </div>
+</div>
+
+<script>
+/** 
+ * MEMPOOL INVADERS
+ * リアルタイムのビットコインTXをインベーダーに見立てたシューティング
+ */
+
+const canvas = document.getElementById('gameCanvas');
+const ctx = canvas.getContext('2d');
+const W = canvas.width;
+const H = canvas.height;
+
+// --- ゲーム状態 ---
+let isPlaying = false;
+let score = 0;
+let blockHeight = "----";
+let keys = {};
+
+// エンティティ
+let player = { x: W/2, y: H - 50, w: 40, h: 20, speed: 5, cooldown: 0 };
+let bullets = [];
+let enemies = [];
+let particles = [];
+
+// WebSocket
+let wsConn = null;
+
+// --- 音声エンジン (Web Audio API) ---
+let audioCtx = null;
+function playSound(type) {
+  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  const t = audioCtx.currentTime;
+  const osc = audioCtx.createOscillator();
+  const gain = audioCtx.createGain();
+  osc.connect(gain); gain.connect(audioCtx.destination);
+  
+  if (type === 'shoot') {
+    osc.type = 'square';
+    osc.frequency.setValueAtTime(440, t);
+    osc.frequency.exponentialRampToValueAtTime(110, t + 0.1);
+    gain.gain.setValueAtTime(0.1, t);
+    gain.gain.exponentialRampToValueAtTime(0.001, t + 0.1);
+    osc.start(t); osc.stop(t + 0.1);
+  } else if (type === 'hit') {
+    osc.type = 'sawtooth';
+    osc.frequency.setValueAtTime(100, t);
+    osc.frequency.exponentialRampToValueAtTime(50, t + 0.1);
+    gain.gain.setValueAtTime(0.1, t);
+    gain.gain.exponentialRampToValueAtTime(0.001, t + 0.1);
+    osc.start(t); osc.stop(t + 0.1);
+  } else if (type === 'block') {
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(800, t);
+    osc.frequency.linearRampToValueAtTime(100, t + 1.5);
+    gain.gain.setValueAtTime(0.3, t);
+    gain.gain.linearRampToValueAtTime(0.001, t + 1.5);
+    osc.start(t); osc.stop(t + 1.5);
+  }
+}
+
+// --- 入力処理 ---
+window.addEventListener('keydown', e => { keys[e.code] = true; });
+window.addEventListener('keyup', e => { keys[e.code] = false; });
+
+// --- WS接続 (mempool.space) ---
+function connectWS() {
+  if (wsConn) wsConn.close();
+  wsConn = new WebSocket('wss://mempool.space/api/v1/ws');
+  
+  wsConn.onopen = () => {
+    wsConn.send(JSON.stringify({ action: 'want', data: ['stats', 'blocks'] }));
+  };
+  
+  wsConn.onmessage = (e) => {
+    if (!isPlaying) return;
+    try {
+      const d = JSON.parse(e.data);
+      
+      // ブロック生成イベント（全滅ボム）
+      if (d.block) {
+        blockHeight = d.block.height;
+        document.getElementById('block-height').innerText = blockHeight;
+        triggerBlockExplosion();
+      }
+      
+      // 新規トランザクション（敵追加）
+      if (d.transactions && d.transactions.length > 0) {
+        // 大量に来すぎないよう最大5個に制限
+        const txs = d.transactions.slice(0, 5); 
+        txs.forEach(tx => spawnEnemyFromTx(tx));
+      }
+    } catch(err) {}
+  };
+}
+
+// TXから敵を生成
+function spawnEnemyFromTx(tx) {
+  let sats = 0;
+  if (Array.isArray(tx.vout)) sats = tx.vout.reduce((sum, v) => sum + (v.value || 0), 0);
+  
+  // 送金額に応じて敵の強さを決定
+  let hp = 1, size = 20, color = "#00e5ff", pts = 10;
+  if (sats > 10000000) { hp = 5; size = 40; color = "#ff3355"; pts = 100; } // 0.1 BTC以上 (クジラ)
+  else if (sats > 1000000) { hp = 3; size = 30; color = "#f7931a"; pts = 50; } // 0.01 BTC以上
+  else if (sats > 100000)  { hp = 2; size = 25; color = "#ffee00"; pts = 20; }
+  
+  enemies.push({
+    x: Math.random() * (W - size),
+    y: -size,
+    w: size, h: size,
+    hp: hp, maxHp: hp,
+    color: color,
+    points: pts,
+    speedX: (Math.random() - 0.5) * 2,
+    speedY: 0.5 + Math.random() * 1.5
+  });
+}
+
+// ブロック生成による全画面爆発
+function triggerBlockExplosion() {
+  playSound('block');
+  const overlay = document.getElementById('flash-overlay');
+  overlay.style.opacity = "1";
+  setTimeout(() => overlay.style.opacity = "0", 150);
+  
+  // 全敵を破壊しボーナス
+  enemies.forEach(e => {
+    createParticles(e.x + e.w/2, e.y + e.h/2, e.color, 15);
+    score += e.points * 2; // ブロックボーナスでポイント2倍
+  });
+  enemies = [];
+  updateScore();
+}
+
+function createParticles(x, y, color, count) {
+  for(let i=0; i<count; i++){
+    particles.push({
+      x: x, y: y,
+      vx: (Math.random() - 0.5) * 8, vy: (Math.random() - 0.5) * 8,
+      life: 1.0, color: color
+    });
+  }
+}
+
+// --- メインループ ---
+function update() {
+  if (!isPlaying) return;
+  
+  // プレイヤー移動
+  if (keys['ArrowLeft'] || keys['KeyA']) player.x = Math.max(0, player.x - player.speed);
+  if (keys['ArrowRight'] || keys['KeyD']) player.x = Math.min(W - player.w, player.x + player.speed);
+  
+  // 射撃
+  if (player.cooldown > 0) player.cooldown--;
+  if (keys['Space'] && player.cooldown <= 0) {
+    bullets.push({ x: player.x + player.w/2 - 2, y: player.y, w: 4, h: 10, speed: 10 });
+    player.cooldown = 15;
+    playSound('shoot');
+  }
+  
+  // 弾の移動
+  for (let i = bullets.length - 1; i >= 0; i--) {
+    bullets[i].y -= bullets[i].speed;
+    if (bullets[i].y < 0) bullets.splice(i, 1);
+  }
+  
+  // 敵の移動と当たり判定
+  for (let i = enemies.length - 1; i >= 0; i--) {
+    let e = enemies[i];
+    e.x += e.speedX;
+    e.y += e.speedY;
+    
+    // 壁反射
+    if (e.x <= 0 || e.x + e.w >= W) e.speedX *= -1;
+    
+    // ゲームオーバー判定（一番下まで到達）
+    if (e.y + e.h > player.y + player.h) {
+      gameOver();
+      return;
+    }
+    
+    // 弾との衝突判定
+    for (let j = bullets.length - 1; j >= 0; j--) {
+      let b = bullets[j];
+      if (b.x < e.x + e.w && b.x + b.w > e.x && b.y < e.y + e.h && b.y + b.h > e.y) {
+        bullets.splice(j, 1);
+        e.hp--;
+        playSound('hit');
+        createParticles(b.x, b.y, "#fff", 3);
+        if (e.hp <= 0) {
+          score += e.points;
+          updateScore();
+          createParticles(e.x + e.w/2, e.y + e.h/2, e.color, 10);
+          enemies.splice(i, 1);
+        }
+        break;
+      }
+    }
+  }
+  
+  // パーティクル更新
+  for (let i = particles.length - 1; i >= 0; i--) {
+    let p = particles[i];
+    p.x += p.vx; p.y += p.vy;
+    p.life -= 0.05;
+    if (p.life <= 0) particles.splice(i, 1);
+  }
+}
+
+function draw() {
+  // 背景クリア
+  ctx.fillStyle = "rgba(0, 0, 0, 0.4)"; // 残像効果
+  ctx.fillRect(0, 0, W, H);
+  
+  if (!isPlaying) return;
+
+  // プレイヤー描画 (砲台)
+  ctx.fillStyle = "#00ff88";
+  ctx.fillRect(player.x, player.y, player.w, player.h);
+  ctx.fillRect(player.x + 15, player.y - 10, 10, 10);
+  
+  // 弾描画
+  ctx.fillStyle = "#fff";
+  bullets.forEach(b => ctx.fillRect(b.x, b.y, b.w, b.h));
+  
+  // 敵描画
+  enemies.forEach(e => {
+    ctx.fillStyle = e.color;
+    ctx.fillRect(e.x, e.y, e.w, e.h);
+    // HPバー
+    if (e.maxHp > 1) {
+      ctx.fillStyle = "red";
+      ctx.fillRect(e.x, e.y - 6, e.w, 4);
+      ctx.fillStyle = "lime";
+      ctx.fillRect(e.x, e.y - 6, e.w * (e.hp / e.maxHp), 4);
+    }
+  });
+  
+  // パーティクル描画
+  particles.forEach(p => {
+    ctx.fillStyle = p.color;
+    ctx.globalAlpha = p.life;
+    ctx.fillRect(p.x, p.y, 4, 4);
+  });
+  ctx.globalAlpha = 1.0;
+}
+
+function loop() {
+  update();
+  draw();
+  if(isPlaying) requestAnimationFrame(loop);
+}
+
+// --- ゲーム制御 ---
+function startGame() {
+  document.getElementById('start-screen').style.display = 'none';
+  document.getElementById('game-over-screen').style.display = 'none';
+  
+  score = 0;
+  updateScore();
+  player.x = W/2;
+  bullets = [];
+  enemies = [];
+  particles = [];
+  isPlaying = true;
+  
+  // AudioContextの初期化（ユーザーアクション起点）
+  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  
+  connectWS();
+  loop();
+}
+
+function gameOver() {
+  isPlaying = false;
+  if (wsConn) wsConn.close();
+  document.getElementById('final-score').innerText = score;
+  document.getElementById('game-over-screen').style.display = 'flex';
+}
+
+function updateScore() {
+  document.getElementById('score').innerText = score;
+}
+
+document.getElementById('start-btn').addEventListener('click', startGame);
+document.getElementById('restart-btn').addEventListener('click', startGame);
+
+</script>
+</body>
+</html>
