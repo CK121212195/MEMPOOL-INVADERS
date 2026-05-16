@@ -66,11 +66,10 @@ header{
 .dot.on{background:var(--green);box-shadow:0 0 8px var(--green);}
 .dot.err{background:#ff4d4d;}
 
-/* LAYOUT — Grid Areas */
+/* LAYOUT — Grid Areas (PC用) */
 #app{
   position:relative;z-index:10;
   display:grid;
-  /* 中央カラム（ゲーム画面）を柔軟に拡大 */
   grid-template-columns:220px minmax(300px, 1fr) 220px;
   grid-template-rows: auto 1fr;
   grid-template-areas: 
@@ -80,6 +79,8 @@ header{
   padding:16px 20px 24px;
   width:100%;max-width:1400px;
   align-items:start;
+  /* ヘッダーの分を引いた高さを指定し、内部を100%広げる */
+  height: calc(100vh - 65px);
 }
 
 /* PANEL */
@@ -101,7 +102,9 @@ header{
 .vsub{font-size:.62rem;color:var(--text-dim);margin-top:2px;}
 
 /* LEFT COL */
-#lc{grid-area:lc; display:flex;flex-direction:column;gap:12px;}
+#lc{grid-area:lc; display:flex;flex-direction:column;gap:12px; overflow-y:auto; height:100%; padding-right:4px;}
+#lc::-webkit-scrollbar, #rc::-webkit-scrollbar { width: 4px; }
+#lc::-webkit-scrollbar-thumb, #rc::-webkit-scrollbar-thumb { background: var(--panel-bdr); border-radius: 2px; }
 
 .sleg{display:flex;flex-direction:column;gap:4px;margin-top:3px;}
 .srow{display:flex;align-items:center;gap:7px;font-size:.65rem;color:var(--text-mid);}
@@ -115,8 +118,16 @@ header{
 .fbar{height:5px;background:#c2bbb0;border-radius:2px;margin-top:6px;overflow:hidden;}
 .ffill{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--green),var(--gold),var(--amber),#ff4d4d);transition:width .6s;}
 
-/* CENTER COL */
-#cc{grid-area:cc; display:flex;flex-direction:column;align-items:center;gap:10px;}
+/* CENTER COL (ここが自動で画面いっぱいに広がる) */
+#cc{
+  grid-area:cc; 
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:10px;
+  height:100%;
+  min-height:0; /* Flexboxで縮小を許可する魔法のプロパティ */
+}
 
 #gw{
   position:relative;
@@ -124,10 +135,20 @@ header{
   border:3px solid var(--amber-dim);
   border-radius:6px;
   box-shadow:0 0 25px rgba(0,0,0,.08),inset 0 0 20px rgba(0,0,0,.6);
+  width: 100%;
+  height: 100%; /* 親のスペースを100%使う */
+  display: flex;
+  justify-content: center;
+  align-items: center;
   overflow:hidden;
-  margin: 0 auto;
 }
-#gc{display:block;}
+
+#gc{
+  width: 100%;
+  height: 100%;
+  object-fit: contain; /* アスペクト比を保ちながら限界まで拡大 */
+  display:block;
+}
 
 #bflash{
   position:absolute;inset:0;
@@ -193,7 +214,7 @@ header{
 #nwrap canvas { width: 100%; height: 100%; object-fit: contain; }
 
 /* RIGHT COL */
-#rc{grid-area:rc; display:flex;flex-direction:column;gap:12px;}
+#rc{grid-area:rc; display:flex;flex-direction:column;gap:12px; overflow-y:auto; height:100%; padding-right:4px;}
 
 .clist{display:flex;flex-direction:column;gap:5px;}
 .cri{display:flex;align-items:center;gap:7px;font-size:.62rem;color:var(--text-dim);}
@@ -242,7 +263,9 @@ header{
   }
 }
 @media(max-width:720px){
+  body { overflow-y: auto; }
   #app{
+    height: auto; /* スマホではスクロールを許可 */
     grid-template-columns: 1fr;
     grid-template-rows: auto auto auto auto;
     grid-template-areas: 
@@ -252,7 +275,10 @@ header{
       "rc";
     gap: 12px;
   }
-  #lc, #rc { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  #cc {
+    height: 65vh; /* スマホ画面の縦幅の65%を使って盤面を大きく表示 */
+  }
+  #lc, #rc { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; height:auto; overflow:visible;}
   
   /* スマホの時はNEXTを横並びにして上に配置 */
   #pnl-next { margin-bottom: 0; }
@@ -266,6 +292,7 @@ header{
 @media(max-width:400px){
   .logo{font-size:1.2rem;}
   header{padding:10px;}
+  #lc, #rc { grid-template-columns: 1fr; } /* 非常に狭い画面では1列に */
 }
 </style>
 </head>
@@ -326,7 +353,7 @@ header{
     </div>
   </div>
 
-  <!-- CENTER COL -->
+  <!-- CENTER COL (ゲーム盤面) -->
   <div id="cc">
     <div id="gw">
       <canvas id="gc"></canvas>
@@ -356,6 +383,7 @@ header{
       </div>
     </div>
 
+    <!-- モバイル用コントローラー -->
     <div id="mctrl">
       <div class="mr">
         <div class="mb" id="mb-rl">↺</div>
@@ -368,11 +396,11 @@ header{
     </div>
   </div>
 
-  <!-- NEXT PANEL (分離) -->
+  <!-- NEXT PANEL -->
   <div class="pnl" id="pnl-next">
     <div class="lbl"><span class="ico">→</span>Next</div>
     <div class="next-split">
-      <div id="nwrap"><canvas id="nc" width="160" height="160"></canvas></div>
+      <div id="nwrap"><canvas id="nc"></canvas></div>
       <div class="next-info">
         <div class="vmid" id="nxtier" style="font-size:.95rem;margin-bottom:2px">——</div>
         <div class="vsub" id="nxamt">Awaiting data...</div>
@@ -431,6 +459,10 @@ header{
 // ── CONSTANTS ──────────────────────────────────────────────────
 const COLS=6, ROWS=12;
 
+// ★【重要】キャンバスの「画素数」を固定し、高解像度で美しく描画する。
+// CSSの `object-fit: contain` によって画面の余白を埋めるよう自動で拡大縮小されます。
+const CELL = 70; 
+
 const PUYO_COLORS = [
   { id: 'red',    c1: 'rgba(255, 100, 100, 0.95)', c2: 'rgba(200, 20, 20, 0.85)' },
   { id: 'orange', c1: 'rgba(255, 180, 80, 0.95)',  c2: 'rgba(220, 100, 0, 0.85)' },
@@ -444,44 +476,20 @@ const C_MAP = { red: '#ff4d4d', orange: '#ff9933', cyan: '#33ccff', green: '#4df
 
 const canvas=document.getElementById('gc');
 const ctx=canvas.getContext('2d');
+canvas.width = COLS * CELL;   // 420px
+canvas.height = ROWS * CELL;  // 840px
+
 const nc=document.getElementById('nc');
 const nctx=nc.getContext('2d');
-
-function cellSz(){
-  const w=window.innerWidth;
-  const h=window.innerHeight;
-  let sz;
-  if(w<=720){
-    // スマホ時: ヘッダー、NEXT、コントローラーの高さを考慮して最大限に広げる
-    sz = Math.floor(Math.min((w - 24) / COLS, (h - 220) / ROWS)); 
-  } else if(w<=960){
-    // タブレット時: 左右パネル分を差し引く
-    sz = Math.floor(Math.min((w - 430) / COLS, (h - 140) / ROWS));
-  } else {
-    // PC時
-    sz = Math.floor(Math.min((w - 500) / COLS, (h - 140) / ROWS));
-  }
-  // 上限100pxまで拡大可能にし、余白を埋める
-  return Math.max(20, Math.min(100, sz));
-}
-let CELL=cellSz();
-
-function resize(){
-  CELL=cellSz();
-  canvas.width=COLS*CELL; canvas.height=ROWS*CELL;
-  const gw=document.getElementById('gw');
-  gw.style.width=canvas.width+'px'; gw.style.height=canvas.height+'px';
-  drawNext();
-}
-resize();
-window.addEventListener('resize',resize);
+nc.width = 280;  // NEXT用キャンバスも高解像度に
+nc.height = 280;
 
 // ── STATE ──────────────────────────────────────────────────────
 let gameOn=false,gState='IDLE';
 let board=mkB();
 let score=0,hi=+localStorage.getItem('bphi4')||0;
 let chain=0,maxCh=0,linesCl=0;
-let active=null,nextPiece=null,txQ=[]; // ★ nextPieceとしてインスタンスを保持
+let active=null,nextPiece=null,txQ=[];
 let dropT=0,eraseT=0;
 let eCells=[],parts=[],AF=0;
 let blockH=null,lastBMs=null;
@@ -512,7 +520,15 @@ function mkB(){return Array.from({length:ROWS},()=>new Array(COLS).fill(null));}
 
 // ── AUDIO ──────────────────────────────────────────────────────
 let AC=null;
-function gAC(){if(!AC)AC=new(window.AudioContext||window.webkitAudioContext)();if(AC.state==='suspended')AC.resume();return AC;}
+function gAC(){
+  try{
+    if(!AC && (window.AudioContext||window.webkitAudioContext)){
+      AC=new(window.AudioContext||window.webkitAudioContext)();
+    }
+    if(AC && AC.state==='suspended')AC.resume();
+  }catch(e){ console.warn("Audio Context Error", e); }
+  return AC;
+}
 function sfx(type,n=1){
   if(!snd)return;
   try{
@@ -589,15 +605,20 @@ function canPlace(cells){
   }
   return true;
 }
+
+// ★【重要修正】ゲームが起動しなくなるバグの修正
 function spawn(){
-  if(!nextPiece)return false;
-  active=nextPiece;  // ★ 作成済みのインスタンスをそのまま受け継ぐ（色が完全に一致する）
+  if(!nextPiece) return false;
+  active=nextPiece;  
   active.pr=1; active.pc=Math.floor(COLS/2);
   nextPiece=null;
-  updateNextUI();
+  
+  loadNext(); // 必ず次のピースを補充する
   updateSide();
+  
   return canPlace(active.abs());
 }
+
 function lock(){
   active.abs().forEach(c=>{if(c.r>=0&&c.r<ROWS)board[c.r][c.c]=c.colorId;});
   sfx('land');active=null;gState='FALL';
@@ -780,7 +801,7 @@ function drawP(c,px,py,sz,colorId,nb={},al=1){
 
 function draw(){
   ctx.clearRect(0,0,canvas.width,canvas.height);
-  ctx.strokeStyle='rgba(255,255,255,.03)';ctx.lineWidth=1;ctx.beginPath();
+  ctx.strokeStyle='rgba(255,255,255,.03)';ctx.lineWidth=2;ctx.beginPath();
   for(let x=0;x<=canvas.width;x+=CELL){ctx.moveTo(x,0);ctx.lineTo(x,canvas.height);}
   for(let y=0;y<=canvas.height;y+=CELL){ctx.moveTo(0,y);ctx.lineTo(canvas.width,y);}
   ctx.stroke();
@@ -815,7 +836,6 @@ function draw(){
   parts.forEach(p=>p.draw(ctx));
 }
 
-// ★ NEXT描画処理を修正。保存された nextPiece のローカル座標(dr, dc)を使って表示
 function drawNext(){
   if(!nctx)return;
   nctx.clearRect(0,0,nc.width,nc.height);
@@ -825,8 +845,10 @@ function drawNext(){
   const minR=Math.min(...cells.map(c=>c.dr)),maxR=Math.max(...cells.map(c=>c.dr));
   const minC=Math.min(...cells.map(c=>c.dc)),maxC=Math.max(...cells.map(c=>c.dc));
   const pw=maxC-minC+1,ph=maxR-minR+1;
-  const cs=Math.min(32,Math.floor(Math.min((nc.width-12)/pw,(nc.height-12)/ph)));
+  
+  const cs=Math.min(60,Math.floor(Math.min((nc.width-30)/pw,(nc.height-30)/ph)));
   const ox=(nc.width-pw*cs)/2,oy=(nc.height-ph*cs)/2;
+  
   const pm={};
   cells.forEach(c=>{const dr=c.dr-minR,dc=c.dc-minC;if(!pm[dr])pm[dr]={};pm[dr][dc]=c.colorId;});
   cells.forEach(c=>{
@@ -922,7 +944,7 @@ function loadNext(){
   if(!nextPiece && txQ.length>0){
     const idx=Math.floor(Math.random()*Math.min(txQ.length,5));
     const tx = txQ.splice(idx,1)[0];
-    nextPiece = new Piece(tx); // ★ ここでピースの色情報を確定させる
+    nextPiece = new Piece(tx);
     updateNextUI();
     updateQ();
   }
@@ -1002,25 +1024,39 @@ setInterval(()=>{
 
 // ── GAME FLOW ──────────────────────────────────────────────────
 function startGame(){
-  document.getElementById('ss').style.display='none';
-  document.getElementById('gs').style.display='none';
-  board=mkB();score=0;maxCh=0;chain=0;linesCl=0;
-  active=null;nextPiece=null;txQ=[];parts=[];eCells=[];
-  [5e5,2e6,1e4,8e7,3e5,5e8,1e3,4e6,2e3,1e5,6e4,9e8,5e3,3e4,7e5].forEach(s=>
-    txQ.push({_s:s,_fee:Math.floor(s*.0001),vout:[{value:s}]}));
-  loadNext();updateUI();updateNextUI();updateQ();gAC();
-  gameOn=true;gState='PLAY';
-  if(!ws)connectWS();
+  try {
+    document.getElementById('ss').style.display='none';
+    document.getElementById('gs').style.display='none';
+    board=mkB();score=0;maxCh=0;chain=0;linesCl=0;
+    active=null;nextPiece=null;txQ=[];parts=[];eCells=[];
+    
+    // シードデータ（すぐに遊べるように）
+    [5e5,2e6,1e4,8e7,3e5,5e8,1e3,4e6,2e3,1e5,6e4,9e8,5e3,3e4,7e5].forEach(s=>
+      txQ.push({_s:s,_fee:Math.floor(s*.0001),vout:[{value:s}]}));
+      
+    loadNext(); // ここで最初のピースを確定させる
+    updateUI();
+    gAC(); // オーディオコンテキストの初期化
+    
+    gameOn=true;
+    gState='PLAY';
+    if(!ws)connectWS();
+  } catch(e) {
+    console.error("Start Game Error:", e);
+  }
 }
+
 function gameOver(){
   gameOn=false;gState='IDLE';
   document.getElementById('goscore').textContent=score.toLocaleString();
   document.getElementById('gs').style.display='flex';
   sfx('boom');
 }
+
 document.getElementById('startbtn').addEventListener('click',startGame);
 document.getElementById('restartbtn').addEventListener('click',startGame);
 
+// ゲームループ開始
 loop();
 </script>
 </body>
