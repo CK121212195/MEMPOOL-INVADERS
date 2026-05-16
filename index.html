@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MEMPOOL / EDITORIAL DEFENSE</title>
+<title>MEMPOOL / CHAIN REACTION</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,700&family=Montserrat:wght@300;400;600&family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&display=swap');
 
@@ -14,9 +14,8 @@
   --text-sub: #666666;
   --border-color: #1A1A1A;
   
-  /* Tesseract & BITRIS Theme */
-  --game-bg: #050505; /* 漆黒 */
-  --btc: #f7931a;
+  /* Tesseract Theme */
+  --game-bg: #050505;
   
   --font-vogue: 'Bodoni Moda', serif;
   --font-sans: 'Montserrat', sans-serif;
@@ -95,11 +94,10 @@ h1 {
   margin-bottom: 3px; letter-spacing: 1px;
 }
 .tx-amount { font-size: 0.75rem; margin-bottom: 4px; color: var(--text-main); }
-.tx-sub { color: var(--text-sub); }
 
 /* ===== PIECE SIZE LEGEND ===== */
-.legend-row { display: flex; align-items: center; gap: 6px; font-family: var(--font-mono); font-size: 0.65rem; margin-bottom: 4px; }
-.l-box { font-size: 0.65rem; font-weight: 900; display: inline-block; width: 35px;}
+.legend-row { display: flex; align-items: center; gap: 6px; font-family: var(--font-mono); font-size: 0.65rem; margin-bottom: 6px; }
+.l-box { font-size: 0.65rem; font-weight: 900; display: inline-block; width: 25px;}
 .l-text { color: var(--text-sub); }
 
 /* ===== GAME CANVAS ===== */
@@ -138,22 +136,19 @@ h1 {
 }
 .btn:hover { background: #fff; color: var(--text-main); }
 
-/* ===== SHIELD BAR ===== */
-#shield-wrap { width: 100%; height: 2px; background: #ddd; margin-top: 10px; }
-#shield-bar { height: 100%; background: var(--text-main); width: 100%; transition: width 0.3s; }
-
 /* ===== CONTROLS ===== */
 .ctrl-text { font-family: var(--font-mono); font-size: 0.65rem; color: var(--text-sub); line-height: 1.8; }
-#mobile-controls { display: none; width: 100%; max-width: 400px; margin-top: 15px; }
-.ctrl-row { display: flex; gap: 10px; justify-content: center; }
+#mobile-controls { display: flex; width: 100%; max-width: 420px; margin-top: 15px; flex-direction: column; gap: 8px;}
+.ctrl-row { display: flex; gap: 10px; justify-content: center; width: 100%; }
 .cbtn {
   background: transparent; border: 1px solid var(--border-color); color: var(--text-main);
   font-family: var(--font-sans); font-size: 1.2rem; font-weight: 300; cursor: pointer;
   display: flex; align-items: center; justify-content: center; height: 50px; flex: 1; touch-action: manipulation;
 }
 .cbtn:active { background: var(--border-color); color: #fff; }
-#btn-shoot { flex: 2; font-size: 0.9rem; letter-spacing: 0.1em; font-weight: 500; }
+#btn-rotate { flex: 2; font-size: 0.9rem; letter-spacing: 0.1em; font-weight: 500; }
 
+@media (min-width: 901px) { #mobile-controls { display: none; } }
 @media (max-width: 900px) {
   h1 { font-size: 2rem; }
   #app { flex-direction: column; align-items: center; }
@@ -161,7 +156,6 @@ h1 {
   .panel { flex: 1 1 45%; min-width: 150px; }
   #game-wrap { width: 100%; max-width: 420px; order: -1; }
   #game-canvas { width: 100%; height: auto; aspect-ratio: 3/4; }
-  #mobile-controls { display: flex; flex-direction: column; }
 }
 </style>
 </head>
@@ -169,66 +163,38 @@ h1 {
 
 <header>
   <h1>Mempool</h1>
-  <div class="subtitle">Editorial Defense</div>
+  <div class="subtitle">Chain Reaction</div>
 </header>
 
 <div id="app">
   <!-- LEFT COLUMN -->
   <div class="col" id="left-col">
     <div class="panel">
-      <div class="panel-title">Next Threat</div>
+      <div class="panel-title">Next TX Pair</div>
       <div id="next-canvas-wrap">
         <canvas id="next-canvas" width="160" height="100"></canvas>
       </div>
       <div class="tx-detail" id="next-detail">
         <div class="tx-tier" id="nx-tier" style="color:var(--text-sub);">——</div>
         <div class="tx-amount" id="nx-amount">Awaiting Data...</div>
-        <div class="tx-sub" id="nx-fee">fee: —— sat</div>
-        <div class="tx-sub" id="nx-rate">fee rate: —— sat/vB</div>
-        <div class="tx-sub" id="nx-size">×1 (cells)</div>
+        <div class="tx-amount" id="nx-size">×2 TXs</div>
       </div>
     </div>
 
-    <!-- PIECE SIZE LEGEND -->
     <div class="panel">
-      <div class="panel-title">Piece Size</div>
-      <div class="legend-row">
-        <span class="l-box" style="color:#ff3355; text-shadow:0 0 5px #ff3355;">████</span>
-        <span class="l-text">&gt;10₿ 🟥</span>
-      </div>
-      <div class="legend-row">
-        <span class="l-box" style="color:#ff8800; text-shadow:0 0 5px #ff8800;">███</span>
-        <span class="l-text">&gt;1₿ 🟧</span>
-      </div>
-      <div class="legend-row">
-        <span class="l-box" style="color:#ffee00; text-shadow:0 0 4px #ffee00;">██</span>
-        <span class="l-text">&gt;0.1₿ 🟨</span>
-      </div>
-      <div class="legend-row">
-        <span class="l-box" style="color:#00ff88; text-shadow:0 0 3px #00ff88;">■</span>
-        <span class="l-text">&gt;0.05₿ 🟩</span>
-      </div>
-      <div class="legend-row">
-        <span class="l-box" style="color:#00e5ff; text-shadow:0 0 3px #00e5ff;">■</span>
-        <span class="l-text">&gt;0.01₿ 🟦</span>
-      </div>
-      <div class="legend-row" style="margin: 6px 0;">
-        <span class="l-text" style="color:#888;">7 standard pieces</span>
-      </div>
-      <div class="legend-row">
-        <span class="l-box" style="color:#cc44ff; text-shadow:0 0 3px #cc44ff;">▬</span>
-        <span class="l-text">≤0.005₿ 🟣</span>
-      </div>
-      <div class="legend-row">
-        <span class="l-box" style="color:#4466ff; font-weight:900;">·</span>
-        <span class="l-text">Dust ●</span>
-      </div>
+      <div class="panel-title">TX Tier</div>
+      <div class="legend-row"><span class="l-box" style="color:#ff3355; text-shadow:0 0 5px #ff3355;">██</span> <span class="l-text">&gt;1 BTC 🟥</span></div>
+      <div class="legend-row"><span class="l-box" style="color:#ff8800; text-shadow:0 0 5px #ff8800;">██</span> <span class="l-text">&gt;0.1 BTC 🟧</span></div>
+      <div class="legend-row"><span class="l-box" style="color:#ffee00; text-shadow:0 0 5px #ffee00;">██</span> <span class="l-text">&gt;0.01 BTC 🟨</span></div>
+      <div class="legend-row"><span class="l-box" style="color:#00ff88; text-shadow:0 0 5px #00ff88;">██</span> <span class="l-text">&gt;0.001 BTC 🟩</span></div>
+      <div class="legend-row"><span class="l-box" style="color:#00e5ff; text-shadow:0 0 5px #00e5ff;">██</span> <span class="l-text">Micro 🟦</span></div>
+      <div class="legend-row" style="margin-top:10px;"><span class="l-text" style="font-weight:bold;">Match 4+ to Clear</span></div>
     </div>
   </div>
 
   <!-- CENTER COLUMN (Game) -->
   <div id="game-wrap">
-    <canvas id="game-canvas" width="400" height="520"></canvas>
+    <canvas id="game-canvas" width="400" height="560"></canvas>
     
     <div id="block-flash">
       <div class="flash-title">Block Mined</div>
@@ -239,19 +205,19 @@ h1 {
     <div id="start-screen" class="screen-overlay">
       <div class="overlay-title">Mempool</div>
       <div class="overlay-desc">
-        Eliminate unconfirmed transactions.<br>
-        Larger TXs appear as massive wireframes.<br>
+        Connect 4 or more transactions of the same color.<br>
+        Create Chain Reactions for massive score multipliers.<br>
         <br>
-        ← / A : Move Left<br>
-        → / D : Move Right<br>
-        SPACE : Shoot
+        ← / → : Move<br>
+        SPACE : Rotate<br>
+        ↓ : Fast Drop
       </div>
       <button class="btn" id="start-btn">Engage</button>
     </div>
 
     <div id="go-screen" class="screen-overlay" style="display: none;">
       <div class="overlay-title" style="font-style: italic;">Game Over</div>
-      <div class="overlay-desc">Defenses Compromised</div>
+      <div class="overlay-desc">Mempool Overflow</div>
       <div class="pvalue" id="go-score" style="font-size:2.5rem; margin-bottom: 30px;">0</div>
       <button class="btn" id="restart-btn">Retry</button>
     </div>
@@ -266,9 +232,9 @@ h1 {
     </div>
 
     <div class="panel">
-      <div class="panel-title">Shield</div>
-      <div class="pvalue" style="font-size:1.4rem;" id="shield-val">100%</div>
-      <div id="shield-wrap"><div id="shield-bar"></div></div>
+      <div class="panel-title">Chain</div>
+      <div class="pvalue" style="font-size:1.8rem;" id="chain-val">0</div>
+      <div class="psub">Max Multiplier</div>
     </div>
 
     <div class="panel">
@@ -286,10 +252,9 @@ h1 {
     <div class="panel">
       <div class="panel-title">Controls</div>
       <div class="ctrl-text">
-        [ ← ] [ → ] or [ A ] [ D ]<br>
-        Navigate elegant vessel.<br><br>
-        [ SPACE ]<br>
-        Hold for continuous fire.
+        [ ← ] [ → ] : Move<br>
+        [ ↓ ] : Fast Drop<br>
+        [ SPACE ] : Rotate
       </div>
     </div>
   </div>
@@ -298,8 +263,11 @@ h1 {
 <div id="mobile-controls">
   <div class="ctrl-row">
     <div class="cbtn" id="btn-left">←</div>
-    <div class="cbtn" id="btn-shoot">SHOOT</div>
+    <div class="cbtn" id="btn-down">↓</div>
     <div class="cbtn" id="btn-right">→</div>
+  </div>
+  <div class="ctrl-row">
+    <div class="cbtn" id="btn-rotate">ROTATE</div>
   </div>
 </div>
 
@@ -312,27 +280,43 @@ const ctx = canvas.getContext('2d');
 const nextCanvas = document.getElementById('next-canvas');
 const nextCtx = nextCanvas.getContext('2d');
 
-let W = canvas.width;
-let H = canvas.height;
+const W = canvas.width;
+const H = canvas.height;
+
+// PUYO PUYO GRID CONSTANTS
+const COLS = 6;
+const ROWS = 13; // 0行目は見えないエリア
+const CELL = 40;
+const BOARD_W = COLS * CELL;
+const BOARD_H = ROWS * CELL;
+const OX = (W - BOARD_W) / 2;
+const OY = (H - BOARD_H) / 2 + 20;
 
 let gameOn = false;
 let score = 0;
-let shield = 100;
+let maxChain = 0;
 
-let player;
-let bullets = [];
-let enemies = [];
-let particles = [];
-let stars = [];
+let board = [];
+for(let r=0; r<ROWS; r++) board[r] = new Array(COLS).fill(null);
+
+const STATE = { PLAY: 0, DROP: 1, ERASE_WAIT: 2 };
+let gameState = STATE.PLAY;
+let frameCount = 0;
+
+// アクティブなペア（操作中のぷよ）
+let activePair = null; 
+let dropTimer = 0;
+
+let erasingCells = [];
+let eraseWaitTimer = 0;
+let currentChain = 0;
 
 let keys = {};
 let txQueue = [];
-let nextEnemyData = null; 
-let spawnTimer = 0;
+let nextPair = null;
 
-const MAX_ENEMIES = 4;        // 少数精鋭
-const SPAWN_INTERVAL = 150;   // さらにゆったり出現
-const BASE_SPEED = 0.5;
+let particles = [];
+let stars = [];
 
 let blockHeight = "----";
 let lastBlockMs = null;
@@ -347,7 +331,7 @@ function getAudioCtx() {
   if (audioCtx.state === 'suspended') audioCtx.resume();
   return audioCtx;
 }
-function playSound(type) {
+function playSound(type, chain = 1) {
   try {
     const ac = getAudioCtx();
     const t = ac.currentTime;
@@ -355,25 +339,34 @@ function playSound(type) {
     const gain = ac.createGain();
     osc.connect(gain); gain.connect(ac.destination);
     
-    if (type === 'shoot') {
-      osc.type = 'square';
-      osc.frequency.setValueAtTime(1200, t);
-      osc.frequency.exponentialRampToValueAtTime(300, t + 0.05);
-      gain.gain.setValueAtTime(0.015, t);
-      gain.gain.exponentialRampToValueAtTime(0.001, t + 0.05);
-      osc.start(t); osc.stop(t + 0.06);
-    } else if (type === 'hit') {
-      osc.type = 'triangle';
-      osc.frequency.setValueAtTime(400, t);
-      osc.frequency.exponentialRampToValueAtTime(100, t + 0.05);
+    if (type === 'rotate') {
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(800, t);
+      osc.frequency.exponentialRampToValueAtTime(1200, t + 0.05);
       gain.gain.setValueAtTime(0.05, t);
       gain.gain.exponentialRampToValueAtTime(0.001, t + 0.05);
       osc.start(t); osc.stop(t + 0.06);
+    } else if (type === 'drop') {
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(200, t);
+      osc.frequency.exponentialRampToValueAtTime(100, t + 0.05);
+      gain.gain.setValueAtTime(0.08, t);
+      gain.gain.exponentialRampToValueAtTime(0.001, t + 0.05);
+      osc.start(t); osc.stop(t + 0.06);
+    } else if (type === 'erase') {
+      // 連鎖数に応じて音が高くなる
+      osc.type = 'square';
+      const baseFreq = 400 + (chain * 100);
+      osc.frequency.setValueAtTime(baseFreq, t);
+      osc.frequency.exponentialRampToValueAtTime(baseFreq * 1.5, t + 0.1);
+      gain.gain.setValueAtTime(0.1, t);
+      gain.gain.exponentialRampToValueAtTime(0.001, t + 0.2);
+      osc.start(t); osc.stop(t + 0.25);
     } else if (type === 'boom') {
       osc.type = 'sawtooth';
       osc.frequency.setValueAtTime(150, t);
       osc.frequency.exponentialRampToValueAtTime(20, t + 0.4);
-      gain.gain.setValueAtTime(0.2, t);
+      gain.gain.setValueAtTime(0.3, t);
       gain.gain.exponentialRampToValueAtTime(0.001, t + 0.4);
       osc.start(t); osc.stop(t + 0.45);
     }
@@ -381,213 +374,15 @@ function playSound(type) {
 }
 
 // ================================================================
-//  CLASSES
+//  TIERS & MEMPOOL
 // ================================================================
-
-// プレイヤー：Tesseract風 シャープなワイヤーフレーム機体
-class Player {
-  constructor() {
-    this.w = 40; this.h = 40;
-    this.x = W / 2 - this.w / 2;
-    this.y = H - 55;
-    this.speed = 4.5;
-    this.fireCooldown = 0;
-  }
-  update() {
-    if (keys['ArrowLeft'] || keys['KeyA'] || btnStates.left) this.x -= this.speed;
-    if (keys['ArrowRight'] || keys['KeyD'] || btnStates.right) this.x += this.speed;
-    this.x = Math.max(10, Math.min(W - this.w - 10, this.x));
-
-    if (this.fireCooldown > 0) this.fireCooldown--;
-    if ((keys['Space'] || btnStates.shoot) && this.fireCooldown <= 0) {
-      this.shoot();
-      this.fireCooldown = 12; 
-    }
-  }
-  shoot() {
-    bullets.push(new Bullet(this.x + 8, this.y + 10, 2, 16, 12, '#00e5ff'));
-    bullets.push(new Bullet(this.x + this.w - 10, this.y + 10, 2, 16, 12, '#00e5ff'));
-    playSound('shoot');
-  }
-  draw(ctx) {
-    ctx.save();
-    ctx.translate(this.x, this.y);
-    
-    // ベース機体 (発光するワイヤーフレーム)
-    ctx.strokeStyle = 'rgba(255, 255, 255, 0.9)';
-    ctx.lineWidth = 1.5;
-    ctx.shadowBlur = 10;
-    ctx.shadowColor = '#ffffff';
-    
-    ctx.beginPath();
-    ctx.moveTo(this.w/2, 0); 
-    ctx.lineTo(this.w, this.h); 
-    ctx.lineTo(this.w/2, this.h - 10); 
-    ctx.lineTo(0, this.h); 
-    ctx.closePath();
-    ctx.stroke();
-
-    // 中央コア (オレンジに発光する菱形/Tesseractモチーフ)
-    ctx.fillStyle = '#f7931a';
-    ctx.shadowColor = '#f7931a';
-    ctx.shadowBlur = 15;
-    ctx.beginPath();
-    ctx.moveTo(this.w/2, this.h/2 - 6);
-    ctx.lineTo(this.w/2 + 6, this.h/2);
-    ctx.lineTo(this.w/2, this.h/2 + 6);
-    ctx.lineTo(this.w/2 - 6, this.h/2);
-    ctx.closePath();
-    ctx.fill();
-    
-    ctx.restore();
-  }
-}
-
-class Bullet {
-  constructor(x, y, w, h, speed, color) {
-    this.x = x; this.y = y; this.w = w; this.h = h;
-    this.speed = speed; this.color = color;
-  }
-  update() { this.y -= this.speed; }
-  draw(ctx) {
-    ctx.fillStyle = '#ffffff';
-    ctx.shadowBlur = 8; ctx.shadowColor = this.color;
-    ctx.fillRect(this.x, this.y, this.w, this.h);
-    ctx.shadowBlur = 0;
-  }
-}
-
-const SHAPES = {
-  Z: [[1,1,0],[0,1,1]],
-  L: [[0,0,1],[1,1,1]],
-  O: [[1,1],[1,1]],
-  S: [[0,1,1],[1,1,0]],
-  I: [[1,1,1,1]],
-  T: [[0,1,0],[1,1,1]],
-  J: [[1,0,0],[1,1,1]],
-  domino: [[1,1]],
-  dot: [[1]]
-};
-
-// Tesseract風：発光するワイヤーフレーム・キューブ
-function drawWireframeCell(ctx, x, y, size, color) {
-  ctx.strokeStyle = color;
-  ctx.lineWidth = 1.5;
-  
-  // 内側の薄い塗り
-  ctx.fillStyle = color;
-  ctx.globalAlpha = 0.15;
-  ctx.fillRect(x, y, size, size);
-  
-  // 外枠と発光
-  ctx.globalAlpha = 1.0;
-  ctx.shadowBlur = 12;
-  ctx.shadowColor = color;
-  ctx.strokeRect(x, y, size, size);
-  
-  // 十字ライン (3D感)
-  ctx.globalAlpha = 0.3;
-  ctx.beginPath();
-  ctx.moveTo(x + size/2, y);
-  ctx.lineTo(x + size/2, y + size);
-  ctx.moveTo(x, y + size/2);
-  ctx.lineTo(x + size, y + size/2);
-  ctx.stroke();
-  
-  ctx.globalAlpha = 1.0;
-  ctx.shadowBlur = 0;
-}
-
-class Enemy {
-  constructor(tier, x) {
-    this.tier = tier;
-    this.hp = tier.hp; this.maxHp = tier.hp;
-    this.color = tier.color;
-    this.points = tier.pts;
-    this.shape = SHAPES[tier.shape] || SHAPES.T;
-    
-    this.cols = this.shape[0].length;
-    this.rows = this.shape.length;
-    this.cellSize = 10 + (tier.scale * 6); 
-    
-    this.w = this.cols * this.cellSize;
-    this.h = this.rows * this.cellSize;
-    this.x = x; 
-    this.y = -this.h - 10;
-    
-    this.speedY = BASE_SPEED * tier.speedMod;
-    this.hitFlash = 0;
-  }
-  update() {
-    this.y += this.speedY;
-    if (this.hitFlash > 0) this.hitFlash--;
-  }
-  draw(ctx) {
-    ctx.save();
-    ctx.translate(this.x, this.y);
-    
-    const drawColor = this.hitFlash > 0 ? '#ffffff' : this.color;
-
-    for(let r=0; r<this.rows; r++){
-      for(let c=0; c<this.cols; c++){
-        if(this.shape[r][c]) {
-          const px = c * this.cellSize;
-          const py = r * this.cellSize;
-          if (this.hitFlash > 0) {
-            ctx.shadowBlur = 20; ctx.shadowColor = '#ffffff';
-            ctx.fillStyle = '#ffffff';
-            ctx.fillRect(px, py, this.cellSize, this.cellSize);
-            ctx.shadowBlur = 0;
-          } else {
-            drawWireframeCell(ctx, px, py, this.cellSize, drawColor);
-          }
-        }
-      }
-    }
-    
-    if (this.hp < this.maxHp && this.maxHp > 1) {
-      ctx.fillStyle = 'rgba(255,255,255,0.2)';
-      ctx.fillRect(0, -8, this.w, 2);
-      ctx.fillStyle = this.color;
-      ctx.fillRect(0, -8, this.w * (this.hp / this.maxHp), 2);
-    }
-    ctx.restore();
-  }
-}
-
-class Particle {
-  constructor(x, y, color) {
-    this.x = x; this.y = y;
-    const a = Math.random() * Math.PI * 2;
-    const s = Math.random() * 3 + 1;
-    this.vx = Math.cos(a) * s; this.vy = Math.sin(a) * s;
-    this.life = 1.0; this.decay = Math.random() * 0.02 + 0.01;
-    this.color = color;
-    this.size = Math.random() * 3 + 2;
-  }
-  update() { this.x += this.vx; this.y += this.vy; this.life -= this.decay; }
-  draw(ctx) {
-    ctx.globalAlpha = Math.max(0, this.life);
-    ctx.strokeStyle = this.color;
-    ctx.lineWidth = 1;
-    ctx.beginPath();
-    ctx.strokeRect(this.x, this.y, this.size, this.size);
-    ctx.globalAlpha = 1.0;
-  }
-}
-
-// ================================================================
-//  TIERS (大口TXをより明確に強調)
-// ================================================================
-function getEnemyTier(sats) {
+function getTxTier(sats) {
   const btc = sats / 1e8;
-  if (btc >= 10)   return { scale: 6, hp: 100, color: '#ff3355', pts: 5000, speedMod: 0.15, shape: 'Z', name: '>10₿ 🟥' };
-  if (btc >= 1)    return { scale: 5, hp: 40,  color: '#ff8800', pts: 1000, speedMod: 0.25, shape: 'L', name: '>1₿ 🟧' };
-  if (btc >= 0.1)  return { scale: 4, hp: 15,  color: '#ffee00', pts: 300,  speedMod: 0.35, shape: 'O', name: '>0.1₿ 🟨' };
-  if (btc >= 0.05) return { scale: 3, hp: 6,   color: '#00ff88', pts: 100,  speedMod: 0.5,  shape: 'S', name: '>0.05₿ 🟩' };
-  if (btc >= 0.01) return { scale: 2.5,hp: 3,  color: '#00e5ff', pts: 50,   speedMod: 0.7,  shape: 'I', name: '>0.01₿ 🟦' };
-  if (sats > 5000) return { scale: 1.5,hp: 2,  color: '#cc44ff', pts: 10,   speedMod: 0.9,  shape: ['T','J','L','S','Z'][Math.floor(Math.random()*5)], name: 'Normal 🟣' };
-  return           { scale: 1,  hp: 1,  color: '#4466ff', pts: 2,    speedMod: 1.2,  shape: 'dot',   name: 'Dust ●' };
+  if (btc >= 1)     return { color: '#ff3355' }; // Red
+  if (btc >= 0.1)   return { color: '#ff8800' }; // Orange
+  if (btc >= 0.01)  return { color: '#ffee00' }; // Yellow
+  if (btc >= 0.001) return { color: '#00ff88' }; // Green
+  return            { color: '#00e5ff' }; // Cyan
 }
 
 function txSatoshis(tx) {
@@ -595,166 +390,344 @@ function txSatoshis(tx) {
   return 0;
 }
 
-// ================================================================
-//  SMART SPAWNER & NEXT PANEL LOGIC
-// ================================================================
-function loadNextEnemy() {
-  if (!nextEnemyData && txQueue.length > 0) {
-    // 常に最新キューの中で「最も巨大なTX」を絶対に選出する
-    txQueue.sort((a, b) => txSatoshis(b) - txSatoshis(a));
-    nextEnemyData = txQueue.shift();
+function loadNextPair() {
+  if (!nextPair && txQueue.length >= 2) {
+    let tx1 = txQueue.shift();
+    let tx2 = txQueue.shift();
+    let c1 = getTxTier(txSatoshis(tx1));
+    let c2 = getTxTier(txSatoshis(tx2));
+    nextPair = { 
+      color1: c1.color, color2: c2.color, 
+      sats: txSatoshis(tx1) + txSatoshis(tx2) 
+    };
     updateNextUI();
   }
 }
 
-function updateNextUI() {
-  nextCtx.clearRect(0, 0, nextCanvas.width, nextCanvas.height);
+// ================================================================
+//  PUYO LOGIC
+// ================================================================
+function spawnPair() {
+  if (!nextPair) return false;
+  activePair = {
+    r: 1, c: 2, rot: 0, 
+    colorChild: nextPair.color1, 
+    colorAxis: nextPair.color2
+  };
+  nextPair = null;
+  loadNextPair();
   
-  if (!nextEnemyData) {
-    document.getElementById('nx-tier').textContent = '——';
-    document.getElementById('nx-tier').style.color = '#666666';
-    document.getElementById('nx-amount').textContent = 'Awaiting Data...';
-    document.getElementById('nx-fee').textContent = 'fee: —— sat';
-    document.getElementById('nx-rate').textContent = 'fee rate: —— sat/vB';
-    document.getElementById('nx-size').textContent = '——';
-    return;
+  if (!canMove(activePair.r, activePair.c, activePair.rot)) {
+    return false; // Game Over
   }
+  return true;
+}
 
-  const sats = txSatoshis(nextEnemyData);
-  const tier = getEnemyTier(sats);
-  const fee = nextEnemyData.fee || 0;
-  const vsize = nextEnemyData.weight ? Math.round(nextEnemyData.weight/4) : 0;
-  const rate = vsize > 0 ? Math.round(fee / vsize) : 0;
+function canMove(r, c, rot) {
+  if(r < 0 || r >= ROWS || c < 0 || c >= COLS || board[r][c] !== null) return false;
+  let cr = r, cc = c;
+  if(rot === 0) cr -= 1;
+  else if(rot === 1) cc += 1;
+  else if(rot === 2) cr += 1;
+  else if(rot === 3) cc -= 1;
   
-  let amtStr = "";
-  if (sats >= 1e8) amtStr = (sats/1e8).toFixed(4) + " ₿";
-  else if (sats > 1000) amtStr = (sats/1e5).toFixed(4) + " mBTC";
-  else amtStr = sats + " sat";
+  if(cr < 0 || cr >= ROWS || cc < 0 || cc >= COLS || board[cr][cc] !== null) return false;
+  return true;
+}
 
-  const tierEl = document.getElementById('nx-tier');
-  tierEl.textContent = tier.name.split(' ')[0]; 
-  tierEl.style.color = tier.color;
-  tierEl.style.textShadow = `0 0 10px ${tier.color}`; 
-  
-  document.getElementById('nx-amount').textContent = amtStr;
-  document.getElementById('nx-fee').textContent = `fee: ${fee.toLocaleString()} sat`;
-  document.getElementById('nx-rate').textContent = `fee rate: ${rate} sat/vB`;
-  
-  const shape = SHAPES[tier.shape] || SHAPES.T;
-  const cols = shape[0].length;
-  const rows = shape.length;
-  document.getElementById('nx-size').textContent = `×${Math.max(1, tier.scale)} (${cols}×${rows} cells)`;
+function moveActive(dc) {
+  if(canMove(activePair.r, activePair.c + dc, activePair.rot)) {
+    activePair.c += dc;
+  }
+}
 
-  const drawScale = 16; 
-  const tw = cols * drawScale;
-  const th = rows * drawScale;
-  const ox = (nextCanvas.width - tw) / 2;
-  const oy = (nextCanvas.height - th) / 2;
-
-  for(let r=0; r<rows; r++){
-    for(let c=0; c<cols; c++){
-      if(shape[r][c]) {
-        drawWireframeCell(nextCtx, ox + c * drawScale, oy + r * drawScale, drawScale, tier.color);
-      }
+function rotateActive() {
+  let nextRot = (activePair.rot + 1) % 4;
+  if(canMove(activePair.r, activePair.c, nextRot)) {
+    activePair.rot = nextRot;
+    playSound('rotate');
+  } else {
+    // 壁蹴り (Wall Kick)
+    if (canMove(activePair.r, activePair.c - 1, nextRot)) {
+      activePair.c -= 1; activePair.rot = nextRot; playSound('rotate');
+    } else if (canMove(activePair.r, activePair.c + 1, nextRot)) {
+      activePair.c += 1; activePair.rot = nextRot; playSound('rotate');
+    } else if (canMove(activePair.r - 1, activePair.c, nextRot)) {
+      activePair.r -= 1; activePair.rot = nextRot; playSound('rotate');
     }
   }
 }
 
-function trySpawnEnemy() {
-  spawnTimer++;
-  if (spawnTimer > SPAWN_INTERVAL && nextEnemyData && enemies.length < MAX_ENEMIES) {
-    const sats = txSatoshis(nextEnemyData);
-    const tier = getEnemyTier(sats);
-    
-    const shape = SHAPES[tier.shape] || SHAPES.T;
-    const w = shape[0].length * (10 + (tier.scale * 6));
-    const safeX = 10 + Math.random() * (W - w - 20);
-    
-    enemies.push(new Enemy(tier, safeX));
-    
-    nextEnemyData = null;
-    spawnTimer = 0;
-    loadNextEnemy();
+function lockActive() {
+  board[activePair.r][activePair.c] = { color: activePair.colorAxis };
+  let cr = activePair.r, cc = activePair.c;
+  if(activePair.rot === 0) cr -= 1;
+  else if(activePair.rot === 1) cc += 1;
+  else if(activePair.rot === 2) cr += 1;
+  else if(activePair.rot === 3) cc -= 1;
+  board[cr][cc] = { color: activePair.colorChild };
+  
+  playSound('drop');
+  activePair = null;
+  gameState = STATE.DROP;
+}
+
+// 宙に浮いているブロックを重力で落とす
+function applyGravity() {
+  let dropped = false;
+  for(let c = 0; c < COLS; c++) {
+    for(let r = ROWS - 2; r >= 0; r--) {
+      if(board[r][c] !== null && board[r+1][c] === null) {
+        board[r+1][c] = board[r][c];
+        board[r][c] = null;
+        dropped = true;
+      }
+    }
+  }
+  return dropped;
+}
+
+// 同色4つ以上の連結をチェック
+function checkErase() {
+  let visited = Array(ROWS).fill(0).map(()=>Array(COLS).fill(false));
+  let toErase = [];
+  
+  for(let r = 0; r < ROWS; r++) {
+    for(let c = 0; c < COLS; c++) {
+      if(board[r][c] !== null && !visited[r][c]) {
+        let group = [];
+        let color = board[r][c].color;
+        let q = [{r, c}];
+        visited[r][c] = true;
+        let head = 0;
+        
+        while(head < q.length) {
+          let curr = q[head++];
+          group.push(curr);
+          
+          const dirs = [[-1,0],[1,0],[0,-1],[0,1]];
+          for(let d of dirs) {
+            let nr = curr.r + d[0], nc = curr.c + d[1];
+            if(nr>=0 && nr<ROWS && nc>=0 && nc<COLS && !visited[nr][nc] && board[nr][nc] !== null && board[nr][nc].color === color) {
+              visited[nr][nc] = true;
+              q.push({r: nr, c: nc});
+            }
+          }
+        }
+        if(group.length >= 4) {
+          toErase.push(...group);
+        }
+      }
+    }
+  }
+  return toErase;
+}
+
+// ================================================================
+//  DRAWING
+// ================================================================
+function drawWireframeCell(ctx, r, c, x, y, size, color, isErasing) {
+  // 隣接セルとの連結チェック
+  let u = (r>0 && board[r-1][c]?.color === color);
+  let d = (r<ROWS-1 && board[r+1][c]?.color === color);
+  let l = (c>0 && board[r][c-1]?.color === color);
+  let rig = (c<COLS-1 && board[r][c+1]?.color === color);
+
+  ctx.strokeStyle = color;
+  ctx.lineWidth = 2;
+  
+  // 内側の塗り
+  ctx.fillStyle = color;
+  ctx.globalAlpha = isErasing ? 0.9 : 0.15;
+  ctx.fillRect(x, y, size, size);
+
+  ctx.globalAlpha = 1.0;
+  ctx.shadowBlur = isErasing ? 25 : 12;
+  ctx.shadowColor = color;
+
+  // 繋がっていない部分だけ線を引く (スライム感)
+  ctx.beginPath();
+  if(!u) { ctx.moveTo(x, y); ctx.lineTo(x+size, y); }
+  if(!d) { ctx.moveTo(x, y+size); ctx.lineTo(x+size, y+size); }
+  if(!l) { ctx.moveTo(x, y); ctx.lineTo(x, y+size); }
+  if(!rig) { ctx.moveTo(x+size, y); ctx.lineTo(x+size, y+size); }
+  ctx.stroke();
+
+  // 中央コア
+  ctx.globalAlpha = 0.8;
+  ctx.fillRect(x + size/2 - 3, y + size/2 - 3, 6, 6);
+
+  ctx.globalAlpha = 1.0;
+  ctx.shadowBlur = 0;
+}
+
+function drawActivePair(ctx) {
+  if (!activePair) return;
+  const s = CELL;
+  
+  // Axis
+  let ax = OX + activePair.c * s;
+  let ay = OY + activePair.r * s;
+  
+  // Child
+  let cr = activePair.r, cc = activePair.c;
+  if(activePair.rot === 0) cr -= 1;
+  else if(activePair.rot === 1) cc += 1;
+  else if(activePair.rot === 2) cr += 1;
+  else if(activePair.rot === 3) cc -= 1;
+  let cx = OX + cc * s;
+  let cy = OY + cr * s;
+
+  // Axis Draw (繋がりなしの単体として描画)
+  ctx.strokeStyle = activePair.colorAxis; ctx.lineWidth = 2;
+  ctx.fillStyle = activePair.colorAxis; ctx.globalAlpha = 0.3;
+  ctx.fillRect(ax, ay, s, s);
+  ctx.globalAlpha = 1.0; ctx.shadowBlur = 12; ctx.shadowColor = activePair.colorAxis;
+  ctx.strokeRect(ax, ay, s, s);
+  ctx.globalAlpha = 0.8; ctx.fillRect(ax + s/2 - 3, ay + s/2 - 3, 6, 6);
+  ctx.shadowBlur = 0;
+
+  // Child Draw
+  ctx.strokeStyle = activePair.colorChild; ctx.lineWidth = 2;
+  ctx.fillStyle = activePair.colorChild; ctx.globalAlpha = 0.3;
+  ctx.fillRect(cx, cy, s, s);
+  ctx.globalAlpha = 1.0; ctx.shadowBlur = 12; ctx.shadowColor = activePair.colorChild;
+  ctx.strokeRect(cx, cy, s, s);
+  ctx.globalAlpha = 0.8; ctx.fillRect(cx + s/2 - 3, cy + s/2 - 3, 6, 6);
+  ctx.shadowBlur = 0;
+}
+
+class Particle {
+  constructor(x, y, color) {
+    this.x = x; this.y = y;
+    const a = Math.random() * Math.PI * 2;
+    const s = Math.random() * 5 + 2;
+    this.vx = Math.cos(a) * s; this.vy = Math.sin(a) * s;
+    this.life = 1.0; this.decay = Math.random() * 0.03 + 0.02;
+    this.color = color;
+    this.size = Math.random() * 4 + 2;
+  }
+  update() { this.x += this.vx; this.y += this.vy; this.life -= this.decay; }
+  draw(ctx) {
+    ctx.globalAlpha = Math.max(0, this.life);
+    ctx.fillStyle = this.color;
+    ctx.fillRect(this.x, this.y, this.size, this.size);
+    ctx.globalAlpha = 1.0;
   }
 }
 
 // ================================================================
 //  MAIN LOGIC
 // ================================================================
-function initBackground() {
-  stars = [];
-  // 宇宙のチリ (細かい多層パララックス)
-  for(let i=0; i<60; i++) {
-    stars.push({
-      x: Math.random()*W,
-      y: Math.random()*H,
-      s: Math.random()*1.5 + 0.5,
-      v: Math.random()*0.3 + 0.1,
-      alpha: Math.random()*0.5 + 0.1
-    });
+function updateNextUI() {
+  nextCtx.clearRect(0, 0, nextCanvas.width, nextCanvas.height);
+  if (!nextPair) return;
+
+  let cx = nextCanvas.width / 2;
+  let cy = nextCanvas.height / 2;
+  let s = 24;
+  
+  // Child (上)
+  nextCtx.strokeStyle = nextPair.color1; nextCtx.lineWidth = 2;
+  nextCtx.fillStyle = nextPair.color1; nextCtx.globalAlpha = 0.3;
+  nextCtx.fillRect(cx - s/2, cy - s - 2, s, s);
+  nextCtx.globalAlpha = 1.0; nextCtx.shadowBlur = 10; nextCtx.shadowColor = nextPair.color1;
+  nextCtx.strokeRect(cx - s/2, cy - s - 2, s, s);
+  nextCtx.shadowBlur = 0;
+
+  // Axis (下)
+  nextCtx.strokeStyle = nextPair.color2; nextCtx.lineWidth = 2;
+  nextCtx.fillStyle = nextPair.color2; nextCtx.globalAlpha = 0.3;
+  nextCtx.fillRect(cx - s/2, cy + 2, s, s);
+  nextCtx.globalAlpha = 1.0; nextCtx.shadowBlur = 10; nextCtx.shadowColor = nextPair.color2;
+  nextCtx.strokeRect(cx - s/2, cy + 2, s, s);
+  nextCtx.shadowBlur = 0;
+
+  const totalSats = nextPair.sats;
+  let amtStr = totalSats >= 1e8 ? (totalSats/1e8).toFixed(4) + " ₿" :
+               totalSats > 1000 ? (totalSats/1e5).toFixed(4) + " mBTC" : totalSats + " sat";
+  
+  document.getElementById('nx-amount').textContent = amtStr;
+  document.getElementById('nx-tier').textContent = "TX PAIR";
+  document.getElementById('nx-tier').style.color = nextPair.color2;
+  document.getElementById('nx-tier').style.textShadow = `0 0 10px ${nextPair.color2}`;
+}
+
+let keyDelay = 0;
+function handleInput() {
+  if (keyDelay > 0) keyDelay--;
+  
+  if (keys['ArrowLeft'] || keys['KeyA'] || btnStates.left) {
+    if(keyDelay === 0) { moveActive(-1); keyDelay = 6; }
+  } else if (keys['ArrowRight'] || keys['KeyD'] || btnStates.right) {
+    if(keyDelay === 0) { moveActive(1); keyDelay = 6; }
+  } else {
+    keyDelay = 0; 
   }
 }
 
-function triggerBlockExplosion(height) {
-  const flashEl = document.getElementById('block-flash');
-  document.getElementById('flash-height-val').textContent = `#${height.toLocaleString()}`;
-  flashEl.classList.remove('show'); void flashEl.offsetWidth; flashEl.classList.add('show');
-  
-  enemies.forEach(e => {
-    score += e.points * 5; 
-    for(let i=0; i<15; i++) particles.push(new Particle(e.x + e.w/2, e.y + e.h/2, e.color));
-  });
-  enemies = [];
-  txQueue = [];
-  nextEnemyData = null;
-  updateNextUI();
-  updateUI();
-}
+// 1回だけ押すキー（長押し防止）
+window.addEventListener('keydown', e => { 
+  keys[e.code] = true; 
+  if(e.code==='Space') { e.preventDefault(); if(gameState === STATE.PLAY && activePair) rotateActive(); }
+});
+window.addEventListener('keyup', e => { keys[e.code] = false; });
 
 function update() {
+  frameCount++;
   if (!gameOn) return;
+  loadNextPair();
 
-  player.update();
-  loadNextEnemy();
-  trySpawnEnemy();
-
-  for (let i = bullets.length - 1; i >= 0; i--) {
-    bullets[i].update();
-    if (bullets[i].y < 0) bullets.splice(i, 1);
-  }
-
-  for (let i = enemies.length - 1; i >= 0; i--) {
-    let e = enemies[i];
-    e.update();
-
-    if (e.y + e.h >= H - 10) {
-      shield -= Math.max(5, e.maxHp); 
-      if(shield < 0) shield = 0;
-      updateUI();
-      for(let k=0; k<10; k++) particles.push(new Particle(e.x+e.w/2, H-10, e.color));
-      enemies.splice(i, 1);
-      if(shield === 0) gameOver();
-      continue;
+  if (gameState === STATE.PLAY) {
+    if (!activePair) {
+      if (!spawnPair()) { gameOver(); return; }
     }
-
-    for (let j = bullets.length - 1; j >= 0; j--) {
-      let b = bullets[j];
-      if (b.x < e.x + e.w && b.x + b.w > e.x && b.y < e.y + e.h && b.y + b.h > e.y) {
-        bullets.splice(j, 1);
-        e.hp--;
-        e.hitFlash = 3;
-        playSound('hit');
-        for(let k=0; k<2; k++) particles.push(new Particle(b.x, b.y, '#fff'));
-        
-        if (e.hp <= 0) {
-          score += e.points;
-          updateUI();
-          playSound('boom');
-          for(let k=0; k<15; k++) particles.push(new Particle(e.x+e.w/2, e.y+e.h/2, e.color));
-          enemies.splice(i, 1);
-        }
-        break;
+    
+    handleInput();
+    
+    // 落下処理
+    let dropInterval = (keys['ArrowDown'] || keys['KeyS'] || btnStates.down) ? 2 : 30;
+    dropTimer++;
+    if (dropTimer >= dropInterval) {
+      dropTimer = 0;
+      if (canMove(activePair.r + 1, activePair.c, activePair.rot)) {
+        activePair.r += 1;
+      } else {
+        lockActive();
       }
+    }
+  } 
+  else if (gameState === STATE.DROP) {
+    // スムーズな落下アニメーションのため数フレーム毎に処理
+    if (frameCount % 3 === 0) {
+      if (!applyGravity()) {
+        let toErase = checkErase();
+        if (toErase.length > 0) {
+          erasingCells = toErase;
+          gameState = STATE.ERASE_WAIT;
+          eraseWaitTimer = 25; // ピカピカ光る時間
+          currentChain++;
+          playSound('erase', currentChain);
+        } else {
+          currentChain = 0;
+          gameState = STATE.PLAY;
+        }
+      }
+    }
+  } 
+  else if (gameState === STATE.ERASE_WAIT) {
+    eraseWaitTimer--;
+    if (eraseWaitTimer <= 0) {
+      score += erasingCells.length * 100 * currentChain;
+      if (currentChain > maxChain) maxChain = currentChain;
+      updateUI();
+      
+      erasingCells.forEach(cell => {
+        for(let i=0; i<6; i++) particles.push(new Particle(OX + cell.c*CELL + CELL/2, OY + cell.r*CELL + CELL/2, board[cell.r][cell.c].color));
+        board[cell.r][cell.c] = null;
+      });
+      erasingCells = [];
+      gameState = STATE.DROP;
     }
   }
 
@@ -762,44 +735,37 @@ function update() {
     particles[i].update();
     if (particles[i].life <= 0) particles.splice(i, 1);
   }
-  
-  stars.forEach(s => { 
-    s.y += s.v; 
-    if(s.y > H) { s.y = 0; s.x = Math.random()*W; } 
-  });
+  stars.forEach(s => { s.y += s.v; if(s.y > H) { s.y = 0; s.x = Math.random()*W; } });
 }
 
 function draw() {
-  ctx.fillStyle = '#050505'; // 漆黒の宇宙
+  ctx.fillStyle = '#050505';
   ctx.fillRect(0, 0, W, H);
   
-  // うっすらとしたグリッド線
-  ctx.strokeStyle = 'rgba(255,255,255,0.03)';
-  ctx.lineWidth = 1; ctx.beginPath();
-  for(let x=0; x<W; x+=40) { ctx.moveTo(x,0); ctx.lineTo(x,H); }
-  for(let y=0; y<H; y+=40) { ctx.moveTo(0,y); ctx.lineTo(W,y); }
-  ctx.stroke();
-
-  // 星（宇宙のチリ）
   stars.forEach(s => {
     ctx.fillStyle = `rgba(255, 255, 255, ${s.alpha})`;
-    ctx.beginPath();
-    ctx.arc(s.x, s.y, s.s, 0, Math.PI*2);
-    ctx.fill();
+    ctx.beginPath(); ctx.arc(s.x, s.y, s.s, 0, Math.PI*2); ctx.fill();
   });
 
-  if (!gameOn && shield === 0) {
-    particles.forEach(p => p.draw(ctx));
-    return;
+  // フィールド枠（エレガントな極細ライン）
+  ctx.strokeStyle = 'rgba(255,255,255,0.2)';
+  ctx.lineWidth = 1;
+  ctx.strokeRect(OX, OY + CELL, BOARD_W, BOARD_H - CELL); // 0行目は見えないエリアとして枠をずらす
+
+  // ボード内のぷよ描画
+  for(let r=1; r<ROWS; r++) { // 1行目から描画
+    for(let c=0; c<COLS; c++) {
+      if(board[r][c] !== null) {
+        let isErasing = erasingCells.some(cell => cell.r === r && cell.c === c);
+        drawWireframeCell(ctx, r, c, OX + c*CELL, OY + r*CELL, CELL, board[r][c].color, isErasing);
+      }
+    }
   }
 
-  // 防御ライン
-  ctx.strokeStyle = `rgba(255, 255, 255, ${shield/100 * 0.3})`;
-  ctx.beginPath(); ctx.moveTo(0, H - 10); ctx.lineTo(W, H - 10); ctx.stroke();
+  if (gameState === STATE.PLAY) {
+    drawActivePair(ctx);
+  }
 
-  if(player) player.draw(ctx);
-  bullets.forEach(b => b.draw(ctx));
-  enemies.forEach(e => e.draw(ctx));
   particles.forEach(p => p.draw(ctx));
 }
 
@@ -810,27 +776,20 @@ function loop() {
 }
 
 // ================================================================
-//  UI & CONTROLS
+//  UI & EVENTS
 // ================================================================
 function updateUI() {
   document.getElementById('score').textContent = score.toLocaleString();
-  const sBar = document.getElementById('shield-bar');
-  const sVal = document.getElementById('shield-val');
-  sVal.textContent = `${shield}%`;
-  sBar.style.width = `${shield}%`;
-  
-  if(shield > 50) { sBar.style.background = '#1A1A1A'; sVal.style.color = '#1A1A1A'; }
-  else { sBar.style.background = '#ff3355'; sVal.style.color = '#ff3355'; }
+  document.getElementById('chain-val').textContent = maxChain;
 }
 
-window.addEventListener('keydown', e => { keys[e.code] = true; if(e.code==='Space') e.preventDefault(); });
-window.addEventListener('keyup', e => { keys[e.code] = false; });
-
-const btnStates = { left:false, right:false, shoot:false };
+const btnStates = { left:false, right:false, down:false, shoot:false };
 function bindBtn(id, key) {
   const el = document.getElementById(id);
   if(!el) return;
-  const press = (e) => { e.preventDefault(); btnStates[key] = true; };
+  const press = (e) => { e.preventDefault(); btnStates[key] = true; 
+    if(key==='shoot' && gameState===STATE.PLAY && activePair) rotateActive();
+  };
   const release = (e) => { e.preventDefault(); btnStates[key] = false; };
   el.addEventListener('touchstart', press, {passive:false});
   el.addEventListener('touchend', release, {passive:false});
@@ -838,18 +797,21 @@ function bindBtn(id, key) {
   el.addEventListener('mouseup', release);
   el.addEventListener('mouseleave', release);
 }
-bindBtn('btn-left', 'left'); bindBtn('btn-right', 'right'); bindBtn('btn-shoot', 'shoot');
+bindBtn('btn-left', 'left'); bindBtn('btn-right', 'right'); bindBtn('btn-down', 'down'); bindBtn('btn-rotate', 'shoot');
 
 function startGame() {
   document.getElementById('start-screen').style.display = 'none';
   document.getElementById('go-screen').style.display = 'none';
-  score = 0; shield = 100;
-  player = new Player();
-  bullets = []; enemies = []; particles = []; txQueue = []; nextEnemyData = null;
-  spawnTimer = 0;
-  initBackground();
-  updateUI(); updateNextUI();
+  score = 0; maxChain = 0; currentChain = 0;
+  for(let r=0; r<ROWS; r++) board[r] = new Array(COLS).fill(null);
+  activePair = null; nextPair = null; txQueue = [];
+  particles = [];
+  gameState = STATE.PLAY;
   
+  stars = [];
+  for(let i=0; i<60; i++) stars.push({ x: Math.random()*W, y: Math.random()*H, s: Math.random()*1.5+0.5, v: Math.random()*0.3+0.1, alpha: Math.random()*0.5+0.1 });
+  
+  updateUI(); updateNextUI();
   getAudioCtx();
   gameOn = true;
   if(!wsConn) connectWS();
@@ -859,18 +821,35 @@ function gameOver() {
   gameOn = false;
   document.getElementById('go-score').textContent = score.toLocaleString();
   document.getElementById('go-screen').style.display = 'flex';
-  if(player) {
-    for(let i=0; i<30; i++) particles.push(new Particle(player.x+20, player.y+20, '#f7931a'));
-    playSound('boom');
+  playSound('boom');
+}
+
+function triggerBlockExplosion(height) {
+  const flashEl = document.getElementById('block-flash');
+  document.getElementById('flash-height-val').textContent = `#${height.toLocaleString()}`;
+  flashEl.classList.remove('show'); void flashEl.offsetWidth; flashEl.classList.add('show');
+  
+  playSound('boom');
+  // 全消しボーナス
+  let cleared = 0;
+  for(let r=0; r<ROWS; r++) {
+    for(let c=0; c<COLS; c++) {
+      if(board[r][c] !== null) {
+        cleared++;
+        for(let i=0; i<5; i++) particles.push(new Particle(OX + c*CELL + CELL/2, OY + r*CELL + CELL/2, board[r][c].color));
+        board[r][c] = null;
+      }
+    }
   }
+  score += cleared * 1000; // 特大ボーナス
+  activePair = null;
+  gameState = STATE.PLAY;
+  updateUI();
 }
 
 document.getElementById('start-btn').addEventListener('click', startGame);
 document.getElementById('restart-btn').addEventListener('click', startGame);
 
-// ================================================================
-//  WEBSOCKET (mempool.space)
-// ================================================================
 function fmtAgo(ms) {
   const diff = Date.now() - ms;
   const m = Math.floor(diff/60000);
@@ -897,13 +876,11 @@ function connectWS() {
       if (d.mempoolInfo) document.getElementById('mempool-size').textContent = d.mempoolInfo.size.toLocaleString();
       
       if (d.transactions && gameOn) {
-        for (const tx of d.transactions) {
-          txQueue.push(tx);
-        }
-        // キューが溜まりすぎた場合は、ソートして上位100個だけ残す (確実な大口確保)
-        if (txQueue.length > 300) {
+        for (const tx of d.transactions) txQueue.push(tx);
+        if (txQueue.length > 50) {
+           // 大口優先で残す
            txQueue.sort((a, b) => txSatoshis(b) - txSatoshis(a));
-           txQueue = txQueue.slice(0, 100); 
+           txQueue = txQueue.slice(0, 50); 
         }
       }
     } catch(err) {}
@@ -913,11 +890,8 @@ function connectWS() {
 
 fetch('https://mempool.space/api/blocks/tip/height')
   .then(r => r.json())
-  .then(h => {
-    blockHeight = h; document.getElementById('block-height').textContent = h.toLocaleString();
-  }).catch(()=>{});
+  .then(h => { blockHeight = h; document.getElementById('block-height').textContent = h.toLocaleString(); }).catch(()=>{});
 
-initBackground();
 loop();
 </script>
 </body>
