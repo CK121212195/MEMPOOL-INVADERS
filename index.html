@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>MEMPOOL / EDITORIAL DEFENSE</title>
 <style>
-/* VOGUE風エレガントフォント + BITRIS風サイバーフォント */
 @import url('https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,700&family=Montserrat:wght@300;400;600&family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&display=swap');
 
 :root {
@@ -15,17 +14,9 @@
   --text-sub: #666666;
   --border-color: #1A1A1A;
   
-  /* BITRIS Theme */
-  --game-bg: #1A120A;
+  /* Tesseract & BITRIS Theme */
+  --game-bg: #050505; /* 漆黒 */
   --btc: #f7931a;
-  
-  --c-red: #ff3355;
-  --c-orange: #ff8800;
-  --c-yellow: #ffee00;
-  --c-green: #00ff88;
-  --c-cyan: #00e5ff;
-  --c-purple: #cc44ff;
-  --c-blue: #4466ff;
   
   --font-vogue: 'Bodoni Moda', serif;
   --font-sans: 'Montserrat', sans-serif;
@@ -90,16 +81,14 @@ h1 {
 }
 .psub { font-family: var(--font-sans); font-size: 0.6rem; font-weight: 300; color: var(--text-sub); letter-spacing: 0.05em; }
 
-/* ===== NEXT PANEL (BITRIS STYLE) ===== */
+/* ===== NEXT PANEL ===== */
 #next-canvas-wrap {
   width: 100%; height: 110px; background: var(--game-bg);
   display: flex; align-items: center; justify-content: center;
   margin-bottom: 10px; border: 1px solid var(--border-color);
-  position: relative;
 }
 #next-canvas { image-rendering: pixelated; }
 
-/* TX Detail - BITRIS風 */
 .tx-detail { font-family: var(--font-mono); font-size: 0.65rem; line-height: 1.4; color: var(--text-main); }
 .tx-tier {
   font-family: var(--font-orbitron); font-size: 1.1rem; font-weight: 900;
@@ -108,7 +97,7 @@ h1 {
 .tx-amount { font-size: 0.75rem; margin-bottom: 4px; color: var(--text-main); }
 .tx-sub { color: var(--text-sub); }
 
-/* ===== PIECE SIZE LEGEND (BITRIS REPLICA) ===== */
+/* ===== PIECE SIZE LEGEND ===== */
 .legend-row { display: flex; align-items: center; gap: 6px; font-family: var(--font-mono); font-size: 0.65rem; margin-bottom: 4px; }
 .l-box { font-size: 0.65rem; font-weight: 900; display: inline-block; width: 35px;}
 .l-text { color: var(--text-sub); }
@@ -118,7 +107,7 @@ h1 {
   position: relative; border: 4px solid var(--text-main);
   background: #fff; padding: 6px; box-shadow: 0 20px 40px rgba(0,0,0,0.05);
 }
-#game-canvas { display: block; background-color: var(--game-bg); image-rendering: pixelated; }
+#game-canvas { display: block; background-color: var(--game-bg); }
 
 /* FLASH OVERLAY */
 #block-flash {
@@ -153,7 +142,7 @@ h1 {
 #shield-wrap { width: 100%; height: 2px; background: #ddd; margin-top: 10px; }
 #shield-bar { height: 100%; background: var(--text-main); width: 100%; transition: width 0.3s; }
 
-/* ===== RESPONSIVE & CONTROLS ===== */
+/* ===== CONTROLS ===== */
 .ctrl-text { font-family: var(--font-mono); font-size: 0.65rem; color: var(--text-sub); line-height: 1.8; }
 #mobile-controls { display: none; width: 100%; max-width: 400px; margin-top: 15px; }
 .ctrl-row { display: flex; gap: 10px; justify-content: center; }
@@ -186,7 +175,6 @@ h1 {
 <div id="app">
   <!-- LEFT COLUMN -->
   <div class="col" id="left-col">
-    <!-- NEXT PANEL -->
     <div class="panel">
       <div class="panel-title">Next Threat</div>
       <div id="next-canvas-wrap">
@@ -205,44 +193,43 @@ h1 {
     <div class="panel">
       <div class="panel-title">Piece Size</div>
       <div class="legend-row">
-        <span class="l-box" style="color:var(--c-red); text-shadow:0 0 5px var(--c-red);">████</span>
-        <span class="l-text">&gt;100₿ 🟥</span>
+        <span class="l-box" style="color:#ff3355; text-shadow:0 0 5px #ff3355;">████</span>
+        <span class="l-text">&gt;10₿ 🟥</span>
       </div>
       <div class="legend-row">
-        <span class="l-box" style="color:var(--c-orange); text-shadow:0 0 5px var(--c-orange);">███</span>
-        <span class="l-text">&gt;10₿ 🟧</span>
+        <span class="l-box" style="color:#ff8800; text-shadow:0 0 5px #ff8800;">███</span>
+        <span class="l-text">&gt;1₿ 🟧</span>
       </div>
       <div class="legend-row">
-        <span class="l-box" style="color:var(--c-yellow); text-shadow:0 0 4px var(--c-yellow);">██</span>
-        <span class="l-text">&gt;1₿ 🟨</span>
+        <span class="l-box" style="color:#ffee00; text-shadow:0 0 4px #ffee00;">██</span>
+        <span class="l-text">&gt;0.1₿ 🟨</span>
       </div>
       <div class="legend-row">
-        <span class="l-box" style="color:var(--c-green); text-shadow:0 0 3px var(--c-green);">■</span>
-        <span class="l-text">&gt;0.1₿ 🟩</span>
+        <span class="l-box" style="color:#00ff88; text-shadow:0 0 3px #00ff88;">■</span>
+        <span class="l-text">&gt;0.05₿ 🟩</span>
       </div>
       <div class="legend-row">
-        <span class="l-box" style="color:var(--c-cyan); text-shadow:0 0 3px var(--c-cyan);">■</span>
-        <span class="l-text">&gt;0.05₿ 🟦</span>
+        <span class="l-box" style="color:#00e5ff; text-shadow:0 0 3px #00e5ff;">■</span>
+        <span class="l-text">&gt;0.01₿ 🟦</span>
       </div>
       <div class="legend-row" style="margin: 6px 0;">
         <span class="l-text" style="color:#888;">7 standard pieces</span>
       </div>
       <div class="legend-row">
-        <span class="l-box" style="color:var(--c-purple); text-shadow:0 0 3px var(--c-purple);">▬</span>
-        <span class="l-text">≤0.0001₿ 🟣</span>
+        <span class="l-box" style="color:#cc44ff; text-shadow:0 0 3px #cc44ff;">▬</span>
+        <span class="l-text">≤0.005₿ 🟣</span>
       </div>
       <div class="legend-row">
-        <span class="l-box" style="color:var(--c-blue); font-weight:900;">·</span>
-        <span class="l-text">≤0.00001₿ dust</span>
+        <span class="l-box" style="color:#4466ff; font-weight:900;">·</span>
+        <span class="l-text">Dust ●</span>
       </div>
     </div>
   </div>
 
   <!-- CENTER COLUMN (Game) -->
   <div id="game-wrap">
-    <!-- BITRIS風 黒背景キャンバス -->
     <canvas id="game-canvas" width="400" height="520"></canvas>
-
+    
     <div id="block-flash">
       <div class="flash-title">Block Mined</div>
       <div class="flash-height" id="flash-height-val">#000000</div>
@@ -253,7 +240,7 @@ h1 {
       <div class="overlay-title">Mempool</div>
       <div class="overlay-desc">
         Eliminate unconfirmed transactions.<br>
-        Larger TXs appear as huge Tetriminos.<br>
+        Larger TXs appear as massive wireframes.<br>
         <br>
         ← / A : Move Left<br>
         → / D : Move Right<br>
@@ -336,18 +323,17 @@ let player;
 let bullets = [];
 let enemies = [];
 let particles = [];
+let stars = [];
 
 let keys = {};
 let txQueue = [];
 let nextEnemyData = null; 
 let spawnTimer = 0;
 
-// ★ プレイヤーに余裕を与える設定
-const MAX_ENEMIES = 4;        // 画面上は最大4体まで
-const SPAWN_INTERVAL = 120;   // スポーン間隔（ゆったり）
-const BASE_SPEED = 0.5;       // 敵の基本落下速度（非常に遅い）
+const MAX_ENEMIES = 4;        // 少数精鋭
+const SPAWN_INTERVAL = 150;   // さらにゆったり出現
+const BASE_SPEED = 0.5;
 
-// Bitcoin Stats
 let blockHeight = "----";
 let lastBlockMs = null;
 let wsConn = null;
@@ -373,11 +359,10 @@ function playSound(type) {
       osc.type = 'square';
       osc.frequency.setValueAtTime(1200, t);
       osc.frequency.exponentialRampToValueAtTime(300, t + 0.05);
-      gain.gain.setValueAtTime(0.02, t);
+      gain.gain.setValueAtTime(0.015, t);
       gain.gain.exponentialRampToValueAtTime(0.001, t + 0.05);
       osc.start(t); osc.stop(t + 0.06);
     } else if (type === 'hit') {
-      // コツンというブロックを叩く音
       osc.type = 'triangle';
       osc.frequency.setValueAtTime(400, t);
       osc.frequency.exponentialRampToValueAtTime(100, t + 0.05);
@@ -399,7 +384,7 @@ function playSound(type) {
 //  CLASSES
 // ================================================================
 
-// プレイヤー：Bitcoinの「₿」ロゴをモチーフにした洗練された機体
+// プレイヤー：Tesseract風 シャープなワイヤーフレーム機体
 class Player {
   constructor() {
     this.w = 40; this.h = 40;
@@ -414,43 +399,45 @@ class Player {
     this.x = Math.max(10, Math.min(W - this.w - 10, this.x));
 
     if (this.fireCooldown > 0) this.fireCooldown--;
-    // ゆとりのある連射速度
     if ((keys['Space'] || btnStates.shoot) && this.fireCooldown <= 0) {
       this.shoot();
       this.fireCooldown = 12; 
     }
   }
   shoot() {
-    // 2連装ビーム
-    bullets.push(new Bullet(this.x + 8, this.y + 10, 3, 12, 10, '#ffffff'));
-    bullets.push(new Bullet(this.x + this.w - 11, this.y + 10, 3, 12, 10, '#ffffff'));
+    bullets.push(new Bullet(this.x + 8, this.y + 10, 2, 16, 12, '#00e5ff'));
+    bullets.push(new Bullet(this.x + this.w - 10, this.y + 10, 2, 16, 12, '#00e5ff'));
     playSound('shoot');
   }
   draw(ctx) {
     ctx.save();
     ctx.translate(this.x, this.y);
     
-    // ベース機体 (白くシャープなシルエット)
-    ctx.fillStyle = '#ffffff';
+    // ベース機体 (発光するワイヤーフレーム)
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.9)';
+    ctx.lineWidth = 1.5;
+    ctx.shadowBlur = 10;
+    ctx.shadowColor = '#ffffff';
+    
     ctx.beginPath();
-    ctx.moveTo(this.w/2, 0);
-    ctx.lineTo(this.w, this.h);
-    ctx.lineTo(this.w/2, this.h - 10);
-    ctx.lineTo(0, this.h);
+    ctx.moveTo(this.w/2, 0); 
+    ctx.lineTo(this.w, this.h); 
+    ctx.lineTo(this.w/2, this.h - 10); 
+    ctx.lineTo(0, this.h); 
+    ctx.closePath();
+    ctx.stroke();
+
+    // 中央コア (オレンジに発光する菱形/Tesseractモチーフ)
+    ctx.fillStyle = '#f7931a';
+    ctx.shadowColor = '#f7931a';
+    ctx.shadowBlur = 15;
+    ctx.beginPath();
+    ctx.moveTo(this.w/2, this.h/2 - 6);
+    ctx.lineTo(this.w/2 + 6, this.h/2);
+    ctx.lineTo(this.w/2, this.h/2 + 6);
+    ctx.lineTo(this.w/2 - 6, this.h/2);
     ctx.closePath();
     ctx.fill();
-
-    // 中央に Bitcoin Orange の「₿」ロゴ
-    ctx.fillStyle = '#f7931a';
-    ctx.beginPath();
-    ctx.arc(this.w/2, this.h/2 + 2, 10, 0, Math.PI*2);
-    ctx.fill();
-    
-    ctx.fillStyle = '#ffffff';
-    ctx.font = 'bold 14px sans-serif';
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.fillText('₿', this.w/2, this.h/2 + 3);
     
     ctx.restore();
   }
@@ -463,14 +450,13 @@ class Bullet {
   }
   update() { this.y -= this.speed; }
   draw(ctx) {
-    ctx.fillStyle = this.color;
-    ctx.shadowBlur = 10; ctx.shadowColor = this.color;
+    ctx.fillStyle = '#ffffff';
+    ctx.shadowBlur = 8; ctx.shadowColor = this.color;
     ctx.fillRect(this.x, this.y, this.w, this.h);
     ctx.shadowBlur = 0;
   }
 }
 
-// テトリミノ形状（BITRIS互換）
 const SHAPES = {
   Z: [[1,1,0],[0,1,1]],
   L: [[0,0,1],[1,1,1]],
@@ -483,19 +469,33 @@ const SHAPES = {
   dot: [[1]]
 };
 
-// BITRIS風の「内側ハイライト＆シャドウ付きブロック」描画関数
-function drawBlockCell(ctx, x, y, size, color) {
+// Tesseract風：発光するワイヤーフレーム・キューブ
+function drawWireframeCell(ctx, x, y, size, color) {
+  ctx.strokeStyle = color;
+  ctx.lineWidth = 1.5;
+  
+  // 内側の薄い塗り
   ctx.fillStyle = color;
+  ctx.globalAlpha = 0.15;
   ctx.fillRect(x, y, size, size);
-  // Top highlight
-  ctx.fillStyle = 'rgba(255,255,255,0.3)';
-  ctx.fillRect(x, y, size, size * 0.15);
-  // Left highlight
-  ctx.fillStyle = 'rgba(255,255,255,0.15)';
-  ctx.fillRect(x, y, size * 0.15, size);
-  // Bottom shadow
-  ctx.fillStyle = 'rgba(0,0,0,0.3)';
-  ctx.fillRect(x, y + size * 0.85, size, size * 0.15);
+  
+  // 外枠と発光
+  ctx.globalAlpha = 1.0;
+  ctx.shadowBlur = 12;
+  ctx.shadowColor = color;
+  ctx.strokeRect(x, y, size, size);
+  
+  // 十字ライン (3D感)
+  ctx.globalAlpha = 0.3;
+  ctx.beginPath();
+  ctx.moveTo(x + size/2, y);
+  ctx.lineTo(x + size/2, y + size);
+  ctx.moveTo(x, y + size/2);
+  ctx.lineTo(x + size, y + size/2);
+  ctx.stroke();
+  
+  ctx.globalAlpha = 1.0;
+  ctx.shadowBlur = 0;
 }
 
 class Enemy {
@@ -508,21 +508,14 @@ class Enemy {
     
     this.cols = this.shape[0].length;
     this.rows = this.shape.length;
-    
-    // スケールごとにブロックのサイズを変える
-    // (Dust=10px, Normal=15px, Huge=30px, Whale=45px など)
     this.cellSize = 10 + (tier.scale * 6); 
     
     this.w = this.cols * this.cellSize;
     this.h = this.rows * this.cellSize;
-    
     this.x = x; 
     this.y = -this.h - 10;
     
-    // スピードは1/10。大きいほど重厚にゆっくり降りてくる。
-    // x方向には移動せず、真下に圧をかけてくる
     this.speedY = BASE_SPEED * tier.speedMod;
-    
     this.hitFlash = 0;
   }
   update() {
@@ -533,9 +526,7 @@ class Enemy {
     ctx.save();
     ctx.translate(this.x, this.y);
     
-    // ネオン発光
-    ctx.shadowBlur = this.hitFlash > 0 ? 30 : 15; 
-    ctx.shadowColor = this.hitFlash > 0 ? '#ffffff' : this.color;
+    const drawColor = this.hitFlash > 0 ? '#ffffff' : this.color;
 
     for(let r=0; r<this.rows; r++){
       for(let c=0; c<this.cols; c++){
@@ -543,22 +534,22 @@ class Enemy {
           const px = c * this.cellSize;
           const py = r * this.cellSize;
           if (this.hitFlash > 0) {
+            ctx.shadowBlur = 20; ctx.shadowColor = '#ffffff';
             ctx.fillStyle = '#ffffff';
-            ctx.fillRect(px, py, this.cellSize-1, this.cellSize-1);
+            ctx.fillRect(px, py, this.cellSize, this.cellSize);
+            ctx.shadowBlur = 0;
           } else {
-            drawBlockCell(ctx, px, py, this.cellSize-1, this.color);
+            drawWireframeCell(ctx, px, py, this.cellSize, drawColor);
           }
         }
       }
     }
     
-    // HPが減ったときのみ細くエレガントなHPバーを表示
     if (this.hp < this.maxHp && this.maxHp > 1) {
-      ctx.shadowBlur = 0;
       ctx.fillStyle = 'rgba(255,255,255,0.2)';
-      ctx.fillRect(0, -6, this.w, 3);
+      ctx.fillRect(0, -8, this.w, 2);
       ctx.fillStyle = this.color;
-      ctx.fillRect(0, -6, this.w * (this.hp / this.maxHp), 3);
+      ctx.fillRect(0, -8, this.w * (this.hp / this.maxHp), 2);
     }
     ctx.restore();
   }
@@ -577,27 +568,26 @@ class Particle {
   update() { this.x += this.vx; this.y += this.vy; this.life -= this.decay; }
   draw(ctx) {
     ctx.globalAlpha = Math.max(0, this.life);
-    ctx.fillStyle = this.color;
-    ctx.fillRect(this.x, this.y, this.size, this.size);
+    ctx.strokeStyle = this.color;
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.strokeRect(this.x, this.y, this.size, this.size);
     ctx.globalAlpha = 1.0;
   }
 }
 
 // ================================================================
-//  TIERS (BITRIS 完全準拠の閾値と直接指定カラーコード)
+//  TIERS (大口TXをより明確に強調)
 // ================================================================
 function getEnemyTier(sats) {
   const btc = sats / 1e8;
-  // 大きなTXほどHPが高く、落下速度(speedMod)が遅い
-  // ★ Canvasが認識できるようにCSS変数(var(--...))ではなく直接カラーコードを指定 ★
-  if (btc >= 100)  return { scale: 6, hp: 150, color: '#ff3355', pts: 5000, speedMod: 0.3, shape: 'Z', name: '>100₿ 🟥' };
-  if (btc >= 10)   return { scale: 5, hp: 50,  color: '#ff8800', pts: 1000, speedMod: 0.4, shape: 'L', name: '>10₿ 🟧' };
-  if (btc >= 1)    return { scale: 4, hp: 20,  color: '#ffee00', pts: 300,  speedMod: 0.5, shape: 'O', name: '>1₿ 🟨' };
-  if (btc >= 0.1)  return { scale: 3, hp: 8,   color: '#00ff88', pts: 100,  speedMod: 0.6, shape: 'S', name: '>0.1₿ 🟩' };
-  if (btc >= 0.05) return { scale: 2, hp: 4,   color: '#00e5ff', pts: 50,   speedMod: 0.8, shape: 'I', name: '>0.05₿ 🟦' };
-  if (sats > 10000) return { scale: 1, hp: 2,  color: '#666666', pts: 10,   speedMod: 1.0, shape: ['T','J','L','S','Z'][Math.floor(Math.random()*5)], name: '<0.05₿ (Normal)' };
-  if (sats > 1000) return { scale: 1, hp: 1,  color: '#cc44ff', pts: 5,    speedMod: 1.2, shape: 'domino', name: '≤0.0001₿ 🟣' };
-  return           { scale: 0.5,hp: 1,  color: '#4466ff', pts: 2,    speedMod: 1.5, shape: 'dot',    name: 'dust ●' };
+  if (btc >= 10)   return { scale: 6, hp: 100, color: '#ff3355', pts: 5000, speedMod: 0.15, shape: 'Z', name: '>10₿ 🟥' };
+  if (btc >= 1)    return { scale: 5, hp: 40,  color: '#ff8800', pts: 1000, speedMod: 0.25, shape: 'L', name: '>1₿ 🟧' };
+  if (btc >= 0.1)  return { scale: 4, hp: 15,  color: '#ffee00', pts: 300,  speedMod: 0.35, shape: 'O', name: '>0.1₿ 🟨' };
+  if (btc >= 0.05) return { scale: 3, hp: 6,   color: '#00ff88', pts: 100,  speedMod: 0.5,  shape: 'S', name: '>0.05₿ 🟩' };
+  if (btc >= 0.01) return { scale: 2.5,hp: 3,  color: '#00e5ff', pts: 50,   speedMod: 0.7,  shape: 'I', name: '>0.01₿ 🟦' };
+  if (sats > 5000) return { scale: 1.5,hp: 2,  color: '#cc44ff', pts: 10,   speedMod: 0.9,  shape: ['T','J','L','S','Z'][Math.floor(Math.random()*5)], name: 'Normal 🟣' };
+  return           { scale: 1,  hp: 1,  color: '#4466ff', pts: 2,    speedMod: 1.2,  shape: 'dot',   name: 'Dust ●' };
 }
 
 function txSatoshis(tx) {
@@ -608,18 +598,11 @@ function txSatoshis(tx) {
 // ================================================================
 //  SMART SPAWNER & NEXT PANEL LOGIC
 // ================================================================
-
-// キューの中から「最も送金額が大きいTX」を優先的に抽出するスマートロジック
 function loadNextEnemy() {
   if (!nextEnemyData && txQueue.length > 0) {
-    // キューをSatsの降順（大きい順）にソート
+    // 常に最新キューの中で「最も巨大なTX」を絶対に選出する
     txQueue.sort((a, b) => txSatoshis(b) - txSatoshis(a));
-    
-    // 常に一番大きいものを出すと偏るので、上位3つの中からランダムで選ぶ
-    let maxIdx = Math.min(2, txQueue.length - 1);
-    let idx = Math.floor(Math.random() * (maxIdx + 1));
-    
-    nextEnemyData = txQueue.splice(idx, 1)[0];
+    nextEnemyData = txQueue.shift();
     updateNextUI();
   }
 }
@@ -649,9 +632,9 @@ function updateNextUI() {
   else amtStr = sats + " sat";
 
   const tierEl = document.getElementById('nx-tier');
-  tierEl.textContent = tier.name.split(' ')[0]; // 絵文字を除去して名前だけ
+  tierEl.textContent = tier.name.split(' ')[0]; 
   tierEl.style.color = tier.color;
-  tierEl.style.textShadow = `0 0 10px ${tier.color}`; // ネオン効果
+  tierEl.style.textShadow = `0 0 10px ${tier.color}`; 
   
   document.getElementById('nx-amount').textContent = amtStr;
   document.getElementById('nx-fee').textContent = `fee: ${fee.toLocaleString()} sat`;
@@ -662,23 +645,19 @@ function updateNextUI() {
   const rows = shape.length;
   document.getElementById('nx-size').textContent = `×${Math.max(1, tier.scale)} (${cols}×${rows} cells)`;
 
-  // NEXT キャンバス描画 (中央配置)
   const drawScale = 16; 
   const tw = cols * drawScale;
   const th = rows * drawScale;
   const ox = (nextCanvas.width - tw) / 2;
   const oy = (nextCanvas.height - th) / 2;
 
-  nextCtx.shadowBlur = 15;
-  nextCtx.shadowColor = tier.color;
   for(let r=0; r<rows; r++){
     for(let c=0; c<cols; c++){
       if(shape[r][c]) {
-        drawBlockCell(nextCtx, ox + c * drawScale, oy + r * drawScale, drawScale-1, tier.color);
+        drawWireframeCell(nextCtx, ox + c * drawScale, oy + r * drawScale, drawScale, tier.color);
       }
     }
   }
-  nextCtx.shadowBlur = 0;
 }
 
 function trySpawnEnemy() {
@@ -702,6 +681,20 @@ function trySpawnEnemy() {
 // ================================================================
 //  MAIN LOGIC
 // ================================================================
+function initBackground() {
+  stars = [];
+  // 宇宙のチリ (細かい多層パララックス)
+  for(let i=0; i<60; i++) {
+    stars.push({
+      x: Math.random()*W,
+      y: Math.random()*H,
+      s: Math.random()*1.5 + 0.5,
+      v: Math.random()*0.3 + 0.1,
+      alpha: Math.random()*0.5 + 0.1
+    });
+  }
+}
+
 function triggerBlockExplosion(height) {
   const flashEl = document.getElementById('block-flash');
   document.getElementById('flash-height-val').textContent = `#${height.toLocaleString()}`;
@@ -734,9 +727,8 @@ function update() {
     let e = enemies[i];
     e.update();
 
-    // 防壁到達
     if (e.y + e.h >= H - 10) {
-      shield -= Math.max(5, e.maxHp); // でかいやつほど大ダメージ
+      shield -= Math.max(5, e.maxHp); 
       if(shield < 0) shield = 0;
       updateUI();
       for(let k=0; k<10; k++) particles.push(new Particle(e.x+e.w/2, H-10, e.color));
@@ -745,7 +737,6 @@ function update() {
       continue;
     }
 
-    // 弾衝突
     for (let j = bullets.length - 1; j >= 0; j--) {
       let b = bullets[j];
       if (b.x < e.x + e.w && b.x + b.w > e.x && b.y < e.y + e.h && b.y + b.h > e.y) {
@@ -771,19 +762,31 @@ function update() {
     particles[i].update();
     if (particles[i].life <= 0) particles.splice(i, 1);
   }
+  
+  stars.forEach(s => { 
+    s.y += s.v; 
+    if(s.y > H) { s.y = 0; s.x = Math.random()*W; } 
+  });
 }
 
 function draw() {
-  // ★ Canvasが認識できるよう直接カラーコード(#1A120A)を指定
-  ctx.fillStyle = '#1A120A';
+  ctx.fillStyle = '#050505'; // 漆黒の宇宙
   ctx.fillRect(0, 0, W, H);
   
   // うっすらとしたグリッド線
-  ctx.strokeStyle = 'rgba(200,150,80,0.08)';
+  ctx.strokeStyle = 'rgba(255,255,255,0.03)';
   ctx.lineWidth = 1; ctx.beginPath();
   for(let x=0; x<W; x+=40) { ctx.moveTo(x,0); ctx.lineTo(x,H); }
   for(let y=0; y<H; y+=40) { ctx.moveTo(0,y); ctx.lineTo(W,y); }
   ctx.stroke();
+
+  // 星（宇宙のチリ）
+  stars.forEach(s => {
+    ctx.fillStyle = `rgba(255, 255, 255, ${s.alpha})`;
+    ctx.beginPath();
+    ctx.arc(s.x, s.y, s.s, 0, Math.PI*2);
+    ctx.fill();
+  });
 
   if (!gameOn && shield === 0) {
     particles.forEach(p => p.draw(ctx));
@@ -844,6 +847,7 @@ function startGame() {
   player = new Player();
   bullets = []; enemies = []; particles = []; txQueue = []; nextEnemyData = null;
   spawnTimer = 0;
+  initBackground();
   updateUI(); updateNextUI();
   
   getAudioCtx();
@@ -893,14 +897,13 @@ function connectWS() {
       if (d.mempoolInfo) document.getElementById('mempool-size').textContent = d.mempoolInfo.size.toLocaleString();
       
       if (d.transactions && gameOn) {
-        // ストリーム制限を撤廃し、全てのTXをキューに入れる（大口を逃さないため）
         for (const tx of d.transactions) {
           txQueue.push(tx);
         }
-        // メモリ肥大化を防ぐため、キューが多すぎたら古い(小さい)ものを捨てる
-        if (txQueue.length > 100) {
+        // キューが溜まりすぎた場合は、ソートして上位100個だけ残す (確実な大口確保)
+        if (txQueue.length > 300) {
            txQueue.sort((a, b) => txSatoshis(b) - txSatoshis(a));
-           txQueue = txQueue.slice(0, 50); // 上位50個だけ残す
+           txQueue = txQueue.slice(0, 100); 
         }
       }
     } catch(err) {}
@@ -914,6 +917,7 @@ fetch('https://mempool.space/api/blocks/tip/height')
     blockHeight = h; document.getElementById('block-height').textContent = h.toLocaleString();
   }).catch(()=>{});
 
+initBackground();
 loop();
 </script>
 </body>
