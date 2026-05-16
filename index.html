@@ -128,7 +128,7 @@ header{
   gap:10px;
 }
 
-/* ★ゲーム盤面：自動で比率(1:2)を保ちつつ、無駄な余白を消す最新の手法 */
+/* ★ゲーム盤面：自動で比率(1:2)を保ちつつ、無駄な余白を消す */
 #gw{
   position:relative;
   background:var(--game-bg);
@@ -265,7 +265,7 @@ header{
   }
 }
 
-/* ★スマホ用：横幅を少し小さくし、画面に綺麗に収まるサイズに調整 */
+/* スマホ用レイアウト */
 @media(max-width:768px){
   #app{
     grid-template-columns: 1fr;
@@ -278,13 +278,11 @@ header{
   }
   #lc, #rc { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
   
-  /* スマホの時はNEXTを横並びにして上に配置 */
   #pnl-next { margin-bottom: 0; }
   .next-split { display: flex; align-items: center; justify-content: space-around; gap: 10px; }
   #nwrap { width: 110px; height: 110px; margin-bottom: 0; }
   .next-info { text-align: left; }
   
-  /* スマホの盤面：大きすぎたのを縮小し、最大横幅280pxに制限 */
   #gw {
     width: 100%;
     max-width: 280px; 
@@ -361,7 +359,7 @@ header{
     </div>
   </div>
 
-  <!-- CENTER COL (ゲーム盤面) -->
+  <!-- CENTER COL -->
   <div id="cc">
     <div id="gw">
       <canvas id="gc"></canvas>
@@ -466,7 +464,7 @@ header{
 <script>
 // ── 高解像度・固定アスペクト比設定 ──────────────────────────
 const COLS=6, ROWS=12;
-const CELL=60; // 内部解像度: 横360px × 縦720px で超クッキリ描画
+const CELL=60; // 内部解像度: 横360px × 縦720px
 
 const canvas=document.getElementById('gc');
 const ctx=canvas.getContext('2d');
@@ -478,14 +476,14 @@ const nctx=nc.getContext('2d');
 nc.width = 240; 
 nc.height = 240;
 
-// ★ 透明感・ネオン発光・ガラス質感の設定
+// ★ 透明感・ネオン発光・中身の色の設定（innerを追加）
 const PUYO_COLORS = {
-  red:    { base: 'rgba(255, 20,  20,  0.15)', glow: '#ff0033', edge: 'rgba(255, 100, 100, 1)' },
-  orange: { base: 'rgba(255, 100, 0,   0.15)', glow: '#ff6600', edge: 'rgba(255, 180, 50,  1)' },
-  cyan:   { base: 'rgba(0,   200, 255, 0.15)', glow: '#00ccff', edge: 'rgba(150, 240, 255, 1)' },
-  green:  { base: 'rgba(20,  255, 20,  0.15)', glow: '#00ff33', edge: 'rgba(150, 255, 150, 1)' },
-  yellow: { base: 'rgba(255, 220, 0,   0.15)', glow: '#ffcc00', edge: 'rgba(255, 255, 150, 1)' },
-  dust:   { base: 'rgba(150, 150, 150, 0.15)', glow: '#aaaaaa', edge: 'rgba(230, 230, 230, 1)' }
+  red:    { base: 'rgba(255, 20,  20,  0.2)', glow: '#ff0033', edge: 'rgba(255, 120, 120, 1)', inner: 'rgba(220, 0,   0,   0.8)' },
+  orange: { base: 'rgba(255, 100, 0,   0.2)', glow: '#ff6600', edge: 'rgba(255, 180, 80,  1)', inner: 'rgba(230, 80,  0,   0.8)' },
+  cyan:   { base: 'rgba(0,   200, 255, 0.2)', glow: '#00ccff', edge: 'rgba(150, 240, 255, 1)', inner: 'rgba(0,   160, 220, 0.8)' },
+  green:  { base: 'rgba(20,  255, 20,  0.2)', glow: '#00ff33', edge: 'rgba(150, 255, 150, 1)', inner: 'rgba(0,   200, 0,   0.8)' },
+  yellow: { base: 'rgba(255, 220, 0,   0.2)', glow: '#ffcc00', edge: 'rgba(255, 255, 150, 1)', inner: 'rgba(230, 190, 0,   0.8)' },
+  dust:   { base: 'rgba(150, 150, 150, 0.2)', glow: '#aaaaaa', edge: 'rgba(230, 230, 230, 1)', inner: 'rgba(120, 120, 120, 0.8)' }
 };
 const PUYO_IDS = ['red', 'orange', 'cyan', 'green', 'yellow'];
 // UIパネル用の色
@@ -504,7 +502,7 @@ let snd=true,ws=null;
 let keys={},bs={l:0,r:0,d:0};
 let kdl=0,krp=0;
 
-// ★【超重要】localStorageエラーでゲームが起動しなくなるバグを完全にガード
+// ★ localStorageエラーを回避
 try {
   hi = +localStorage.getItem('bphi4') || 0;
 } catch (e) {
@@ -625,7 +623,7 @@ function spawn(){
   active.pr=1; active.pc=Math.floor(COLS/2);
   nextPiece=null;
   
-  loadNext(); // キューからすぐ補充
+  loadNext();
   updateSide();
   
   return canPlace(active.abs());
@@ -762,7 +760,7 @@ class Part{
   }
 }
 
-// ── DRAW PUYO (★シームレスなネオン＆スライム質感) ────────────
+// ── DRAW PUYO (★完全塗りつぶし・スライム感＆ネオン枠) ────────────
 function getPM(cells){
   const m={};cells.forEach(c=>{if(!m[c.r])m[c.r]={};m[c.r][c.c]=c.colorId;});return m;
 }
@@ -810,13 +808,12 @@ function drawP(c,px,py,sz,colorId,nb={},al=1){
   if(nb.l) c.fillRect(px - 1, cy - ibw/2, h, ibw);
   if(nb.r) c.fillRect(cx - 1, cy - ibw/2, h, ibw);
   
-  // 3. ホロウコア（内側を背景色でくり抜くことで、シームレスな枠線を表現）
-  c.globalAlpha = 1; // くり抜きは常に不透明で重ねる
+  // 3. インナーコア（黒くくり抜かず、ぷよの色で中身を塗りつぶす）
   c.shadowBlur = 0;
-  c.fillStyle = '#110f0d'; // ゲーム背景のディープグレー
+  c.fillStyle = colorDef.inner;
   
   const iirad = sz * 0.32;
-  const iibw = sz * 0.41;
+  const iibw = sz * 0.44;
   
   c.beginPath(); c.arc(cx, cy, iirad, 0, Math.PI*2); c.fill();
   if(nb.u) c.fillRect(cx - iibw/2, py - 1, iibw, h);
@@ -824,8 +821,6 @@ function drawP(c,px,py,sz,colorId,nb={},al=1){
   if(nb.l) c.fillRect(px - 1, cy - iibw/2, h, iibw);
   if(nb.r) c.fillRect(cx - 1, cy - iibw/2, h, iibw);
   
-  c.globalAlpha = al; // 透明度を元に戻す
-
   // 4. スライムの目
   c.fillStyle = 'rgba(255,255,255,0.95)';
   c.beginPath(); c.ellipse(cx-sz*.14, cy-sz*.06, sz*.09, sz*.13, 0, 0, Math.PI*2); c.fill();
@@ -836,8 +831,9 @@ function drawP(c,px,py,sz,colorId,nb={},al=1){
   c.beginPath(); c.arc(cx+sz*.17, cy-sz*.04, sz*.05, 0, Math.PI*2); c.fill();
 
   // 5. ガラスのハイライト（反射光）
-  c.fillStyle = 'rgba(255,255,255,0.7)';
-  c.beginPath(); c.arc(cx - sz*.18, cy - sz*.20, sz*.05, 0, Math.PI*2); c.fill();
+  c.fillStyle = 'rgba(255,255,255,0.6)';
+  c.beginPath(); c.arc(cx - sz*.16, cy - sz*.18, sz*.06, 0, Math.PI*2); c.fill();
+  c.beginPath(); c.arc(cx + sz*.16, cy + sz*.18, sz*.03, 0, Math.PI*2); c.fill();
   
   c.globalAlpha = 1;
 }
@@ -1080,9 +1076,9 @@ setInterval(()=>{
   }).join('');
 })();
 
-// ★ Twitterシェア用URLの動的生成
+// ★ Twitterシェア用URLの動的生成（自身のURLを取得してセット）
 document.getElementById('x-share-btn').href = "https://twitter.com/intent/tweet?text=" + 
-  encodeURIComponent("₿びっぷよ - Bitcoin Puyo\nBitcoin TXが降ってくるぷよぷよ！新ブロック採掘で全消し！") + 
+  encodeURIComponent("₿びっぷよ - Bitcoin Puyo\nBitcoin TXが降ってくるぷよぷよ！新ブロック採掘で全消し！\n\n") + 
   "&url=" + encodeURIComponent(window.location.href);
 
 // ── GAME FLOW ──────────────────────────────────────────────────
@@ -1093,7 +1089,6 @@ function startGame(){
     board=mkB();score=0;maxCh=0;chain=0;linesCl=0;
     active=null;nextPiece=null;txQ=[];parts=[];eCells=[];
     
-    // 即座にプレイできるようシードデータを生成
     [5e5,2e6,1e4,8e7,3e5,5e8,1e3,4e6,2e3,1e5,6e4,9e8,5e3,3e4,7e5].forEach(s=>
       txQ.push({_s:s,_fee:Math.floor(s*.0001),vout:[{value:s}]}));
       
@@ -1116,11 +1111,9 @@ function gameOver(){
   sfx('boom');
 }
 
-// イベントリスナーの登録
 document.getElementById('startbtn').addEventListener('click',startGame);
 document.getElementById('restartbtn').addEventListener('click',startGame);
 
-// ゲームループの開始
 loop();
 </script>
 </body>
