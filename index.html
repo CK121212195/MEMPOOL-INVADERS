@@ -51,8 +51,8 @@ h1 {
   letter-spacing: 5px;
   text-align: center;
   margin-bottom: 5px;
-  text-shadow: 0 1px 3px rgba(0,0,0,0.15);
   margin-top: 10px;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.15);
 }
 
 .subtitle {
@@ -87,22 +87,8 @@ h1 {
   background: linear-gradient(90deg, transparent, rgba(140,100,50,0.3), transparent);
 }
 
-.plabel {
-  font-size: 0.6rem;
-  color: var(--dim);
-  letter-spacing: 3px;
-  text-transform: uppercase;
-  margin-bottom: 6px;
-}
-
-.pvalue {
-  font-family: 'Orbitron', monospace;
-  font-size: 1.3rem;
-  font-weight: 700;
-  color: var(--accent);
-  line-height: 1.1;
-}
-
+.plabel { font-size: 0.6rem; color: var(--dim); letter-spacing: 3px; text-transform: uppercase; margin-bottom: 6px; }
+.pvalue { font-family: 'Orbitron', monospace; font-size: 1.3rem; font-weight: 700; color: var(--accent); line-height: 1.1; }
 .psub { font-size: 0.6rem; color: var(--dim); margin-top: 3px; }
 
 #left-col, #right-col { display: flex; flex-direction: column; gap: 10px; }
@@ -128,29 +114,17 @@ h1 {
 #block-flash {
   position: absolute; top: 0; left: 0; right: 0; bottom: 0;
   display: flex; flex-direction: column; align-items: center; justify-content: center;
-  pointer-events: none; opacity: 0; transition: opacity 0.1s; z-index: 10;
-  border-radius: 6px;
+  pointer-events: none; opacity: 0; transition: opacity 0.1s; z-index: 10; border-radius: 6px;
 }
-
-#block-flash.show {
-  opacity: 1; animation: flashAnim 3s forwards;
-}
-
+#block-flash.show { opacity: 1; animation: flashAnim 3s forwards; }
 @keyframes flashAnim {
   0% { opacity: 1; background: rgba(247,147,26,0.3); }
   20% { opacity: 1; background: rgba(255,255,255,0.9); }
   100% { opacity: 0; background: transparent; }
 }
 
-.flash-title {
-  font-family: 'Orbitron', monospace; font-size: 1rem; font-weight: 900;
-  color: #fff; text-shadow: 0 0 20px var(--btc); letter-spacing: 6px;
-}
-
-.flash-height {
-  font-family: 'Orbitron', monospace; font-size: 3rem; font-weight: 900;
-  color: #fff; text-shadow: 0 0 40px var(--btc); margin-top: 10px;
-}
+.flash-title { font-family: 'Orbitron', monospace; font-size: 1rem; font-weight: 900; color: #fff; text-shadow: 0 0 20px var(--btc); letter-spacing: 6px; }
+.flash-height { font-family: 'Orbitron', monospace; font-size: 3rem; font-weight: 900; color: #fff; text-shadow: 0 0 40px var(--btc); margin-top: 10px; }
 
 /* ===== OVERLAYS ===== */
 .screen-overlay {
@@ -158,15 +132,8 @@ h1 {
   display: flex; flex-direction: column; align-items: center; justify-content: center;
   background: rgba(240,232,216,0.94); border-radius: 6px; z-index: 20; text-align: center;
 }
-
-.overlay-title {
-  font-family: 'Orbitron', monospace; font-size: 1.5rem; font-weight: 900;
-  color: var(--accent); letter-spacing: 4px; margin-bottom: 15px;
-}
-
-.overlay-desc {
-  font-size: 0.7rem; color: var(--dim); line-height: 2; margin-bottom: 25px; letter-spacing: 1px;
-}
+.overlay-title { font-family: 'Orbitron', monospace; font-size: 1.5rem; font-weight: 900; color: var(--accent); letter-spacing: 4px; margin-bottom: 15px; }
+.overlay-desc { font-size: 0.7rem; color: var(--dim); line-height: 2; margin-bottom: 25px; letter-spacing: 1px; }
 
 .btn {
   font-family: 'Orbitron', monospace; font-size: 0.9rem; font-weight: 700; letter-spacing: 3px;
@@ -177,20 +144,11 @@ h1 {
 .btn:hover { background: #a0520f; transform: translateY(-2px); }
 
 /* ===== SHIELD BAR ===== */
-#shield-wrap {
-  width: 100%; height: 8px; background: var(--bg3); border-radius: 4px; overflow: hidden; margin-top: 8px;
-  border: 1px solid rgba(0,0,0,0.1);
-}
-#shield-bar {
-  height: 100%; background: linear-gradient(90deg, #00e5ff, #00ff88);
-  width: 100%; transition: width 0.2s, background 0.2s;
-}
+#shield-wrap { width: 100%; height: 8px; background: var(--bg3); border-radius: 4px; overflow: hidden; margin-top: 8px; border: 1px solid rgba(0,0,0,0.1); }
+#shield-bar { height: 100%; background: linear-gradient(90deg, #00e5ff, #00ff88); width: 100%; transition: width 0.2s, background 0.2s; }
 
 /* ===== TX FEED & LEGEND ===== */
-#tx-feed {
-  font-size: 0.55rem; color: var(--dim); height: 70px; overflow: hidden;
-  display: flex; flex-direction: column-reverse; gap: 3px;
-}
+#tx-feed { font-size: 0.55rem; color: var(--dim); height: 70px; overflow: hidden; display: flex; flex-direction: column-reverse; gap: 3px; }
 .tx-line { color: var(--cyan); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; animation: slideIn 0.3s; }
 @keyframes slideIn { from { opacity: 0; transform: translateX(-10px); } to { opacity: 1; transform: translateX(0); } }
 
@@ -216,21 +174,17 @@ h1 {
   h1 { font-size: 1rem; }
   .subtitle { font-size: 0.5rem; }
   #app { flex-direction: column; align-items: center; gap: 10px; width: 100%; padding: 0 10px; }
-  
   #left-col, #right-col { width: 100%; flex-direction: row; flex-wrap: wrap; justify-content: center; gap: 6px; }
   .panel { width: 48%; padding: 8px; }
   #tx-feed { height: 40px; }
-  
   #game-wrap { width: 100%; max-width: 420px; }
   #game-canvas { width: 100%; height: auto; aspect-ratio: 4/5; }
-  
-  /* 固定コントローラー */
   #mobile-controls {
     position: fixed; bottom: 0; left: 0; right: 0; padding: 10px;
     background: rgba(240,232,216,0.9); border-top: 1px solid var(--border); z-index: 100;
   }
   #ctrl-area { margin: 0; }
-  body { padding-bottom: 100px; } /* コントローラーのスペース */
+  body { padding-bottom: 100px; }
 }
 @media (min-width: 851px) { #mobile-controls { display: none; } }
 </style>
@@ -280,7 +234,6 @@ h1 {
 
   <!-- CENTER COLUMN (Game) -->
   <div id="game-wrap">
-    <!-- キャンバスサイズ: 400x500 (シューティングに最適な比率) -->
     <canvas id="game-canvas" width="400" height="500"></canvas>
 
     <div id="block-flash">
@@ -292,9 +245,9 @@ h1 {
     <div id="start-screen" class="screen-overlay">
       <div class="overlay-title">MEMPOOL DEFENDER</div>
       <div class="overlay-desc">
-        Destroy unconfirmed TXs falling from the Mempool.<br>
+        Classic Formation Shooter.<br>
+        Unconfirmed TXs will stack up in the swarm.<br>
         Hold [SPACE] to Auto-Fire. [A][D] or [←][→] to Move.<br><br>
-        Don't let them hit the bottom shield.<br>
         Survive until the next Block is mined!
       </div>
       <button class="btn" id="start-btn">ENGAGE</button>
@@ -327,7 +280,6 @@ h1 {
       <div id="tx-feed"></div>
     </div>
 
-    <!-- PC用操作説明 -->
     <div class="panel" style="display: flex; flex-direction: column; justify-content: center;">
       <div class="plabel">CONTROLS (PC)</div>
       <div style="font-size:0.65rem; color:var(--dim); line-height:1.8; margin-top:5px;">
@@ -339,7 +291,6 @@ h1 {
   </div>
 </div>
 
-<!-- スマホ用オンスクリーンコントローラー -->
 <div id="mobile-controls">
   <div id="ctrl-area">
     <div class="ctrl-row">
@@ -359,7 +310,6 @@ const ctx = canvas.getContext('2d');
 let W = canvas.width;
 let H = canvas.height;
 
-// キャンバスの見た目をシャープにするための処理（Retina対応）
 function resizeCanvas() {
   const rect = canvas.getBoundingClientRect();
   canvas.width = rect.width;
@@ -367,10 +317,8 @@ function resizeCanvas() {
   W = canvas.width;
   H = canvas.height;
 }
-// PCブラウザでは固定サイズ、モバイルではCSSでリサイズされた幅に合わせる
 window.addEventListener('resize', () => { if(window.innerWidth <= 850) resizeCanvas(); });
 if(window.innerWidth <= 850) resizeCanvas();
-
 
 let gameOn = false;
 let score = 0;
@@ -380,14 +328,13 @@ let destroyedCount = 0;
 
 let player;
 let bullets = [];
-let enemies = [];
 let particles = [];
 let stars = [];
 
 let keys = {};
-let isShooting = false;
 let txQueue = [];
 let spawnTimer = 0;
+let globalTime = 0; // アニメーション用
 
 // Bitcoin Stats
 let blockHeight = "----";
@@ -395,7 +342,7 @@ let lastBlockMs = null;
 let wsConn = null;
 
 // ================================================================
-//  AUDIO ENGINE (Web Audio API) - 美しく邪魔にならない音
+//  AUDIO ENGINE
 // ================================================================
 let audioCtx = null;
 function getAudioCtx() {
@@ -403,52 +350,43 @@ function getAudioCtx() {
   if (audioCtx.state === 'suspended') audioCtx.resume();
   return audioCtx;
 }
-
-function playShootSound() {
+function playSound(type) {
   try {
     const ac = getAudioCtx();
     const t = ac.currentTime;
     const osc = ac.createOscillator();
     const gain = ac.createGain();
     osc.connect(gain); gain.connect(ac.destination);
-    osc.type = 'square';
-    osc.frequency.setValueAtTime(880, t);
-    osc.frequency.exponentialRampToValueAtTime(220, t + 0.05);
-    gain.gain.setValueAtTime(0.05, t); // 音量小さめ
-    gain.gain.exponentialRampToValueAtTime(0.001, t + 0.05);
-    osc.start(t); osc.stop(t + 0.06);
-  } catch(e) {}
-}
-
-function playHitSound() {
-  try {
-    const ac = getAudioCtx();
-    const t = ac.currentTime;
-    const osc = ac.createOscillator();
-    const gain = ac.createGain();
-    osc.connect(gain); gain.connect(ac.destination);
-    osc.type = 'sawtooth';
-    osc.frequency.setValueAtTime(150, t);
-    osc.frequency.exponentialRampToValueAtTime(50, t + 0.1);
-    gain.gain.setValueAtTime(0.08, t);
-    gain.gain.exponentialRampToValueAtTime(0.001, t + 0.1);
-    osc.start(t); osc.stop(t + 0.1);
-  } catch(e) {}
-}
-
-function playExplosionSound() {
-  try {
-    const ac = getAudioCtx();
-    const t = ac.currentTime;
-    const osc = ac.createOscillator();
-    const gain = ac.createGain();
-    osc.connect(gain); gain.connect(ac.destination);
-    osc.type = 'triangle';
-    osc.frequency.setValueAtTime(100, t);
-    osc.frequency.exponentialRampToValueAtTime(20, t + 0.3);
-    gain.gain.setValueAtTime(0.2, t);
-    gain.gain.exponentialRampToValueAtTime(0.001, t + 0.3);
-    osc.start(t); osc.stop(t + 0.35);
+    
+    if (type === 'shoot') {
+      osc.type = 'square';
+      osc.frequency.setValueAtTime(880, t);
+      osc.frequency.exponentialRampToValueAtTime(220, t + 0.05);
+      gain.gain.setValueAtTime(0.05, t);
+      gain.gain.exponentialRampToValueAtTime(0.001, t + 0.05);
+      osc.start(t); osc.stop(t + 0.06);
+    } else if (type === 'hit') {
+      osc.type = 'sawtooth';
+      osc.frequency.setValueAtTime(150, t);
+      osc.frequency.exponentialRampToValueAtTime(50, t + 0.1);
+      gain.gain.setValueAtTime(0.08, t);
+      gain.gain.exponentialRampToValueAtTime(0.001, t + 0.1);
+      osc.start(t); osc.stop(t + 0.1);
+    } else if (type === 'boom') {
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(100, t);
+      osc.frequency.exponentialRampToValueAtTime(20, t + 0.3);
+      gain.gain.setValueAtTime(0.2, t);
+      gain.gain.exponentialRampToValueAtTime(0.001, t + 0.3);
+      osc.start(t); osc.stop(t + 0.35);
+    } else if (type === 'damage') {
+      osc.type = 'sawtooth';
+      osc.frequency.setValueAtTime(80, t);
+      osc.frequency.linearRampToValueAtTime(40, t + 0.3);
+      gain.gain.setValueAtTime(0.3, t);
+      gain.gain.linearRampToValueAtTime(0.001, t + 0.3);
+      osc.start(t); osc.stop(t + 0.35);
+    }
   } catch(e) {}
 }
 
@@ -456,7 +394,6 @@ function playBlockMinedSound() {
   try {
     const ac = getAudioCtx();
     const t = ac.currentTime;
-    // Whoosh up
     const osc = ac.createOscillator();
     const gain = ac.createGain();
     osc.connect(gain); gain.connect(ac.destination);
@@ -467,7 +404,7 @@ function playBlockMinedSound() {
     gain.gain.linearRampToValueAtTime(0.3, t + 0.4);
     gain.gain.exponentialRampToValueAtTime(0.001, t + 0.9);
     osc.start(t); osc.stop(t + 1);
-    // Boom
+    
     setTimeout(() => {
       const boom = ac.createOscillator();
       const bg = ac.createGain();
@@ -479,22 +416,6 @@ function playBlockMinedSound() {
       bg.gain.exponentialRampToValueAtTime(0.001, ac.currentTime + 1.5);
       boom.start(ac.currentTime); boom.stop(ac.currentTime + 1.6);
     }, 400);
-  } catch(e) {}
-}
-
-function playDamageSound() {
-  try {
-    const ac = getAudioCtx();
-    const t = ac.currentTime;
-    const osc = ac.createOscillator();
-    const gain = ac.createGain();
-    osc.connect(gain); gain.connect(ac.destination);
-    osc.type = 'sawtooth';
-    osc.frequency.setValueAtTime(80, t);
-    osc.frequency.linearRampToValueAtTime(40, t + 0.3);
-    gain.gain.setValueAtTime(0.3, t);
-    gain.gain.linearRampToValueAtTime(0.001, t + 0.3);
-    osc.start(t); osc.stop(t + 0.35);
   } catch(e) {}
 }
 
@@ -515,19 +436,16 @@ class Player {
     this.x = Math.max(0, Math.min(W - this.w, this.x));
 
     if (this.fireCooldown > 0) this.fireCooldown--;
-    // レベルが上がると連射速度が上がる (最大毎フレーム3回に1回)
     const fireRate = Math.max(3, 10 - Math.floor(level / 2)); 
     
-    if ((keys['Space'] || isShooting || btnStates.shoot) && this.fireCooldown <= 0) {
+    if ((keys['Space'] || btnStates.shoot) && this.fireCooldown <= 0) {
       this.shoot();
       this.fireCooldown = fireRate;
     }
   }
   shoot() {
     bullets.push(new Bullet(this.x + this.w / 2 - 2, this.y, 4, 12, 12, '#00ff88'));
-    playShootSound();
-    
-    // レベル5以上でダブルショット
+    playSound('shoot');
     if (level >= 5) {
       bullets.push(new Bullet(this.x + 2, this.y + 5, 3, 10, 12, '#00ff88'));
       bullets.push(new Bullet(this.x + this.w - 5, this.y + 5, 3, 10, 12, '#00ff88'));
@@ -536,7 +454,6 @@ class Player {
   draw(ctx) {
     ctx.fillStyle = '#00ff88';
     ctx.shadowBlur = 10; ctx.shadowColor = '#00ff88';
-    // 砲台の形
     ctx.beginPath();
     ctx.moveTo(this.x, this.y + this.h);
     ctx.lineTo(this.x + this.w, this.y + this.h);
@@ -566,68 +483,158 @@ class Bullet {
   }
 }
 
-// インベーダー風のドット絵パターン (5x5)
+// 2コマアニメーション用パターン (5x5)
 const ALIEN_PATTERNS = {
-  dust:   [ [0,0,0,0,0], [0,1,1,1,0], [0,1,1,1,0], [0,1,1,1,0], [0,0,0,0,0] ],
-  normal: [ [1,0,1,0,1], [0,1,1,1,0], [1,1,0,1,1], [0,1,1,1,0], [1,0,0,0,1] ],
-  mid:    [ [0,0,1,0,0], [0,1,1,1,0], [1,0,1,0,1], [1,1,1,1,1], [1,0,1,0,1] ],
-  big:    [ [1,1,1,1,1], [1,0,0,0,1], [1,0,1,0,1], [1,0,0,0,1], [1,1,1,1,1] ],
-  huge:   [ [1,1,0,1,1], [1,1,1,1,1], [0,1,1,1,0], [1,1,0,1,1], [1,0,0,0,1] ]
+  dust: [
+    [ [0,0,0,0,0], [0,1,1,1,0], [0,1,0,1,0], [0,1,1,1,0], [0,1,0,1,0] ],
+    [ [0,0,0,0,0], [0,1,1,1,0], [0,1,0,1,0], [0,1,1,1,0], [0,0,1,0,0] ]
+  ],
+  normal: [
+    [ [1,0,1,0,1], [0,1,1,1,0], [1,1,0,1,1], [0,1,1,1,0], [1,0,0,0,1] ],
+    [ [0,1,1,1,0], [1,0,1,0,1], [1,1,0,1,1], [1,0,1,0,1], [0,1,0,1,0] ]
+  ],
+  mid: [
+    [ [0,0,1,0,0], [0,1,1,1,0], [1,0,1,0,1], [1,1,1,1,1], [1,0,1,0,1] ],
+    [ [0,0,1,0,0], [0,1,1,1,0], [1,0,1,0,1], [1,1,1,1,1], [0,1,0,1,0] ]
+  ],
+  big: [
+    [ [1,1,1,1,1], [1,0,0,0,1], [1,0,1,0,1], [1,0,0,0,1], [1,1,1,1,1] ],
+    [ [1,1,1,1,1], [1,0,0,0,1], [1,0,1,0,1], [1,0,0,0,1], [0,1,1,1,0] ]
+  ],
+  huge: [
+    [ [1,1,0,1,1], [1,1,1,1,1], [0,1,1,1,0], [1,1,0,1,1], [1,0,0,0,1] ],
+    [ [1,1,0,1,1], [1,1,1,1,1], [0,1,1,1,0], [1,1,0,1,1], [0,1,0,1,0] ]
+  ]
+};
+
+// ================================================================
+//  INVASION FLEET (フォーメーション管理)
+// ================================================================
+let fleet = {
+  cells: [],
+  x: 20, y: 50,
+  vx: 0.5,
+  spacingX: 28, spacingY: 28,
+  animStep: 0,
+  
+  init() {
+    this.cells = [];
+    this.x = 20; this.y = 50;
+    this.vx = 0.5;
+    // 初期配置 (ダミーTX: 11列 x 4行)
+    for(let row=0; row<4; row++) {
+      for(let col=0; col<11; col++) {
+        let tier = getEnemyTier(0); // normal
+        if (row === 0) tier = getEnemyTier(20000000); // 1行目は少し強い
+        this.cells.push(new Enemy(tier, col, row));
+      }
+    }
+  },
+  
+  addNewEnemy(tier) {
+    if (this.cells.length === 0) {
+      this.cells.push(new Enemy(tier, 5, 0));
+      return;
+    }
+    // 一番上の行（最小のrow）を探す
+    let minRow = 0;
+    this.cells.forEach(e => { if (e.row < minRow) minRow = e.row; });
+    
+    // その行で空いているcolを探す
+    let usedCols = new Set();
+    this.cells.forEach(e => { if (e.row === minRow) usedCols.add(e.col); });
+    
+    let freeCol = -1;
+    // 中央付近から埋めるようにする
+    const order = [5,4,6,3,7,2,8,1,9,0,10];
+    for(let c of order) {
+      if(!usedCols.has(c)) { freeCol = c; break; }
+    }
+    
+    // 空きがなければ新しい行(上)を作る
+    if (freeCol === -1) {
+      minRow--;
+      freeCol = 5;
+    }
+    this.cells.push(new Enemy(tier, freeCol, minRow));
+  },
+  
+  update() {
+    if (this.cells.length === 0) return;
+    
+    // 速度計算（敵が少ないほど速い）
+    let speed = 0.5 + (40 / Math.max(5, this.cells.length));
+    this.vx = this.vx > 0 ? speed : -speed;
+    
+    this.x += this.vx;
+    
+    // アニメーションステップ (速度に応じて切り替えを速く)
+    if (globalTime % Math.max(5, Math.floor(30 / speed)) === 0) {
+      this.animStep = 1 - this.animStep;
+    }
+    
+    // 全体の境界を計算
+    let minX = Infinity, maxX = -Infinity;
+    this.cells.forEach(e => {
+      let absX = this.x + e.col * this.spacingX;
+      if (absX < minX) minX = absX;
+      if (absX > maxX) maxX = absX;
+    });
+    
+    // 画面端で反転して下がる
+    const cellW = 20; // 敵の描画サイズ
+    if ((minX <= 5 && this.vx < 0) || (maxX + cellW >= W - 5 && this.vx > 0)) {
+      this.vx *= -1;
+      this.y += 15; // 一段下がる
+    }
+  },
+  
+  draw(ctx) {
+    this.cells.forEach(e => {
+      e.absoluteX = this.x + e.col * this.spacingX;
+      e.absoluteY = this.y + e.row * this.spacingY;
+      
+      // 画面上部（見えない領域）にいる場合は描画しない
+      if (e.absoluteY < -30) return;
+      
+      ctx.save();
+      ctx.translate(e.absoluteX, e.absoluteY);
+      ctx.fillStyle = e.hitFlash > 0 ? '#ffffff' : e.color;
+      ctx.shadowBlur = e.hitFlash > 0 ? 15 : 5;
+      ctx.shadowColor = ctx.fillStyle;
+
+      const pat = e.patterns[this.animStep];
+      const s = 20 / 5; // 描画サイズ20px
+      for(let r=0; r<5; r++){
+        for(let c=0; c<5; c++){
+          if(pat[r][c]) ctx.fillRect(c * s, r * s, s + 0.5, s + 0.5);
+        }
+      }
+      
+      if (e.maxHp > 2) {
+        ctx.shadowBlur = 0;
+        ctx.fillStyle = 'rgba(255,0,0,0.5)';
+        ctx.fillRect(0, -6, 20, 3);
+        ctx.fillStyle = '#00ff88';
+        ctx.fillRect(0, -6, 20 * (e.hp / e.maxHp), 3);
+      }
+      ctx.restore();
+      if(e.hitFlash > 0) e.hitFlash--;
+    });
+  }
 };
 
 class Enemy {
-  constructor(tier, x) {
-    this.tier = tier;
-    this.size = tier.size;
-    this.w = this.size; this.h = this.size;
-    this.x = x; this.y = -this.size;
+  constructor(tier, col, row) {
+    this.col = col;
+    this.row = row;
     this.hp = tier.hp; this.maxHp = tier.hp;
     this.color = tier.color;
     this.points = tier.pts;
-    this.pattern = ALIEN_PATTERNS[tier.pattern] || ALIEN_PATTERNS.normal;
-    
-    // 下に向かって進みつつ、少し左右に揺れる
-    this.speedY = tier.speedY;
-    this.time = Math.random() * 100;
-    this.amp = tier.amp;
-    this.freq = tier.freq;
+    this.patterns = ALIEN_PATTERNS[tier.pattern] || ALIEN_PATTERNS.normal;
     this.hitFlash = 0;
-  }
-  update() {
-    this.y += this.speedY;
-    this.x += Math.sin(this.time * this.freq) * this.amp;
-    this.time++;
-    if (this.x < 0) this.x = 0;
-    if (this.x > W - this.w) this.x = W - this.w;
-    if (this.hitFlash > 0) this.hitFlash--;
-  }
-  draw(ctx) {
-    ctx.save();
-    ctx.translate(this.x, this.y);
-    
-    // 被弾フラッシュ
-    ctx.fillStyle = this.hitFlash > 0 ? '#ffffff' : this.color;
-    ctx.shadowBlur = this.hitFlash > 0 ? 15 : 5;
-    ctx.shadowColor = ctx.fillStyle;
-
-    const cellSize = this.size / 5;
-    for(let r=0; r<5; r++){
-      for(let c=0; c<5; c++){
-        if(this.pattern[r][c]) {
-          ctx.fillRect(c * cellSize, r * cellSize, cellSize + 0.5, cellSize + 0.5);
-        }
-      }
-    }
-    
-    // HPバー (HPが高い敵のみ)
-    if (this.maxHp > 2) {
-      ctx.shadowBlur = 0;
-      ctx.fillStyle = 'rgba(255,0,0,0.5)';
-      ctx.fillRect(0, -6, this.w, 3);
-      ctx.fillStyle = '#00ff88';
-      ctx.fillRect(0, -6, this.w * (this.hp / this.maxHp), 3);
-    }
-    ctx.restore();
+    this.absoluteX = 0;
+    this.absoluteY = 0;
   }
 }
 
@@ -643,10 +650,7 @@ class Particle {
     this.color = color;
     this.size = Math.random() * 3 + 1;
   }
-  update() {
-    this.x += this.vx; this.y += this.vy;
-    this.life -= this.decay;
-  }
+  update() { this.x += this.vx; this.y += this.vy; this.life -= this.decay; }
   draw(ctx) {
     ctx.globalAlpha = Math.max(0, this.life);
     ctx.fillStyle = this.color;
@@ -660,12 +664,12 @@ class Particle {
 // ================================================================
 function getEnemyTier(sats) {
   const btc = sats / 1e8;
-  if (btc > 10)   return { size: 60, hp: 60, color: '#ff3355', pts: 2000, speedY: 0.3, amp: 0.1, freq: 0.02, pattern: 'huge', name: '>10 BTC (Whale)' };
-  if (btc > 1)    return { size: 45, hp: 20, color: '#ff8800', pts: 500,  speedY: 0.5, amp: 0.5, freq: 0.03, pattern: 'big',  name: '>1 BTC' };
-  if (btc > 0.1)  return { size: 35, hp: 8,  color: '#ffee00', pts: 100,  speedY: 0.8, amp: 1.0, freq: 0.05, pattern: 'mid',  name: '>0.1 BTC' };
-  if (btc > 0.05) return { size: 25, hp: 4,  color: '#00ff88', pts: 50,   speedY: 1.2, amp: 1.5, freq: 0.08, pattern: 'normal', name: '>0.05 BTC' };
-  if (btc > 0.0001) return { size: 20, hp: 1,  color: '#00e5ff', pts: 10,   speedY: 1.8, amp: 2.0, freq: 0.1,  pattern: 'normal', name: 'Normal TX' };
-  return { size: 12, hp: 1, color: '#8a7060', pts: 2, speedY: 2.5, amp: 3.0, freq: 0.15, pattern: 'dust', name: 'Dust' };
+  if (btc > 10)   return { hp: 30, color: '#ff3355', pts: 2000, pattern: 'huge', name: '>10 BTC (Whale)' };
+  if (btc > 1)    return { hp: 15, color: '#ff8800', pts: 500,  pattern: 'big',  name: '>1 BTC' };
+  if (btc > 0.1)  return { hp: 6,  color: '#ffee00', pts: 100,  pattern: 'mid',  name: '>0.1 BTC' };
+  if (btc > 0.05) return { hp: 3,  color: '#00ff88', pts: 50,   pattern: 'normal', name: '>0.05 BTC' };
+  if (btc > 0.0001) return { hp: 1,  color: '#00e5ff', pts: 10, pattern: 'normal', name: 'Normal TX' };
+  return { hp: 1, color: '#8a7060', pts: 2, pattern: 'dust', name: 'Dust' };
 }
 
 // ================================================================
@@ -673,31 +677,27 @@ function getEnemyTier(sats) {
 // ================================================================
 function initBackground() {
   stars = [];
-  for(let i=0; i<50; i++) {
-    stars.push({ x: Math.random()*W, y: Math.random()*H, s: Math.random()*2, v: Math.random()*0.5+0.1 });
-  }
+  for(let i=0; i<50; i++) stars.push({ x: Math.random()*W, y: Math.random()*H, s: Math.random()*2, v: Math.random()*0.5+0.1 });
 }
 
 function spawnFromQueue() {
   if (txQueue.length === 0) return;
-  
-  // キューが詰まってきたら出現間隔を短くする
-  let targetInterval = Math.max(10, 60 - txQueue.length);
   spawnTimer++;
+  // キューが詰まってきたら高速でフォーメーションに追加
+  let interval = Math.max(2, 20 - Math.floor(txQueue.length / 5));
   
-  if (spawnTimer >= targetInterval) {
+  if (spawnTimer >= interval) {
     spawnTimer = 0;
     const tx = txQueue.shift();
     updateQueueUI();
     
     let sats = 0;
     if (Array.isArray(tx.vout)) sats = tx.vout.reduce((s, o) => s + (o.value||0), 0);
-    
     const tier = getEnemyTier(sats);
-    enemies.push(new Enemy(tier, Math.random() * (W - tier.size)));
     
-    // 大口TXが来たら右パネル更新
-    if (sats >= 5000000) { // 0.05 BTC以上
+    fleet.addNewEnemy(tier);
+    
+    if (sats >= 5000000) { 
       document.getElementById('latest-threat').textContent = tier.name;
       document.getElementById('latest-threat').style.color = tier.color;
       document.getElementById('latest-threat-sub').textContent = `${(sats/1e8).toFixed(4)} BTC`;
@@ -707,96 +707,85 @@ function spawnFromQueue() {
 
 function triggerBlockExplosion(height) {
   playBlockMinedSound();
-  
-  // フラッシュ演出
   const flashEl = document.getElementById('block-flash');
   document.getElementById('flash-height-val').textContent = `#${height.toLocaleString()}`;
-  flashEl.classList.remove('show');
-  void flashEl.offsetWidth; // reflow
-  flashEl.classList.add('show');
+  flashEl.classList.remove('show'); void flashEl.offsetWidth; flashEl.classList.add('show');
   
-  // 全敵破壊
-  enemies.forEach(e => {
-    score += e.points * 5; // ブロックボーナス5倍
-    for(let i=0; i<10; i++) particles.push(new Particle(e.x + e.w/2, e.y + e.h/2, e.color, 3));
+  fleet.cells.forEach(e => {
+    score += e.points * 5; 
+    for(let i=0; i<5; i++) particles.push(new Particle(e.absoluteX+10, e.absoluteY+10, e.color, 3));
   });
-  enemies = [];
+  fleet.cells = [];
   txQueue = [];
   updateUI();
 }
 
 function takeDamage(tier) {
-  playDamageSound();
-  // 画面揺らし＆赤フラッシュ
+  playSound('damage');
   canvas.style.transform = `translate(${(Math.random()-0.5)*10}px, ${(Math.random()-0.5)*10}px)`;
   setTimeout(() => canvas.style.transform = 'none', 50);
   
-  // ダメージ計算 (大物ほど痛い)
-  let dmg = 1;
-  if(tier.hp >= 60) dmg = 50;
-  else if(tier.hp >= 20) dmg = 25;
-  else if(tier.hp >= 8) dmg = 10;
-  else if(tier.hp >= 4) dmg = 5;
+  let dmg = 2;
+  if(tier.hp >= 30) dmg = 50;
+  else if(tier.hp >= 15) dmg = 25;
+  else if(tier.hp >= 6) dmg = 10;
+  else if(tier.hp >= 3) dmg = 5;
   
   shield -= dmg;
   if(shield < 0) shield = 0;
   updateUI();
-  
-  if(shield === 0) {
-    gameOver();
-  }
+  if(shield === 0) gameOver();
 }
 
 function update() {
   if (!gameOn) return;
+  globalTime++;
 
   player.update();
   spawnFromQueue();
+  fleet.update();
 
-  // 弾の更新
   for (let i = bullets.length - 1; i >= 0; i--) {
     bullets[i].update();
     if (bullets[i].y < 0) bullets.splice(i, 1);
   }
 
-  // 敵の更新と当たり判定
-  for (let i = enemies.length - 1; i >= 0; i--) {
-    let e = enemies[i];
-    e.update();
+  // 敵との判定（防壁到達 ＆ 弾衝突）
+  for (let i = fleet.cells.length - 1; i >= 0; i--) {
+    let e = fleet.cells[i];
 
-    // 防壁到達（ダメージ）
-    if (e.y + e.h >= H - 10) {
-      takeDamage(e.tier);
-      for(let k=0; k<10; k++) particles.push(new Particle(e.x+e.w/2, H-10, e.color, 2));
-      enemies.splice(i, 1);
+    // 防壁到達（シールドダメージ）
+    if (e.absoluteY + 20 >= H - 15) {
+      takeDamage({hp: e.maxHp});
+      for(let k=0; k<10; k++) particles.push(new Particle(e.absoluteX+10, H-10, e.color, 2));
+      fleet.cells.splice(i, 1);
       continue;
     }
 
     // 弾との衝突
     for (let j = bullets.length - 1; j >= 0; j--) {
       let b = bullets[j];
-      if (b.x < e.x + e.w && b.x + b.w > e.x && b.y < e.y + e.h && b.y + b.h > e.y) {
+      if (b.x < e.absoluteX + 20 && b.x + b.w > e.absoluteX && b.y < e.absoluteY + 20 && b.y + b.h > e.absoluteY) {
         bullets.splice(j, 1);
         e.hp--;
         e.hitFlash = 3;
-        playHitSound();
-        for(let k=0; k<3; k++) particles.push(new Particle(b.x, b.y, '#fff'));
+        playSound('hit');
+        for(let k=0; k<2; k++) particles.push(new Particle(b.x, b.y, '#fff'));
         
         if (e.hp <= 0) {
           score += e.points;
           destroyedCount++;
-          if (destroyedCount % 50 === 0) level++; // 50匹倒す毎にレベルアップ
+          if (destroyedCount % 100 === 0) level++;
           updateUI();
-          playExplosionSound();
-          for(let k=0; k<15; k++) particles.push(new Particle(e.x + e.w/2, e.y + e.h/2, e.color, 2));
-          enemies.splice(i, 1);
+          playSound('boom');
+          for(let k=0; k<10; k++) particles.push(new Particle(e.absoluteX+10, e.absoluteY+10, e.color, 2));
+          fleet.cells.splice(i, 1);
         }
         break;
       }
     }
   }
 
-  // パーティクル＆背景更新
   for (let i = particles.length - 1; i >= 0; i--) {
     particles[i].update();
     if (particles[i].life <= 0) particles.splice(i, 1);
@@ -805,29 +794,24 @@ function update() {
 }
 
 function draw() {
-  // 背景 (ダークブラウン)
   ctx.fillStyle = '#211408';
   ctx.fillRect(0, 0, W, H);
   
-  // グリッド線
   ctx.strokeStyle = 'rgba(200,150,80,0.05)';
-  ctx.lineWidth = 1;
-  ctx.beginPath();
+  ctx.lineWidth = 1; ctx.beginPath();
   for(let x=0; x<W; x+=40) { ctx.moveTo(x,0); ctx.lineTo(x,H); }
   for(let y=0; y<H; y+=40) { ctx.moveTo(0,y); ctx.lineTo(W,y); }
   ctx.stroke();
 
-  // 星
   ctx.fillStyle = 'rgba(255,255,255,0.3)';
   stars.forEach(s => ctx.fillRect(s.x, s.y, s.s, s.s));
 
   if (!gameOn && shield === 0) {
-    // ゲームオーバー時も残骸を描画
     particles.forEach(p => p.draw(ctx));
     return;
   }
 
-  // 防壁（シールドウォール）
+  // 防壁
   ctx.fillStyle = `rgba(0, 229, 255, ${shield/100 * 0.3})`;
   ctx.fillRect(0, H - 15, W, 15);
   ctx.strokeStyle = `rgba(0, 255, 136, ${shield/100 * 0.8})`;
@@ -835,7 +819,7 @@ function draw() {
 
   if(player) player.draw(ctx);
   bullets.forEach(b => b.draw(ctx));
-  enemies.forEach(e => e.draw(ctx));
+  fleet.draw(ctx);
   particles.forEach(p => p.draw(ctx));
 }
 
@@ -862,25 +846,19 @@ function updateUI() {
   else { sBar.style.background = '#ff3355'; sVal.style.color = '#ff3355'; }
 }
 
-function updateQueueUI() {
-  document.getElementById('queue-size').textContent = txQueue.length;
-}
+function updateQueueUI() { document.getElementById('queue-size').textContent = txQueue.length; }
 
 function addTxFeed(msg, color) {
   const feed = document.getElementById('tx-feed');
   const el = document.createElement('div');
-  el.className = 'tx-line';
-  el.style.color = color;
-  el.textContent = msg;
+  el.className = 'tx-line'; el.style.color = color; el.textContent = msg;
   feed.prepend(el);
   while(feed.children.length > 5) feed.removeChild(feed.lastChild);
 }
 
-// キーボード
 window.addEventListener('keydown', e => { keys[e.code] = true; if(e.code==='Space') e.preventDefault(); });
 window.addEventListener('keyup', e => { keys[e.code] = false; });
 
-// モバイルボタン
 const btnStates = { left:false, right:false, shoot:false };
 function bindBtn(id, key) {
   const el = document.getElementById(id);
@@ -892,19 +870,18 @@ function bindBtn(id, key) {
   el.addEventListener('mouseup', release);
   el.addEventListener('mouseleave', release);
 }
-bindBtn('btn-left', 'left');
-bindBtn('btn-right', 'right');
-bindBtn('btn-shoot', 'shoot');
+bindBtn('btn-left', 'left'); bindBtn('btn-right', 'right'); bindBtn('btn-shoot', 'shoot');
 
 function startGame() {
   document.getElementById('start-screen').style.display = 'none';
   document.getElementById('go-screen').style.display = 'none';
-  score = 0; level = 1; shield = 100; destroyedCount = 0;
+  score = 0; level = 1; shield = 100; destroyedCount = 0; globalTime = 0;
   player = new Player();
-  bullets = []; enemies = []; particles = []; txQueue = [];
+  fleet.init();
+  bullets = []; particles = []; txQueue = [];
   updateUI(); updateQueueUI();
   
-  getAudioCtx(); // 音声許可
+  getAudioCtx();
   gameOn = true;
   if(!wsConn) connectWS();
 }
@@ -913,10 +890,9 @@ function gameOver() {
   gameOn = false;
   document.getElementById('go-score').textContent = score.toLocaleString();
   document.getElementById('go-screen').style.display = 'flex';
-  // プレイヤー爆発
   if(player) {
     for(let i=0; i<30; i++) particles.push(new Particle(player.x+15, player.y+10, '#00ff88', 3));
-    playExplosionSound();
+    playSound('boom');
   }
 }
 
@@ -939,38 +915,25 @@ setInterval(() => {
 
 function connectWS() {
   wsConn = new WebSocket('wss://mempool.space/api/v1/ws');
-  
-  wsConn.onopen = () => {
-    wsConn.send(JSON.stringify({ action:'want', data:['stats','blocks'] }));
-  };
-  
+  wsConn.onopen = () => { wsConn.send(JSON.stringify({ action:'want', data:['stats','blocks'] })); };
   wsConn.onmessage = e => {
     try {
       const d = JSON.parse(e.data);
-      
-      // ブロック生成
       if (d.block) {
-        blockHeight = d.block.height;
-        lastBlockMs = d.block.timestamp * 1000;
+        blockHeight = d.block.height; lastBlockMs = d.block.timestamp * 1000;
         document.getElementById('block-height').textContent = blockHeight.toLocaleString();
         document.getElementById('last-block-ago').textContent = "Just now";
         if (gameOn) triggerBlockExplosion(blockHeight);
         addTxFeed(`⛏ BLOCK #${blockHeight} MINED!`, 'var(--btc)');
       }
-      
-      // TX情報取得
-      if (d.mempoolInfo) {
-        document.getElementById('mempool-size').textContent = d.mempoolInfo.size.toLocaleString();
-      }
+      if (d.mempoolInfo) document.getElementById('mempool-size').textContent = d.mempoolInfo.size.toLocaleString();
       
       if (d.transactions && gameOn) {
         let added = 0;
         for (const tx of d.transactions) {
-          if (txQueue.length > 200) break; // キュー溢れ防止
+          if (txQueue.length > 300) break; 
           txQueue.push(tx);
           added++;
-          
-          // 一部のTXだけフィードに流す
           if(Math.random() < 0.2) {
             let sats = 0; if (Array.isArray(tx.vout)) sats = tx.vout.reduce((s, o) => s + (o.value||0), 0);
             const tier = getEnemyTier(sats);
@@ -981,16 +944,13 @@ function connectWS() {
       }
     } catch(err) {}
   };
-  
   wsConn.onclose = () => { setTimeout(connectWS, 3000); };
 }
 
-// Fetch current block height on load
 fetch('https://mempool.space/api/blocks/tip/height')
   .then(r => r.json())
   .then(h => {
-    blockHeight = h;
-    document.getElementById('block-height').textContent = h.toLocaleString();
+    blockHeight = h; document.getElementById('block-height').textContent = h.toLocaleString();
   }).catch(()=>{});
 
 initBackground();
