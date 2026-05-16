@@ -2,1437 +2,892 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>₿びっぷよ — Bitcoin Puyo Puyo</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>₿びっぷよ — Bitcoin Puyo</title>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800;900&family=Share+Tech+Mono&family=Zen+Maru+Gothic:wght@700;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&family=Zen+Kaku+Gothic+New:wght@700;900&display=swap');
 
 :root {
-  --bg:        #1a0533;
-  --panel-bg:  #2a0d4a;
-  --panel-bdr: #5a1f9a;
-  --panel-glow:#8b2fc9;
-  --accent:    #ff6bff;
-  --accent2:   #ffe066;
-  --accent3:   #66ffcc;
-  --text:      #f0e6ff;
-  --text-dim:  #9977cc;
-  --shadow:    rgba(140,47,200,0.5);
-
-  /* Puyo colors */
-  --p-red:    #ff3a3a;
-  --p-green:  #2eff8a;
-  --p-blue:   #2ea5ff;
-  --p-yellow: #ffe033;
-  --p-purple: #c944ff;
-
-  --font-game: 'Fredoka One', cursive;
-  --font-ui:   'Nunito', sans-serif;
+  --bg:         #060608;
+  --panel:      #0d0d14;
+  --panel-bdr:  #231a30;
+  --amber:      #ff8c00;
+  --amber-dim:  #7a4000;
+  --amber-glow: rgba(255,140,0,0.3);
+  --gold:       #ffd040;
+  --gold-glow:  rgba(255,208,64,0.35);
+  --green:      #39ff6a;
+  --text:       #e8d8b8;
+  --text-dim:   #5a4530;
+  --text-mid:   #a08060;
+  --p-red:    #ff3030;
+  --p-orange: #ff8800;
+  --p-cyan:   #00ddff;
+  --p-green:  #22ee66;
+  --p-yellow: #ffe030;
+  --font-hud:  'Orbitron', monospace;
   --font-mono: 'Share Tech Mono', monospace;
-
-  --cell: 32px;
-  --cols: 6;
-  --rows: 12;
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html{background:var(--bg);}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:var(--font-mono);
+  min-height:100vh;
+  display:flex;flex-direction:column;align-items:center;
+  overflow-x:hidden;user-select:none;
+  position:relative;
 }
 
-*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+/* STARS */
+#starfield{position:fixed;inset:0;z-index:0;pointer-events:none;}
+.s{position:absolute;border-radius:50%;background:#fff;}
 
-body {
-  background: var(--bg);
-  background-image:
-    radial-gradient(ellipse at 20% 20%, rgba(138,47,200,0.25) 0%, transparent 60%),
-    radial-gradient(ellipse at 80% 80%, rgba(255,107,255,0.15) 0%, transparent 60%);
-  color: var(--text);
-  font-family: var(--font-ui);
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 16px 10px 30px;
-  overflow-x: hidden;
-  user-select: none;
+/* HEADER */
+header{
+  position:relative;z-index:10;
+  width:100%;max-width:1040px;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:12px 18px 10px;
+  border-bottom:1px solid var(--panel-bdr);
 }
+.logo{
+  font-family:var(--font-hud);font-size:1.4rem;font-weight:900;
+  letter-spacing:.1em;color:var(--amber);
+  text-shadow:0 0 18px var(--amber),0 0 36px var(--amber-glow);
+}
+.logo .b{color:var(--gold);text-shadow:0 0 12px var(--gold-glow);}
+.sub{font-size:.55rem;color:var(--text-dim);letter-spacing:.18em;margin-top:2px;}
+.pill{
+  display:flex;align-items:center;gap:6px;
+  background:var(--panel);border:1px solid var(--panel-bdr);
+  border-radius:20px;padding:4px 12px;
+  font-size:.58rem;color:var(--text-dim);letter-spacing:.08em;
+}
+.dot{width:7px;height:7px;border-radius:50%;background:#333;transition:background .4s,box-shadow .4s;}
+.dot.on{background:var(--green);box-shadow:0 0 8px var(--green);}
+.dot.err{background:#ff3333;}
 
-/* ===== HEADER ===== */
-header {
-  text-align: center;
-  margin-bottom: 18px;
-  position: relative;
-}
-.logo {
-  font-family: var(--font-game);
-  font-size: 3.2rem;
-  color: var(--accent);
-  text-shadow: 0 0 30px var(--accent), 0 0 60px rgba(255,107,255,0.4), 4px 4px 0 #6600aa;
-  letter-spacing: 0.05em;
-  line-height: 1;
-}
-.logo span { color: var(--accent2); text-shadow: 0 0 20px var(--accent2), 4px 4px 0 #997700; }
-.tagline {
-  font-size: 0.65rem;
-  letter-spacing: 0.35em;
-  color: var(--text-dim);
-  text-transform: uppercase;
-  margin-top: 4px;
-}
-.live-dot {
-  display: inline-block;
-  width: 7px; height: 7px;
-  border-radius: 50%;
-  background: #2eff8a;
-  box-shadow: 0 0 8px #2eff8a;
-  margin-right: 6px;
-  animation: pulse 1.5s infinite;
-}
-@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
-
-/* ===== MAIN LAYOUT ===== */
-#app {
-  display: flex;
-  gap: 14px;
-  align-items: flex-start;
-  justify-content: center;
-  width: 100%;
-  max-width: 900px;
+/* LAYOUT — 3-col grid */
+#app{
+  position:relative;z-index:10;
+  display:grid;
+  grid-template-columns:200px 1fr 190px;
+  gap:12px;
+  padding:12px 14px 18px;
+  width:100%;max-width:1040px;
+  align-items:start;
 }
 
-/* ===== PANELS ===== */
-.panel {
-  background: var(--panel-bg);
-  border: 2px solid var(--panel-bdr);
-  border-radius: 16px;
-  padding: 12px;
-  box-shadow: 0 4px 24px var(--shadow), inset 0 1px 0 rgba(255,255,255,0.06);
+/* PANEL */
+.pnl{
+  background:var(--panel);
+  border:1px solid var(--panel-bdr);
+  border-radius:5px;
+  padding:9px 11px;
 }
-.panel-label {
-  font-size: 0.6rem;
-  font-weight: 800;
-  letter-spacing: 0.25em;
-  text-transform: uppercase;
-  color: var(--accent);
-  margin-bottom: 8px;
-  display: flex;
-  align-items: center;
-  gap: 6px;
+.pnl+.pnl{margin-top:9px;}
+.lbl{
+  font-family:var(--font-hud);font-size:.5rem;font-weight:700;
+  letter-spacing:.22em;color:var(--text-dim);text-transform:uppercase;
+  margin-bottom:5px;display:flex;align-items:center;gap:5px;
 }
-.panel-label::before {
-  content: '';
-  display: inline-block;
-  width: 6px; height: 6px;
-  border-radius: 50%;
-  background: var(--accent);
-  box-shadow: 0 0 8px var(--accent);
-}
-.big-num {
-  font-family: var(--font-game);
-  font-size: 2rem;
-  color: var(--accent2);
-  text-shadow: 0 0 15px rgba(255,224,51,0.5);
-  line-height: 1;
-}
-.sub-num {
-  font-size: 0.65rem;
-  color: var(--text-dim);
-  margin-top: 2px;
-}
+.ico{color:var(--amber);font-size:.62rem;}
+.vbig{font-family:var(--font-hud);font-size:1.7rem;font-weight:900;color:var(--amber);text-shadow:0 0 12px var(--amber-glow);line-height:1;}
+.vmid{font-family:var(--font-hud);font-size:1rem;font-weight:700;color:var(--amber);text-shadow:0 0 8px var(--amber-glow);line-height:1.2;}
+.vsub{font-size:.58rem;color:var(--text-dim);margin-top:2px;}
 
-/* ===== LEFT / RIGHT COLUMNS ===== */
-#left-col, #right-col {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  width: 180px;
-  flex-shrink: 0;
-}
+/* LEFT */
+#lc{display:flex;flex-direction:column;gap:9px;}
 
-/* ===== NEXT PREVIEW ===== */
-#next-wrap {
-  width: 100%;
-  background: #12022a;
-  border-radius: 10px;
-  border: 1px solid var(--panel-bdr);
-  padding: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 90px;
-  margin-bottom: 6px;
-}
-#next-canvas { image-rendering: pixelated; }
+.sleg{display:flex;flex-direction:column;gap:4px;margin-top:3px;}
+.srow{display:flex;align-items:center;gap:7px;font-size:.6rem;color:var(--text-mid);}
+.sw{width:26px;height:9px;border-radius:2px;flex-shrink:0;}
 
-.tx-tier-badge {
-  font-family: var(--font-game);
-  font-size: 1rem;
-  margin-bottom: 3px;
-}
-.tx-amount-val {
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  color: var(--accent2);
-}
-.tx-desc-val {
-  font-size: 0.62rem;
-  color: var(--text-dim);
-  margin-top: 2px;
-}
+#txstream{display:flex;flex-direction:column;gap:3px;max-height:100px;overflow:hidden;}
+.txl{font-size:.57rem;color:var(--text-dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;animation:si .25s ease;}
+@keyframes si{from{opacity:0;transform:translateY(-3px)}to{opacity:1}}
 
-/* QUEUE */
-#queue-list {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-.queue-item {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 0.62rem;
-  color: var(--text-dim);
-  background: rgba(0,0,0,0.2);
-  border-radius: 6px;
-  padding: 3px 6px;
-}
-.queue-dot {
-  width: 8px; height: 8px;
-  border-radius: 50%;
-  flex-shrink: 0;
-}
+.fbar{height:4px;background:#12101a;border-radius:2px;margin-top:4px;overflow:hidden;}
+.ffill{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--green),var(--gold),var(--amber),#ff3030);transition:width .6s;}
 
-/* ===== GAME AREA ===== */
-#game-col {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 10px;
-}
+#ql{display:flex;flex-direction:column;gap:3px;}
+.qi{display:flex;align-items:center;gap:6px;font-size:.58rem;color:var(--text-dim);padding:2px 0;border-bottom:1px solid #191020;}
+.qi:last-child{border-bottom:none;}
+.qd{width:9px;height:9px;border-radius:50%;flex-shrink:0;}
+.qn{color:var(--text-mid);}
+.qa{margin-left:auto;color:var(--text);font-size:.6rem;}
 
-#game-wrap {
-  position: relative;
-  border-radius: 12px;
-  overflow: hidden;
-  border: 3px solid var(--panel-bdr);
-  box-shadow: 0 0 40px var(--shadow), 0 0 80px rgba(255,107,255,0.1);
-}
-#game-canvas {
-  display: block;
-  background: #0a0118;
-}
+/* CENTER */
+#cc{display:flex;flex-direction:column;align-items:center;gap:8px;}
 
-/* FLASH OVERLAY */
-#block-flash {
-  position: absolute; inset: 0;
-  display: flex; flex-direction: column;
-  align-items: center; justify-content: center;
-  pointer-events: none; opacity: 0;
-  background: radial-gradient(ellipse at center, rgba(255,224,51,0.95) 0%, rgba(138,47,200,0.95) 100%);
-  z-index: 10;
-  border-radius: 10px;
+#gw{
+  position:relative;
+  background:#000;
+  border:2px solid var(--amber-dim);
+  border-radius:4px;
+  box-shadow:0 0 28px rgba(255,140,0,.18),0 0 70px rgba(255,140,0,.07),inset 0 0 18px rgba(0,0,0,.85);
+  overflow:hidden;
 }
-#block-flash.show { animation: blockFlash 3s forwards; }
-@keyframes blockFlash {
-  0%   { opacity:1; }
-  60%  { opacity:1; }
-  100% { opacity:0; }
-}
-.flash-title {
-  font-family: var(--font-game);
-  font-size: 1.8rem;
-  color: #fff;
-  text-shadow: 0 0 20px #fff, 4px 4px 0 rgba(0,0,0,0.4);
-  text-align: center;
-}
-.flash-sub {
-  font-family: var(--font-ui);
-  font-size: 0.85rem;
-  font-weight: 800;
-  color: var(--accent2);
-  letter-spacing: 0.1em;
-  margin-top: 8px;
-  text-shadow: 0 0 10px var(--accent2);
-}
+#gc{display:block;}
 
-/* SCREEN OVERLAYS */
-.screen-overlay {
-  position: absolute; inset: 0;
-  display: flex; flex-direction: column;
-  align-items: center; justify-content: center;
-  background: rgba(20,3,50,0.96);
-  z-index: 20;
-  text-align: center;
-  border-radius: 10px;
-  padding: 20px;
+#bflash{
+  position:absolute;inset:0;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  background:radial-gradient(ellipse at center,rgba(255,208,64,.96) 0%,rgba(6,6,8,.97) 100%);
+  pointer-events:none;opacity:0;z-index:15;
 }
-.ov-title {
-  font-family: var(--font-game);
-  font-size: 2.5rem;
-  color: var(--accent);
-  text-shadow: 0 0 30px var(--accent), 4px 4px 0 #6600aa;
-  margin-bottom: 10px;
-}
-.ov-desc {
-  font-size: 0.72rem;
-  color: var(--text-dim);
-  line-height: 2;
-  margin-bottom: 24px;
-  letter-spacing: 0.05em;
-}
-.btn {
-  font-family: var(--font-game);
-  font-size: 1.1rem;
-  padding: 12px 36px;
-  background: linear-gradient(135deg, var(--accent), #9933ff);
-  color: #fff;
-  border: none;
-  border-radius: 50px;
-  cursor: pointer;
-  box-shadow: 0 4px 20px rgba(255,107,255,0.5);
-  transition: transform 0.15s, box-shadow 0.15s;
-  letter-spacing: 0.05em;
-}
-.btn:hover { transform: scale(1.07); box-shadow: 0 6px 30px rgba(255,107,255,0.7); }
-.btn:active { transform: scale(0.96); }
+#bflash.show{animation:bf 3.5s forwards;}
+@keyframes bf{0%{opacity:1}60%{opacity:1}100%{opacity:0}}
+.ft{font-family:var(--font-hud);font-size:1.5rem;font-weight:900;color:#000;letter-spacing:.12em;}
+.fh{font-family:var(--font-hud);font-size:2.5rem;font-weight:900;color:#000;margin-top:4px;}
+.fs{font-size:.75rem;color:rgba(0,0,0,.6);margin-top:6px;letter-spacing:.1em;font-weight:700;}
 
-/* ===== FEE RATE BAR ===== */
-.fee-bar-wrap { width: 100%; }
-.fee-bar-track {
-  height: 8px;
-  background: rgba(0,0,0,0.4);
-  border-radius: 4px;
-  margin-top: 5px;
-  overflow: hidden;
+#cpop{
+  position:absolute;top:26%;left:50%;transform:translateX(-50%);
+  font-family:var(--font-hud);font-size:2.2rem;font-weight:900;
+  color:var(--gold);text-shadow:0 0 28px var(--gold),3px 3px 0 rgba(0,0,0,.5);
+  pointer-events:none;opacity:0;z-index:18;white-space:nowrap;
 }
-.fee-bar-fill {
-  height: 100%;
-  border-radius: 4px;
-  background: linear-gradient(90deg, #2eff8a, #ffe033, #ff3a3a);
-  transition: width 0.5s;
-}
+#cpop.show{animation:ca 1.2s forwards;}
+@keyframes ca{0%{opacity:1;transform:translateX(-50%) scale(.6)}25%{opacity:1;transform:translateX(-50%) scale(1.2)}75%{opacity:.8;transform:translateX(-50%) scale(1) translateY(-28px)}100%{opacity:0;transform:translateX(-50%) scale(.85) translateY(-65px)}}
 
-/* CHAIN popup */
-#chain-popup {
-  position: absolute;
-  top: 30%; left: 50%;
-  transform: translateX(-50%);
-  font-family: var(--font-game);
-  font-size: 3rem;
-  color: var(--accent2);
-  text-shadow: 0 0 30px var(--accent2), 4px 4px 0 #664400;
-  pointer-events: none;
-  opacity: 0;
-  z-index: 15;
-  white-space: nowrap;
+.sov{
+  position:absolute;inset:0;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  background:rgba(6,6,8,.95);z-index:20;text-align:center;padding:20px;border-radius:3px;
 }
-#chain-popup.show { animation: chainPop 1.2s forwards; }
-@keyframes chainPop {
-  0%   { opacity:1; transform: translateX(-50%) scale(0.7); }
-  30%  { opacity:1; transform: translateX(-50%) scale(1.15); }
-  70%  { opacity:0.8; transform: translateX(-50%) scale(1.05) translateY(-20px); }
-  100% { opacity:0; transform: translateX(-50%) scale(0.9) translateY(-50px); }
+.stitle{font-family:var(--font-hud);font-size:1.9rem;font-weight:900;color:var(--amber);letter-spacing:.08em;text-shadow:0 0 28px var(--amber),0 0 50px var(--amber-glow);margin-bottom:10px;}
+.sdesc{font-family:var(--font-mono);font-size:.67rem;color:var(--text-dim);line-height:2;margin-bottom:22px;}
+.sscore{font-family:var(--font-hud);font-size:2.3rem;font-weight:900;color:var(--gold);text-shadow:0 0 18px var(--gold-glow);margin-bottom:22px;}
+.sbtn{
+  font-family:var(--font-hud);font-size:.82rem;font-weight:700;letter-spacing:.18em;
+  padding:13px 34px;background:var(--amber);color:#000;border:none;border-radius:4px;cursor:pointer;
+  box-shadow:0 0 18px var(--amber-glow);transition:transform .15s,box-shadow .15s;
 }
+.sbtn:hover{transform:scale(1.06);box-shadow:0 0 30px var(--amber-glow);}
+.sbtn:active{transform:scale(.97);}
 
-/* ===== CONTROLS ===== */
-.ctrl-grid {
-  font-family: var(--font-mono);
-  font-size: 0.62rem;
-  color: var(--text-dim);
-  line-height: 2;
+/* MOBILE CTRL */
+#mctrl{display:none;flex-direction:column;gap:7px;width:100%;max-width:360px;}
+.mr{display:flex;gap:7px;justify-content:center;}
+.mb{
+  background:var(--panel);border:1px solid var(--panel-bdr);border-bottom:3px solid var(--amber-dim);
+  border-radius:5px;color:var(--amber);font-family:var(--font-hud);font-size:1.1rem;
+  height:52px;flex:1;display:flex;align-items:center;justify-content:center;
+  cursor:pointer;touch-action:manipulation;
 }
-.ctrl-key {
-  display: inline-block;
-  background: rgba(255,255,255,0.08);
-  border: 1px solid rgba(255,255,255,0.15);
-  border-radius: 4px;
-  padding: 0 4px;
-  font-size: 0.6rem;
-  color: var(--text);
-}
+.mb:active{background:#191020;border-bottom-width:1px;transform:translateY(2px);}
+#mb-drop{flex:2;font-size:.72rem;letter-spacing:.14em;color:#000;background:var(--amber);border-color:var(--amber-dim);}
+#mb-drop:active{background:var(--amber-dim);}
 
-.sound-btn {
-  width: 100%;
-  margin-top: 8px;
-  padding: 6px;
-  background: rgba(0,0,0,0.3);
-  border: 1px solid var(--panel-bdr);
-  border-radius: 8px;
-  color: var(--accent3);
-  font-family: var(--font-ui);
-  font-weight: 700;
-  font-size: 0.65rem;
-  letter-spacing: 0.1em;
-  cursor: pointer;
-  transition: background 0.2s;
-}
-.sound-btn:hover { background: rgba(255,107,255,0.15); }
-.sound-btn.off { color: var(--text-dim); }
+/* RIGHT */
+#rc{display:flex;flex-direction:column;gap:9px;}
 
-/* MEMPOOL info line */
-.mempool-row {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 0.62rem;
-  color: var(--text-dim);
-  margin-top: 4px;
+#nwrap{
+  width:100%;height:130px;
+  background:#000;border-radius:4px;border:1px solid var(--panel-bdr);
+  display:flex;align-items:center;justify-content:center;
+  overflow:hidden;margin-bottom:5px;
 }
-.mempool-link {
-  color: var(--accent3);
-  text-decoration: none;
-  font-weight: 700;
-  font-size: 0.6rem;
-}
-.mempool-link:hover { text-decoration: underline; }
+#nc{image-rendering:pixelated;}
 
-/* ===== MOBILE CONTROLS ===== */
-#mobile-ctrl {
-  display: none;
-  flex-direction: column;
-  gap: 8px;
-  width: 100%;
-  max-width: 400px;
+.clist{display:flex;flex-direction:column;gap:4px;}
+.cri{display:flex;align-items:center;gap:7px;font-size:.58rem;color:var(--text-dim);}
+.ck{
+  font-family:var(--font-hud);font-size:.5rem;
+  background:#12101a;border:1px solid var(--panel-bdr);
+  border-radius:2px;padding:2px 5px;color:var(--text-mid);white-space:nowrap;
 }
-.ctrl-row { display: flex; gap: 8px; justify-content: center; }
-.cbtn {
-  background: var(--panel-bg);
-  border: 2px solid var(--panel-bdr);
-  border-radius: 12px;
-  color: var(--text);
-  font-size: 1.4rem;
-  height: 56px;
-  flex: 1;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  touch-action: manipulation;
-  transition: background 0.1s;
-  box-shadow: 0 3px 0 rgba(0,0,0,0.4);
+.sndbtn{
+  width:100%;margin-top:5px;padding:5px;
+  background:#0d0d14;border:1px solid var(--panel-bdr);
+  border-radius:3px;color:var(--text-dim);
+  font-family:var(--font-mono);font-size:.58rem;letter-spacing:.08em;cursor:pointer;
 }
-.cbtn:active { background: var(--panel-bdr); box-shadow: none; transform: translateY(2px); }
-#btn-drop {
-  font-family: var(--font-game);
-  font-size: 1rem;
-  flex: 2;
-  background: linear-gradient(135deg, rgba(255,107,255,0.3), rgba(153,51,255,0.3));
-  border-color: var(--accent);
-}
+.sndbtn:hover{border-color:var(--amber-dim);color:var(--amber);}
+.sndbtn.on{color:var(--green);}
 
-@media (max-width: 860px) {
-  #mobile-ctrl { display: flex; }
-  #app { flex-wrap: wrap; }
-  #left-col, #right-col { width: 160px; }
+/* ---- RESPONSIVE ---- */
+@media(max-width:820px){
+  #app{grid-template-columns:175px 1fr 170px;gap:9px;padding:9px 10px 14px;}
 }
-@media (max-width: 600px) {
-  .logo { font-size: 2.2rem; }
-  #app { flex-direction: column; align-items: center; }
-  #left-col, #right-col { width: 100%; max-width: 400px; flex-direction: row; flex-wrap: wrap; }
-  .panel { flex: 1 1 45%; min-width: 140px; }
-  #game-col { order: -1; width: 100%; align-items: center; }
+@media(max-width:660px){
+  #app{grid-template-columns:1fr;}
+  #lc,#rc{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+  #lc .pnl+.pnl,#rc .pnl+.pnl{margin-top:0;}
+  #cc{order:-1;}
+  #mctrl{display:flex;}
+  .pc-only{display:none;}
+}
+@media(max-width:400px){
+  .logo{font-size:1.05rem;}
+  header{padding:9px 10px 8px;}
 }
 </style>
 </head>
 <body>
 
+<div id="starfield"></div>
+
 <header>
-  <div class="logo"><span>₿</span>びっぷよ</div>
-  <div class="tagline"><span class="live-dot"></span>Bitcoin Mempool · Chain Reaction · Live Data</div>
+  <div>
+    <div class="logo"><span class="b">₿</span>びっぷよ</div>
+    <div class="sub">Bitcoin TX → Puyo Puyo / New Block → Explosion</div>
+  </div>
+  <div class="pill">
+    <div class="dot" id="wsdot"></div>
+    <span id="wslbl">mempool.space</span>
+  </div>
 </header>
 
 <div id="app">
 
   <!-- LEFT -->
-  <div id="left-col">
+  <div id="lc">
 
-    <div class="panel">
-      <div class="panel-label">Next</div>
-      <div id="next-wrap">
-        <canvas id="next-canvas" width="120" height="80"></canvas>
-      </div>
-      <div class="tx-tier-badge" id="nx-tier">——</div>
-      <div class="tx-amount-val" id="nx-amount">Awaiting...</div>
-      <div class="tx-desc-val" id="nx-desc">——</div>
+    <div class="pnl">
+      <div class="lbl"><span class="ico">⛏</span>Block Height</div>
+      <div class="vbig" id="bh">——</div>
+      <div class="vsub" id="bago">connecting...</div>
     </div>
 
-    <div class="panel">
-      <div class="panel-label">Queue</div>
-      <div id="queue-list">
-        <div class="queue-item" style="color:var(--text-dim);font-style:italic;">empty</div>
-      </div>
+    <div class="pnl">
+      <div class="lbl"><span class="ico">◈</span>Score</div>
+      <div class="vbig" id="score">0</div>
+      <div class="vsub">Best: <span id="hiscore">0</span></div>
+    </div>
+
+    <div class="pnl">
+      <div class="lbl"><span class="ico">=</span>Lines</div>
+      <div class="vmid" id="lines">0</div>
+      <div class="vsub">groups cleared</div>
+    </div>
+
+    <div class="pnl">
+      <div class="lbl"><span class="ico">∿</span>Mempool</div>
+      <div class="vmid" id="mps">——</div>
+      <div class="vsub">unconfirmed TXs</div>
+    </div>
+
+    <div class="pnl">
+      <div class="lbl"><span class="ico">⚡</span>Queue</div>
+      <div class="vmid" id="qcnt">0</div>
+      <div class="vsub">pieces pending</div>
+      <div class="fbar"><div class="ffill" id="qbar" style="width:0%"></div></div>
+      <div id="ql" style="margin-top:7px"></div>
+    </div>
+
+    <div class="pnl">
+      <div class="lbl"><span class="ico">⛽</span>Fee Rate</div>
+      <div class="vmid" id="feerate">——</div>
+      <div class="vsub">sat/vByte (fast)</div>
+      <div class="fbar"><div class="ffill" id="feebar" style="width:0%"></div></div>
+    </div>
+
+    <div class="pnl">
+      <div class="lbl"><span class="ico">▦</span>Piece Size</div>
+      <div class="sleg" id="sleg"></div>
     </div>
 
   </div>
 
   <!-- CENTER -->
-  <div id="game-col">
-    <div id="game-wrap">
-      <canvas id="game-canvas" width="192" height="384"></canvas>
+  <div id="cc">
+    <div id="gw">
+      <canvas id="gc"></canvas>
+      <div id="cpop"></div>
 
-      <div id="chain-popup"></div>
-
-      <div id="block-flash">
-        <div class="flash-title">⛏ BLOCK MINED!</div>
-        <div class="flash-sub" id="flash-h">#000000</div>
-        <div class="flash-sub" style="font-size:0.75rem; margin-top:6px; color:#fff;">全消去ボーナス！！</div>
+      <div id="bflash">
+        <div class="ft">⛏ BLOCK MINED</div>
+        <div class="fh" id="flh">#000000</div>
+        <div class="fs">FULL CLEAR BONUS !</div>
       </div>
 
-      <div id="start-screen" class="screen-overlay">
-        <div class="ov-title">₿びっぷよ</div>
-        <div class="ov-desc">
-          同じ色を4個以上くっつけて消そう！<br>
-          リアルタイムのビットコイン送金が<br>
-          ブロックとして降ってくる！<br>
-          新ブロックが採掘されると全消去！
+      <div id="ss" class="sov">
+        <div class="stitle">₿びっぷよ</div>
+        <div class="sdesc">
+          同じ色を4個以上つなげて消そう！<br>
+          Bitcoin送金がリアルタイムで降ってくる<br>
+          新ブロックが採掘されたら全消去！
         </div>
-        <button class="btn" id="start-btn">▶ スタート！</button>
+        <button class="sbtn" id="startbtn">▶ START</button>
       </div>
 
-      <div id="go-screen" class="screen-overlay" style="display:none;">
-        <div class="ov-title" style="color:#ff6666;">GAME OVER</div>
-        <div class="ov-desc">Mempool Overflow...</div>
-        <div style="font-family:var(--font-game);font-size:2.5rem;color:var(--accent2);margin-bottom:24px;" id="go-score">0</div>
-        <button class="btn" id="restart-btn">🔄 もう一回！</button>
+      <div id="gs" class="sov" style="display:none">
+        <div class="stitle" style="color:#ff4444">GAME OVER</div>
+        <div class="sdesc">Mempool Overflow...</div>
+        <div class="sscore" id="goscore">0</div>
+        <button class="sbtn" id="restartbtn">PLAY AGAIN</button>
       </div>
     </div>
 
-    <!-- Mempool attribution -->
-    <div class="mempool-row">
-      <span class="live-dot" style="width:5px;height:5px;"></span>
-      Live data:
-      <a class="mempool-link" href="https://mempool.space" target="_blank">mempool.space</a>
-      <span id="ws-status" style="color:var(--text-dim);">connecting...</span>
+    <div id="mctrl">
+      <div class="mr">
+        <div class="mb" id="mb-rl">↺</div>
+        <div class="mb" id="mb-l">◀</div>
+        <div class="mb" id="mb-d">▼</div>
+        <div class="mb" id="mb-r">▶</div>
+        <div class="mb" id="mb-rr">↻</div>
+      </div>
+      <div class="mr"><div class="mb" id="mb-drop">HARD DROP</div></div>
     </div>
   </div>
 
   <!-- RIGHT -->
-  <div id="right-col">
+  <div id="rc">
 
-    <div class="panel">
-      <div class="panel-label">Score</div>
-      <div class="big-num" id="score">0</div>
-      <div class="sub-num">Best: <span id="hi-score">0</span></div>
+    <div class="pnl">
+      <div class="lbl"><span class="ico">→</span>Next</div>
+      <div id="nwrap"><canvas id="nc" width="120" height="120"></canvas></div>
+      <div class="vmid" id="nxtier" style="font-size:.82rem;margin-bottom:2px">——</div>
+      <div class="vsub" id="nxamt">Awaiting data...</div>
     </div>
 
-    <div class="panel">
-      <div class="panel-label">Max Chain</div>
-      <div class="big-num" id="max-chain">0</div>
-      <div class="sub-num">Consecutive Clears</div>
+    <div class="pnl">
+      <div class="lbl"><span class="ico">↓</span>Falling TX</div>
+      <div class="vmid" id="ftx" style="font-size:.85rem">——</div>
+      <div class="vsub" id="ffee">——</div>
+      <div class="vsub" id="fsz">——</div>
     </div>
 
-    <div class="panel">
-      <div class="panel-label">Falling TX</div>
-      <div class="big-num" style="font-size:1.3rem;" id="falling-tx">——</div>
-      <div class="sub-num">Current piece</div>
+    <div class="pnl">
+      <div class="lbl"><span class="ico">⛓</span>Max Chain</div>
+      <div class="vbig" id="mxchain">0</div>
+      <div class="vsub">consecutive clears</div>
     </div>
 
-    <div class="panel">
-      <div class="panel-label">Piece Size</div>
-      <div class="big-num" style="font-size:1.3rem;" id="piece-size">——</div>
-      <div class="sub-num" id="piece-size-sub">blocks</div>
-    </div>
-
-    <div class="panel">
-      <div class="panel-label">Fee Rate</div>
-      <div class="fee-bar-wrap">
-        <div class="big-num" style="font-size:1.3rem;" id="fee-rate">——</div>
-        <div class="sub-num">sat/vB</div>
-        <div class="fee-bar-track"><div class="fee-bar-fill" id="fee-bar" style="width:0%"></div></div>
+    <div class="pnl pc-only">
+      <div class="lbl"><span class="ico">⌨</span>Controls</div>
+      <div class="clist">
+        <div class="cri"><span class="ck">X / ↑</span><span>Rotate CW</span></div>
+        <div class="cri"><span class="ck">Z</span><span>Rotate CCW</span></div>
+        <div class="cri"><span class="ck">← →</span><span>Move</span></div>
+        <div class="cri"><span class="ck">↓</span><span>Soft Drop</span></div>
+        <div class="cri"><span class="ck">SPACE</span><span>Hard Drop</span></div>
       </div>
+      <button class="sndbtn on" id="sndbtn">🔊 SOUND ON</button>
     </div>
 
-    <div class="panel">
-      <div class="panel-label">Mempool</div>
-      <div class="big-num" style="font-size:1.2rem;" id="block-height">——</div>
-      <div class="sub-num" id="last-block-ago">Block Height</div>
-      <div class="big-num" style="font-size:1.1rem; margin-top:6px;" id="mempool-size">——</div>
-      <div class="sub-num">Unconfirmed TXs</div>
+    <div class="pnl">
+      <div class="lbl"><span class="ico">〜</span>TX Stream</div>
+      <div id="txstream"></div>
     </div>
 
-    <div class="panel">
-      <div class="panel-label">Lines</div>
-      <div class="big-num" id="lines-cleared">0</div>
-      <div class="sub-num">Groups cleared</div>
-    </div>
-
-    <div class="panel">
-      <div class="panel-label">Controls</div>
-      <div class="ctrl-grid">
-        <span class="ctrl-key">←</span> <span class="ctrl-key">→</span> 移動<br>
-        <span class="ctrl-key">↓</span> ソフトドロップ<br>
-        <span class="ctrl-key">SPACE</span> ハードドロップ<br>
-        <span class="ctrl-key">Z</span> 左回転<br>
-        <span class="ctrl-key">X</span> 右回転<br>
-        <span class="ctrl-key">↑</span> 右回転
-      </div>
-      <button class="sound-btn" id="btn-sound">🔊 SOUND ON</button>
-    </div>
-
-  </div>
-</div>
-
-<!-- Mobile controls -->
-<div id="mobile-ctrl">
-  <div class="ctrl-row">
-    <div class="cbtn" id="mb-rot-l">↺</div>
-    <div class="cbtn" id="mb-left">◀</div>
-    <div class="cbtn" id="mb-down">▼</div>
-    <div class="cbtn" id="mb-right">▶</div>
-    <div class="cbtn" id="mb-rot-r">↻</div>
-  </div>
-  <div class="ctrl-row">
-    <div class="cbtn" id="btn-drop" style="flex:1;">HARD DROP</div>
   </div>
 </div>
 
 <script>
-// ================================================================
-//  CONSTANTS
-// ================================================================
-const COLS = 6, ROWS = 12;
-const CELL = 32;
-const PUYO_COLORS = ['#ff3a3a','#2eff8a','#2ea5ff','#ffe033','#c944ff'];
-const COLOR_NAMES = ['Red','Green','Blue','Yellow','Purple'];
+// ── CONSTANTS ──────────────────────────────────────────────────
+const COLS=6, ROWS=12;
+const PUYO=['#ff3030','#ff8800','#00ddff','#22ee66','#ffe030'];
 
-const canvas = document.getElementById('game-canvas');
-const ctx    = canvas.getContext('2d');
-const nc     = document.getElementById('next-canvas');
-const nctx   = nc.getContext('2d');
+const canvas=document.getElementById('gc');
+const ctx=canvas.getContext('2d');
+const nc=document.getElementById('nc');
+const nctx=nc.getContext('2d');
 
-canvas.width  = COLS * CELL;
-canvas.height = ROWS * CELL;
-
-// ================================================================
-//  STATE
-// ================================================================
-let gameOn = false, gameState = 'IDLE'; // PLAY, FALL, ERASE, ANIM
-let board   = makeBoard();
-let score   = 0;
-let highScore = +localStorage.getItem('bitpuyo_hi2') || 0;
-let maxChain = 0, currentChain = 0, linesCleared = 0;
-let activePiece = null, nextTxData = null, txQueue = [];
-let dropTimer = 0, eraseTimer = 0, erasePhase = 0;
-let erasingCells = [], particles = [], stars = [];
-let blockHeight = null, lastBlockMs = null;
-let feeRate = null;
-let soundEnabled = true, wsConn = null;
-let keys = {}, btnStates = {left:false,right:false,down:false};
-let keyDly = 0, keyRep = 0;
-let animFrame = 0;
-
-document.getElementById('hi-score').textContent = highScore.toLocaleString();
-
-function makeBoard() {
-  return Array.from({length:ROWS}, () => new Array(COLS).fill(null));
+function cellSz(){
+  const w=window.innerWidth;
+  if(w<=400)return 30;if(w<=600)return 34;if(w<=820)return 38;return 42;
 }
+let CELL=cellSz();
 
-// ================================================================
-//  AUDIO
-// ================================================================
-let audioCtx = null;
-function getAC() {
-  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-  if (audioCtx.state === 'suspended') audioCtx.resume();
-  return audioCtx;
+function resize(){
+  CELL=cellSz();
+  canvas.width=COLS*CELL; canvas.height=ROWS*CELL;
+  const gw=document.getElementById('gw');
+  gw.style.width=canvas.width+'px'; gw.style.height=canvas.height+'px';
 }
-function sfx(type, chain=1) {
-  if (!soundEnabled) return;
-  try {
-    const ac = getAC(), t = ac.currentTime;
-    const o = ac.createOscillator(), g = ac.createGain();
-    o.connect(g); g.connect(ac.destination);
-    const CONFIGS = {
-      rotate: { type:'sine',     freq:[600,1000], dur:0.06, vol:0.04 },
-      land:   { type:'triangle', freq:[180,80],   dur:0.08, vol:0.06 },
-      erase:  { type:'square',   freq:[300+chain*60, 500+chain*80], dur:0.25, vol:0.09 },
-      chain:  { type:'sawtooth', freq:[200+chain*80, 400+chain*120], dur:0.35, vol:0.12 },
-      boom:   { type:'sawtooth', freq:[120,15],   dur:0.5,  vol:0.25 },
+resize();
+window.addEventListener('resize',resize);
+
+// ── STATE ──────────────────────────────────────────────────────
+let gameOn=false,gState='IDLE';
+let board=mkB();
+let score=0,hi=+localStorage.getItem('bphi4')||0;
+let chain=0,maxCh=0,linesCl=0;
+let active=null,nextTx=null,txQ=[];
+let dropT=0,eraseT=0;
+let eCells=[],parts=[],AF=0;
+let blockH=null,lastBMs=null;
+let snd=true,ws=null;
+let keys={},bs={l:0,r:0,d:0};
+let kdl=0,krp=0;
+
+document.getElementById('hiscore').textContent=hi.toLocaleString();
+
+function mkB(){return Array.from({length:ROWS},()=>new Array(COLS).fill(null));}
+
+// ── STARS ──────────────────────────────────────────────────────
+(function(){
+  const bg=document.getElementById('starfield');
+  for(let i=0;i<130;i++){
+    const el=document.createElement('div');el.className='s';
+    const sz=(Math.random()*1.8+.4).toFixed(1);
+    const a1=(Math.random()*.15+.03).toFixed(2);
+    const a2=(Math.random()*.7+.15).toFixed(2);
+    const dur=(Math.random()*5+2).toFixed(1);
+    const del=(Math.random()*7).toFixed(1);
+    el.style.cssText=`width:${sz}px;height:${sz}px;left:${Math.random()*100}%;top:${Math.random()*100}%;opacity:${a1};animation:twinkle ${dur}s ${del}s infinite alternate;`;
+    bg.appendChild(el);
+  }
+  const st=document.createElement('style');
+  st.textContent=`@keyframes twinkle{from{opacity:var(--a,0.1)}to{opacity:var(--b,0.7)}}`;
+  // simpler: just use CSS animation on each star with keyframes
+  document.head.appendChild(st);
+})();
+
+// ── AUDIO ──────────────────────────────────────────────────────
+let AC=null;
+function gAC(){if(!AC)AC=new(window.AudioContext||window.webkitAudioContext)();if(AC.state==='suspended')AC.resume();return AC;}
+function sfx(type,n=1){
+  if(!snd)return;
+  try{
+    const ac=gAC(),t=ac.currentTime;
+    const o=ac.createOscillator(),g=ac.createGain();
+    o.connect(g);g.connect(ac.destination);
+    const C={
+      rotate:{tp:'sine',f:[700,1100],d:.06,v:.04},
+      land:{tp:'triangle',f:[170,85],d:.08,v:.06},
+      erase:{tp:'square',f:[350+n*60,600+n*80],d:.22,v:.09},
+      chain:{tp:'sawtooth',f:[240+n*80,480+n*110],d:.32,v:.12},
+      boom:{tp:'sawtooth',f:[130,12],d:.55,v:.28},
     };
-    const c = CONFIGS[type] || CONFIGS.rotate;
-    o.type = c.type;
-    o.frequency.setValueAtTime(c.freq[0], t);
-    o.frequency.exponentialRampToValueAtTime(c.freq[1], t + c.dur);
-    g.gain.setValueAtTime(c.vol, t);
-    g.gain.exponentialRampToValueAtTime(0.001, t + c.dur + 0.02);
-    o.start(t); o.stop(t + c.dur + 0.05);
-  } catch(e) {}
+    const c=C[type]||C.rotate;
+    o.type=c.tp;
+    o.frequency.setValueAtTime(c.f[0],t);
+    o.frequency.exponentialRampToValueAtTime(c.f[1],t+c.d);
+    g.gain.setValueAtTime(c.v,t);g.gain.exponentialRampToValueAtTime(.001,t+c.d+.02);
+    o.start(t);o.stop(t+c.d+.05);
+  }catch(e){}
 }
-
-document.getElementById('btn-sound').addEventListener('click', function() {
-  soundEnabled = !soundEnabled;
-  this.textContent = soundEnabled ? '🔊 SOUND ON' : '🔇 SOUND OFF';
-  this.classList.toggle('off', !soundEnabled);
-  if (soundEnabled) getAC();
+document.getElementById('sndbtn').addEventListener('click',function(){
+  snd=!snd;this.textContent=snd?'🔊 SOUND ON':'🔇 SOUND OFF';
+  this.classList.toggle('on',snd);if(snd)gAC();
 });
 
-// ================================================================
-//  TX TIERS  — base unit is 2-cell pair (ぷよぷよ本来の形)
-//   0.00001 ~ 0.0001 BTC  : 2 cells (pair) ← basic puyo
-//   0.0001  ~ 0.05   BTC  : 2 cells (pair, multi-color OK)
-//   0.05    ~ 0.1    BTC  : 3 cells (S/Z/I shape)
-//   0.1     ~ 1      BTC  : 4 cells (L/J/T/O shape)
-//   1       ~ 10     BTC  : 5 cells
-//   10      ~ 100    BTC  : 6 cells
-//   100+         BTC  : 8 cells (massive)
-// ================================================================
-function getTier(sats) {
-  const b = sats / 1e8;
-  if (b >= 100)  return { name:'>100₿', size:8, color:'#ff3a3a', glow:'#ff0000', label:'絶望的巨大 8blocks！', multiColor:false };
-  if (b >= 10)   return { name:'>10₿',  size:6, color:'#ff8c00', glow:'#ff6600', label:'巨大 6blocks！',      multiColor:false };
-  if (b >= 1)    return { name:'>1₿',   size:5, color:'#ffe033', glow:'#ffcc00', label:'大型 5blocks',       multiColor:false };
-  if (b >= 0.1)  return { name:'>0.1₿', size:4, color:'#c944ff', glow:'#9900ff', label:'中型 4blocks',       multiColor:true  };
-  if (b >= 0.05) return { name:'>0.05₿',size:3, color:'#2eff8a', glow:'#00cc66', label:'3blocks',            multiColor:true  };
-  if (b >= 0.0001)return{ name:'Normal', size:2, color:'#2ea5ff', glow:'#0077ff', label:'2blocks (ペア)',    multiColor:true  };
-  if (b >= 0.00001)return{ name:'Small', size:2, color:'#aaaaff', glow:'#6666ff', label:'2blocks (小)',      multiColor:true  };
-  return               { name:'Dust',   size:1, color:'#888888', glow:'#555555', label:'1block (dust)',      multiColor:false };
-}
+// ── TIERS ──────────────────────────────────────────────────────
+const TIERS=[
+  {min:1e10,size:8,name:'>100₿',  color:'#ff3030',mono:true, label:'絶望 8blocks'},
+  {min:1e9, size:6,name:'>10₿',   color:'#ff8800',mono:true, label:'巨大 6blocks'},
+  {min:1e8, size:5,name:'>1₿',    color:'#ffe030',mono:true, label:'大型 5blocks'},
+  {min:1e7, size:4,name:'>0.1₿',  color:'#22ee66',mono:false,label:'4 blocks'},
+  {min:5e6, size:3,name:'>0.05₿', color:'#00ddff',mono:false,label:'3 blocks'},
+  {min:1e4, size:2,name:'Normal',  color:'#00ddff',mono:false,label:'2 blocks (pair)'},
+  {min:1e3, size:2,name:'Small',   color:'#aaddff',mono:false,label:'2 blocks (sm)'},
+  {min:0,   size:1,name:'Dust',    color:'#556677',mono:true, label:'1 block (dust)'},
+];
+function getTier(s){for(const t of TIERS)if(s>=t.min)return t;return TIERS[TIERS.length-1];}
+function txSats(tx){if(tx._s!==undefined)return tx._s;if(Array.isArray(tx.vout))return tx.vout.reduce((a,o)=>a+(o.value||0),0);return 0;}
+function fmtAmt(s){if(s>=1e8)return (s/1e8).toFixed(4)+' ₿';if(s>=1e5)return (s/1e5).toFixed(4)+' mBTC';return s.toLocaleString()+' sat';}
 
-// Build a puyo piece (pivot + satellite shape)
-// Returns array of {dr, dc, color} offsets from pivot
-function buildPiece(tier, txHash) {
-  const size = tier.size;
-  const c1 = randomColor();
-
-  // Dust: single block
-  if (size === 1) {
-    return [{ dr:0, dc:0, color: c1 }];
-  }
-
-  // Pair (classic puyo): pivot bottom, satellite top
-  if (size === 2) {
-    const c2 = tier.multiColor ? randomColor() : c1;
-    return [
-      { dr:0,  dc:0, color: c1 },
-      { dr:-1, dc:0, color: c2 },
+// ── PIECE ──────────────────────────────────────────────────────
+function rCol(){return PUYO[Math.floor(Math.random()*PUYO.length)];}
+function buildCells(tier){
+  const sz=tier.size,c0=rCol(),col=t=>t.mono?c0:rCol();
+  if(sz===1)return [{dr:0,dc:0,color:c0}];
+  if(sz===2)return [{dr:0,dc:0,color:c0},{dr:-1,dc:0,color:col(tier)}];
+  if(sz===3)return [{dr:0,dc:0,color:c0},{dr:-1,dc:0,color:col(tier)},{dr:-1,dc:1,color:col(tier)}];
+  if(sz===4){
+    const shapes=[
+      [{dr:0,dc:0},{dr:-1,dc:0},{dr:-2,dc:0},{dr:-1,dc:1}],
+      [{dr:0,dc:0},{dr:-1,dc:0},{dr:-2,dc:0},{dr:0,dc:1}],
+      [{dr:0,dc:0},{dr:0,dc:1},{dr:-1,dc:1},{dr:-1,dc:2}],
     ];
+    return shapes[Math.floor(Math.random()*shapes.length)].map(p=>({...p,color:col(tier)}));
   }
-
-  // 3-cell S/L shape
-  if (size === 3) {
-    const c2 = tier.multiColor ? randomColor() : c1;
-    const c3 = tier.multiColor ? randomColor() : c1;
-    return [
-      { dr:0,  dc:0,  color: c1 },
-      { dr:-1, dc:0,  color: c2 },
-      { dr:-1, dc:1,  color: c3 },
-    ];
-  }
-
-  // 4-cell T/L/S/Z/O
-  if (size === 4) {
-    const shapes = [
-      [{dr:0,dc:0},{dr:-1,dc:0},{dr:-2,dc:0},{dr:-1,dc:1}],  // T
-      [{dr:0,dc:0},{dr:-1,dc:0},{dr:-2,dc:0},{dr:-2,dc:1}],  // L
-      [{dr:0,dc:0},{dr:0,dc:1},{dr:-1,dc:1},{dr:-1,dc:2}],   // S
-      [{dr:0,dc:0},{dr:-1,dc:0},{dr:-1,dc:1},{dr:-2,dc:1}],  // Z
-    ];
-    const s = shapes[Math.floor(Math.random() * shapes.length)];
-    return s.map(cell => ({...cell, color: tier.multiColor ? randomColor() : c1}));
-  }
-
-  // 5, 6, 8: vertical column (single color for large sizes)
-  const cells = [];
-  for (let i = 0; i < size; i++) {
-    cells.push({ dr: -i, dc: 0, color: c1 });
-  }
-  return cells;
+  return Array.from({length:sz},(_,i)=>({dr:-i,dc:0,color:c0}));
 }
 
-function randomColor() { return PUYO_COLORS[Math.floor(Math.random() * PUYO_COLORS.length)]; }
-
-function txSats(tx) {
-  if (Array.isArray(tx.vout)) return tx.vout.reduce((s, o) => s + (o.value || 0), 0);
-  return tx._fakeSats || 0;
+class Piece{
+  constructor(tx){
+    this.tx=tx;this.sats=txSats(tx);this.tier=getTier(this.sats);
+    this.cells=buildCells(this.tier);this.pr=1;this.pc=Math.floor(COLS/2);
+  }
+  abs(){return this.cells.map(c=>({r:this.pr+c.dr,c:this.pc+c.dc,color:c.color}));}
+  rotateCW(){this.cells=this.cells.map(c=>({dr:c.dc,dc:-c.dr,color:c.color}));}
+  rotateCCW(){this.cells=this.cells.map(c=>({dr:-c.dc,dc:c.dr,color:c.color}));}
 }
 
-// ================================================================
-//  PIECE CLASS
-// ================================================================
-class Piece {
-  constructor(txData) {
-    this.tx = txData;
-    const sats = txSats(txData);
-    this.tier = getTier(sats);
-    this.cells = buildPiece(this.tier, sats);
-    // Start position: pivot at top, centered
-    this.pr = 1; // pivot row
-    this.pc = Math.floor(COLS / 2);
-    this.rotation = 0;
-  }
-
-  // Get absolute positions of all cells
-  abs() {
-    return this.cells.map(cell => ({ r: this.pr + cell.dr, c: this.pc + cell.dc, color: cell.color }));
-  }
-
-  // Rotate cells around pivot (0,0)
-  rotate(dir) {
-    this.cells = this.cells.map(cell => {
-      if (dir === 'cw') return { dr: cell.dc, dc: -cell.dr, color: cell.color };
-      else              return { dr: -cell.dc, dc: cell.dr, color: cell.color };
-    });
-  }
-}
-
-function canPlace(cells) {
-  for (const c of cells) {
-    if (c.c < 0 || c.c >= COLS || c.r >= ROWS) return false;
-    if (c.r >= 0 && board[c.r][c.c] !== null) return false;
+function canPlace(cells){
+  for(const c of cells){
+    if(c.c<0||c.c>=COLS||c.r>=ROWS)return false;
+    if(c.r>=0&&board[c.r][c.c]!==null)return false;
   }
   return true;
 }
-
-function spawnPiece() {
-  if (!nextTxData) return false;
-  activePiece = new Piece(nextTxData);
-  nextTxData = null;
-  loadNextTx();
-  updateSideUI();
-
-  if (!canPlace(activePiece.abs())) return false; // game over
-  return true;
+function spawn(){
+  if(!nextTx)return false;
+  active=new Piece(nextTx);nextTx=null;loadNext();updateSide();
+  return canPlace(active.abs());
+}
+function lock(){
+  active.abs().forEach(c=>{if(c.r>=0&&c.r<ROWS)board[c.r][c.c]=c.color;});
+  sfx('land');active=null;gState='FALL';
 }
 
-function lockPiece() {
-  activePiece.abs().forEach(cell => {
-    if (cell.r >= 0 && cell.r < ROWS) board[cell.r][cell.c] = cell.color;
-  });
-  sfx('land');
-  activePiece = null;
-  gameState = 'FALL';
+// ── PHYSICS ────────────────────────────────────────────────────
+function gravity(){
+  let m=false;
+  for(let c=0;c<COLS;c++)for(let r=ROWS-2;r>=0;r--)
+    if(board[r][c]&&!board[r+1][c]){
+      let nr=r;while(nr+1<ROWS&&!board[nr+1][c])nr++;
+      board[nr][c]=board[r][c];board[r][c]=null;m=true;
+    }
+  return m;
 }
-
-// ================================================================
-//  PHYSICS
-// ================================================================
-function applyGravity() {
-  let moved = false;
-  for (let c = 0; c < COLS; c++) {
-    for (let r = ROWS - 2; r >= 0; r--) {
-      if (board[r][c] !== null && board[r+1][c] === null) {
-        let nr = r;
-        while (nr + 1 < ROWS && board[nr+1][c] === null) nr++;
-        board[nr][c] = board[r][c];
-        board[r][c] = null;
-        moved = true;
+function findGroups(){
+  const vis=Array.from({length:ROWS},()=>new Array(COLS).fill(0)),out=[];
+  for(let r=0;r<ROWS;r++)for(let c=0;c<COLS;c++)if(board[r][c]&&!vis[r][c]){
+    const col=board[r][c],grp=[],q=[{r,c}];vis[r][c]=1;let h=0;
+    while(h<q.length){
+      const {r:cr,c:cc}=q[h++];grp.push({r:cr,c:cc});
+      for(const[dr,dc]of[[-1,0],[1,0],[0,-1],[0,1]]){
+        const nr=cr+dr,nc=cc+dc;
+        if(nr>=0&&nr<ROWS&&nc>=0&&nc<COLS&&!vis[nr][nc]&&board[nr][nc]===col){vis[nr][nc]=1;q.push({r:nr,c:nc});}
       }
     }
+    if(grp.length>=4)out.push(grp);
   }
-  return moved;
+  return out;
 }
 
-function findGroups() {
-  const visited = Array.from({length:ROWS}, () => new Array(COLS).fill(false));
-  const groups = [];
-  for (let r = 0; r < ROWS; r++) {
-    for (let c = 0; c < COLS; c++) {
-      if (board[r][c] && !visited[r][c]) {
-        const color = board[r][c];
-        const group = [];
-        const q = [{r, c}]; visited[r][c] = true;
-        let head = 0;
-        while (head < q.length) {
-          const {r:cr, c:cc} = q[head++];
-          group.push({r:cr, c:cc});
-          for (const [dr,dc] of [[-1,0],[1,0],[0,-1],[0,1]]) {
-            const nr=cr+dr, nc=cc+dc;
-            if (nr>=0&&nr<ROWS&&nc>=0&&nc<COLS&&!visited[nr][nc]&&board[nr][nc]===color) {
-              visited[nr][nc] = true;
-              q.push({r:nr, c:nc});
-            }
-          }
-        }
-        if (group.length >= 4) groups.push(group);
-      }
-    }
-  }
-  return groups;
-}
-
-// ================================================================
-//  INPUT
-// ================================================================
-function tryMove(dr, dc) {
-  if (!activePiece) return false;
-  const newCells = activePiece.abs().map(c => ({...c, r:c.r+dr, c:c.c+dc}));
-  if (canPlace(newCells)) {
-    activePiece.pr += dr; activePiece.pc += dc;
-    return true;
-  }
+// ── INPUT ──────────────────────────────────────────────────────
+function mv(dr,dc){
+  if(!active)return false;
+  const nc2=active.abs().map(c=>({...c,r:c.r+dr,c:c.c+dc}));
+  if(canPlace(nc2)){active.pr+=dr;active.pc+=dc;return true;}
   return false;
 }
-
-function tryRotate(dir) {
-  if (!activePiece) return;
-  const orig = activePiece.cells.map(c => ({...c}));
-  activePiece.rotate(dir);
-  // Wall kick attempts
-  const kicks = [[0,0],[0,1],[0,-1],[0,2],[0,-2],[-1,0],[-2,0]];
-  for (const [dr,dc] of kicks) {
-    const test = activePiece.cells.map(cell => ({
-      r: activePiece.pr + cell.dr + dr,
-      c: activePiece.pc + cell.dc + dc,
-      color: cell.color
-    }));
-    if (canPlace(test)) {
-      activePiece.pr += dr; activePiece.pc += dc;
-      sfx('rotate');
-      return;
-    }
+function rot(dir){
+  if(!active)return;
+  const bk=active.cells.map(c=>({...c}));
+  dir==='cw'?active.rotateCW():active.rotateCCW();
+  for(const[dr,dc]of[[0,0],[0,1],[0,-1],[0,2],[0,-2],[-1,0],[-2,0]]){
+    const test=active.cells.map(c=>({r:active.pr+c.dr+dr,c:active.pc+c.dc+dc,color:c.color}));
+    if(canPlace(test)){active.pr+=dr;active.pc+=dc;sfx('rotate');return;}
   }
-  activePiece.cells = orig; // undo
+  active.cells=bk;
 }
+function hardDrop(){if(!active||gState!=='PLAY')return;while(mv(1,0)){}lock();}
 
-function hardDrop() {
-  if (!activePiece || gameState !== 'PLAY') return;
-  while (tryMove(1, 0)) {}
-  lockPiece();
-}
-
-window.addEventListener('keydown', e => {
-  keys[e.code] = true;
-  if (gameState !== 'PLAY' || !activePiece) return;
-  if (e.code === 'Space') { e.preventDefault(); hardDrop(); }
-  if (e.code === 'KeyZ')  { e.preventDefault(); tryRotate('ccw'); }
-  if (e.code === 'KeyX' || e.code === 'ArrowUp') { e.preventDefault(); tryRotate('cw'); }
-  if (e.code === 'ArrowLeft')  { e.preventDefault(); tryMove(0,-1); }
-  if (e.code === 'ArrowRight') { e.preventDefault(); tryMove(0,1); }
+window.addEventListener('keydown',e=>{
+  keys[e.code]=true;
+  if(gState!=='PLAY'||!active)return;
+  if(e.code==='Space'){e.preventDefault();hardDrop();}
+  if(e.code==='KeyZ'){e.preventDefault();rot('ccw');}
+  if(e.code==='KeyX'||e.code==='ArrowUp'){e.preventDefault();rot('cw');}
+  if(e.code==='ArrowLeft'){e.preventDefault();mv(0,-1);}
+  if(e.code==='ArrowRight'){e.preventDefault();mv(0,1);}
 });
-window.addEventListener('keyup', e => { keys[e.code] = false; });
+window.addEventListener('keyup',e=>{keys[e.code]=false;});
 
-function handleMovInput() {
-  if (gameState !== 'PLAY' || !activePiece) return;
-  const lft = keys['ArrowLeft']  || btnStates.left;
-  const rgt = keys['ArrowRight'] || btnStates.right;
-  const dwn = keys['ArrowDown']  || keys['KeyS'] || btnStates.down;
-
-  if (lft || rgt) {
-    if (keyDly === 0) {
-      if (lft) tryMove(0,-1);
-      if (rgt) tryMove(0,1);
-      keyDly = keyRep === 0 ? 12 : 3;
-      keyRep++;
-    } else keyDly--;
-  } else { keyDly = 0; keyRep = 0; }
-
-  return dwn;
+function handleInput(){
+  if(gState!=='PLAY'||!active)return false;
+  const l=keys['ArrowLeft']||bs.l,r=keys['ArrowRight']||bs.r;
+  if(l||r){if(kdl===0){l?mv(0,-1):mv(0,1);kdl=krp===0?12:3;krp++;}else kdl--;}
+  else{kdl=0;krp=0;}
+  return !!(keys['ArrowDown']||keys['KeyS']||bs.d);
 }
-
-// Mobile buttons
-function bindMobile(id, key, fn) {
-  const el = document.getElementById(id);
-  if (!el) return;
-  const down = e => { e.preventDefault(); if(key) btnStates[key]=true; if(fn) fn(); };
-  const up   = e => { e.preventDefault(); if(key) btnStates[key]=false; };
-  el.addEventListener('touchstart', down, {passive:false});
-  el.addEventListener('touchend',   up,   {passive:false});
-  el.addEventListener('mousedown',  down);
-  el.addEventListener('mouseup',    up);
-  el.addEventListener('mouseleave', up);
+function bindM(id,key,fn){
+  const el=document.getElementById(id);if(!el)return;
+  const dn=e=>{e.preventDefault();if(key)bs[key]=1;if(fn)fn();};
+  const up=e=>{e.preventDefault();if(key)bs[key]=0;};
+  el.addEventListener('touchstart',dn,{passive:false});el.addEventListener('touchend',up,{passive:false});
+  el.addEventListener('mousedown',dn);el.addEventListener('mouseup',up);el.addEventListener('mouseleave',up);
 }
-bindMobile('mb-left',  'left');
-bindMobile('mb-right', 'right');
-bindMobile('mb-down',  'down');
-bindMobile('mb-rot-l', null, () => { if(gameState==='PLAY') tryRotate('ccw'); });
-bindMobile('mb-rot-r', null, () => { if(gameState==='PLAY') tryRotate('cw'); });
-bindMobile('btn-drop', null, hardDrop);
+bindM('mb-l','l');bindM('mb-r','r');bindM('mb-d','d');
+bindM('mb-rl',null,()=>{if(gState==='PLAY')rot('ccw');});
+bindM('mb-rr',null,()=>{if(gState==='PLAY')rot('cw');});
+bindM('mb-drop',null,hardDrop);
 
-// ================================================================
-//  PARTICLES
-// ================================================================
-class Particle {
-  constructor(x, y, color) {
-    this.x=x; this.y=y; this.color=color;
-    const a = Math.random() * Math.PI * 2;
-    const s = Math.random() * 5 + 1;
-    this.vx=Math.cos(a)*s; this.vy=Math.sin(a)*s - 2;
-    this.life=1; this.decay=Math.random()*0.04+0.02;
-    this.r=Math.random()*4+2;
+// ── PARTICLES ──────────────────────────────────────────────────
+class Part{
+  constructor(x,y,col){
+    this.x=x;this.y=y;this.color=col;
+    const a=Math.random()*Math.PI*2,s=Math.random()*5+1.5;
+    this.vx=Math.cos(a)*s;this.vy=Math.sin(a)*s-2.5;
+    this.life=1;this.decay=Math.random()*.04+.02;this.r=Math.random()*4+2;
   }
-  update() { this.x+=this.vx; this.vy+=0.15; this.y+=this.vy; this.life-=this.decay; }
-  draw(ctx) {
-    ctx.globalAlpha = Math.max(0, this.life);
-    ctx.fillStyle = this.color;
-    ctx.beginPath(); ctx.arc(this.x,this.y,this.r,0,Math.PI*2); ctx.fill();
-    ctx.globalAlpha = 1;
+  step(){this.x+=this.vx;this.vy+=.18;this.y+=this.vy;this.life-=this.decay;}
+  draw(c){
+    c.globalAlpha=Math.max(0,this.life);c.fillStyle=this.color;
+    c.shadowColor=this.color;c.shadowBlur=7;
+    c.beginPath();c.arc(this.x,this.y,this.r,0,Math.PI*2);c.fill();
+    c.shadowBlur=0;c.globalAlpha=1;
   }
 }
 
-// ================================================================
-//  DRAWING
-// ================================================================
-function drawPuyo(ctx, x, y, size, color, neighbors={u:false,d:false,l:false,r:false}, alpha=1, glowing=false) {
-  const s = size, r = s * 0.42;
-  ctx.globalAlpha = alpha;
-
-  // Body blob
-  ctx.shadowBlur = glowing ? 20 : 8;
-  ctx.shadowColor = color;
-  ctx.fillStyle = color;
-  ctx.beginPath();
-  ctx.arc(x + s/2, y + s/2, r, 0, Math.PI*2);
-  ctx.fill();
-
-  // Connection bridges to neighbors
-  ctx.fillStyle = color;
-  const bridgeW = r * 0.7;
-  const half = s / 2;
-  if (neighbors.u) ctx.fillRect(x + half - bridgeW/2, y,        bridgeW, half);
-  if (neighbors.d) ctx.fillRect(x + half - bridgeW/2, y + half, bridgeW, half);
-  if (neighbors.l) ctx.fillRect(x,        y + half - bridgeW/2, half, bridgeW);
-  if (neighbors.r) ctx.fillRect(x + half, y + half - bridgeW/2, half, bridgeW);
-
-  // Shine
-  ctx.shadowBlur = 0;
-  ctx.fillStyle = 'rgba(255,255,255,0.55)';
-  ctx.beginPath();
-  ctx.arc(x + s*0.35, y + s*0.3, r*0.32, 0, Math.PI*2);
-  ctx.fill();
-
-  // Eyes
-  ctx.fillStyle = 'rgba(0,0,0,0.7)';
-  ctx.beginPath(); ctx.arc(x + s*0.4, y + s*0.52, r*0.1, 0, Math.PI*2); ctx.fill();
-  ctx.beginPath(); ctx.arc(x + s*0.6, y + s*0.52, r*0.1, 0, Math.PI*2); ctx.fill();
-
-  ctx.globalAlpha = 1;
+// ── DRAW PUYO ──────────────────────────────────────────────────
+function getPM(cells){
+  const m={};cells.forEach(c=>{if(!m[c.r])m[c.r]={};m[c.r][c.c]=c.color;});return m;
+}
+function nbB(r,c,col){
+  const g=(dr,dc)=>{const nr=r+dr,nc=c+dc;return nr>=0&&nr<ROWS&&nc>=0&&nc<COLS&&board[nr][nc]===col;};
+  return{u:g(-1,0),d:g(1,0),l:g(0,-1),r:g(0,1)};
+}
+function nbM(r,c,col,m){
+  const g=(dr,dc)=>!!(m[r+dr]&&m[r+dr][c+dc]===col);
+  return{u:g(-1,0),d:g(1,0),l:g(0,-1),r:g(0,1)};
 }
 
-function getNeighbors(r, c, colorMap) {
-  const get = (dr, dc) => {
-    const nr=r+dr, nc=c+dc;
-    if (nr<0||nr>=ROWS||nc<0||nc>=COLS) return null;
-    return colorMap[nr] ? colorMap[nr][nc] : null;
-  };
-  const self = colorMap[r] ? colorMap[r][c] : null;
-  return {
-    u: get(-1,0) === self && self !== null,
-    d: get(1,0)  === self && self !== null,
-    l: get(0,-1) === self && self !== null,
-    r: get(0,1)  === self && self !== null,
-  };
+function drawP(c,px,py,sz,color,nb={},al=1){
+  const rad=sz*.41,cx=px+sz/2,cy=py+sz/2;
+  c.globalAlpha=al;
+  c.shadowBlur=10;c.shadowColor=color;c.fillStyle=color;
+  // connection bridges
+  const bw=rad*.75,h=sz/2;
+  if(nb.u)c.fillRect(cx-bw/2,py,bw,h+2);
+  if(nb.d)c.fillRect(cx-bw/2,cy-2,bw,h+2);
+  if(nb.l)c.fillRect(px,cy-bw/2,h+2,bw);
+  if(nb.r)c.fillRect(cx-2,cy-bw/2,h+2,bw);
+  // main blob
+  c.beginPath();c.arc(cx,cy,rad,0,Math.PI*2);c.fill();
+  c.shadowBlur=0;
+  // eyes — white base
+  c.globalAlpha=al*.92;c.fillStyle='#fff';
+  c.beginPath();c.ellipse(cx-rad*.28,cy-rad*.08,rad*.22,rad*.27,0,0,Math.PI*2);c.fill();
+  c.beginPath();c.ellipse(cx+rad*.28,cy-rad*.08,rad*.22,rad*.27,0,0,Math.PI*2);c.fill();
+  // pupils (slight right offset for character)
+  c.fillStyle='#111';
+  c.beginPath();c.arc(cx-rad*.24,cy-rad*.06,rad*.13,0,Math.PI*2);c.fill();
+  c.beginPath();c.arc(cx+rad*.32,cy-rad*.06,rad*.13,0,Math.PI*2);c.fill();
+  // shine
+  c.fillStyle='rgba(255,255,255,.62)';
+  c.beginPath();c.arc(cx-rad*.3,cy-rad*.26,rad*.16,0,Math.PI*2);c.fill();
+  c.globalAlpha=1;
 }
 
-function getPieceColorMap(piece) {
-  const map = {};
-  for (const cell of piece.abs()) {
-    if (!map[cell.r]) map[cell.r] = {};
-    map[cell.r][cell.c] = cell.color;
-  }
-  return map;
-}
-
-function draw() {
-  // Background
-  ctx.fillStyle = '#0a0118';
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-  // Subtle grid
-  ctx.strokeStyle = 'rgba(138,47,200,0.12)';
-  ctx.lineWidth = 1;
-  ctx.beginPath();
-  for (let x=0; x<=canvas.width; x+=CELL)  { ctx.moveTo(x,0); ctx.lineTo(x,canvas.height); }
-  for (let y=0; y<=canvas.height; y+=CELL) { ctx.moveTo(0,y); ctx.lineTo(canvas.width,y); }
+function draw(){
+  ctx.fillStyle='#000';ctx.fillRect(0,0,canvas.width,canvas.height);
+  // grid
+  ctx.strokeStyle='rgba(255,140,0,.055)';ctx.lineWidth=1;ctx.beginPath();
+  for(let x=0;x<=canvas.width;x+=CELL){ctx.moveTo(x,0);ctx.lineTo(x,canvas.height);}
+  for(let y=0;y<=canvas.height;y+=CELL){ctx.moveTo(0,y);ctx.lineTo(canvas.width,y);}
   ctx.stroke();
-
-  // Stars
-  stars.forEach(s => {
-    ctx.globalAlpha = s.a;
-    ctx.fillStyle = '#fff';
-    ctx.beginPath(); ctx.arc(s.x,s.y,s.r,0,Math.PI*2); ctx.fill();
-    ctx.globalAlpha = 1;
-  });
-
-  // Board puyos
-  const eraseSet = new Set(erasingCells.map(c => `${c.r},${c.c}`));
-  for (let r=0; r<ROWS; r++) {
-    for (let c=0; c<COLS; c++) {
-      if (board[r][c]) {
-        const isErase = eraseSet.has(`${r},${c}`);
-        const alpha = isErase ? (Math.sin(animFrame * 0.4) * 0.4 + 0.6) : 1;
-        const nb = getNeighbors(r, c, board);
-        drawPuyo(ctx, c*CELL, r*CELL, CELL, board[r][c], nb, alpha, isErase);
-      }
-    }
+  // board
+  const eSet=new Set(eCells.map(c=>`${c.r},${c.c}`));
+  for(let r=0;r<ROWS;r++)for(let c=0;c<COLS;c++)if(board[r][c]){
+    const isE=eSet.has(`${r},${c}`);
+    const al=isE?(.5+.5*Math.abs(Math.sin(AF*.38))):1;
+    drawP(ctx,c*CELL,r*CELL,CELL,board[r][c],nbB(r,c,board[r][c]),al);
   }
-
-  // Ghost piece
-  if (gameState === 'PLAY' && activePiece) {
-    // Project down
-    let ghostPr = activePiece.pr;
-    while (true) {
-      const test = activePiece.cells.map(cell => ({
-        r: ghostPr + 1 + cell.dr, c: activePiece.pc + cell.dc
-      }));
-      if (!canPlace(test.map(t => ({...t, color:null})))) break;
-      ghostPr++;
-    }
-    if (ghostPr !== activePiece.pr) {
-      activePiece.cells.forEach(cell => {
-        const gr = ghostPr + cell.dr, gc = activePiece.pc + cell.dc;
-        if (gr >= 0 && gr < ROWS && gc >= 0 && gc < COLS) {
-          ctx.globalAlpha = 0.22;
-          ctx.fillStyle = cell.color;
-          ctx.beginPath(); ctx.arc(gc*CELL+CELL/2, gr*CELL+CELL/2, CELL*0.38, 0, Math.PI*2); ctx.fill();
-          ctx.globalAlpha = 1;
+  // ghost
+  if(gState==='PLAY'&&active){
+    let gpr=active.pr;
+    while(canPlace(active.cells.map(c=>({r:gpr+1+c.dr,c:active.pc+c.dc,color:c.color}))))gpr++;
+    if(gpr!==active.pr){
+      active.cells.forEach(c=>{
+        const gr=gpr+c.dr,gc=active.pc+c.dc;
+        if(gr>=0&&gr<ROWS&&gc>=0&&gc<COLS){
+          ctx.globalAlpha=.17;ctx.fillStyle=c.color;
+          ctx.beginPath();ctx.arc(gc*CELL+CELL/2,gr*CELL+CELL/2,CELL*.38,0,Math.PI*2);ctx.fill();
+          ctx.globalAlpha=1;
         }
       });
     }
   }
-
-  // Active piece
-  if (gameState === 'PLAY' && activePiece) {
-    const pmap = getPieceColorMap(activePiece);
-    activePiece.abs().forEach(cell => {
-      if (cell.r >= 0 && cell.r < ROWS) {
-        const pnb = {
-          u: pmap[cell.r-1]?.[cell.c] === cell.color,
-          d: pmap[cell.r+1]?.[cell.c] === cell.color,
-          l: pmap[cell.r]?.[cell.c-1] === cell.color,
-          r: pmap[cell.r]?.[cell.c+1] === cell.color,
-        };
-        drawPuyo(ctx, cell.c*CELL, cell.r*CELL, CELL, cell.color, pnb, 1, false);
-      }
-    });
+  // active piece
+  if(gState==='PLAY'&&active){
+    const pm=getPM(active.abs());
+    active.abs().forEach(c=>{if(c.r>=0&&c.r<ROWS)drawP(ctx,c.c*CELL,c.r*CELL,CELL,c.color,nbM(c.r,c.c,c.color,pm));});
   }
-
-  // Particles
-  particles.forEach(p => p.draw(ctx));
+  // particles
+  parts.forEach(p=>p.draw(ctx));
 }
 
-function drawNext() {
-  nctx.fillStyle = '#12022a';
-  nctx.fillRect(0, 0, nc.width, nc.height);
-  if (!nextTxData) return;
-
-  const sats = txSats(nextTxData);
-  const tier = getTier(sats);
-  const tmpPiece = new Piece(nextTxData);
-  const cells = tmpPiece.abs();
-
-  // Center in preview
-  const minR = Math.min(...cells.map(c=>c.r));
-  const maxR = Math.max(...cells.map(c=>c.r));
-  const minC = Math.min(...cells.map(c=>c.c));
-  const maxC = Math.max(...cells.map(c=>c.c));
-  const pw = (maxC-minC+1), ph = (maxR-minR+1);
-  const cs = Math.min(20, Math.floor(Math.min(nc.width/pw, nc.height/ph)*0.7));
-  const ox = (nc.width  - pw*cs) / 2;
-  const oy = (nc.height - ph*cs) / 2;
-
-  // color map for preview
-  const pmap = {};
-  cells.forEach(cell => {
-    const dr = cell.r - minR, dc = cell.c - minC;
-    if (!pmap[dr]) pmap[dr] = {};
-    pmap[dr][dc] = cell.color;
-  });
-
-  cells.forEach(cell => {
-    const dr = cell.r - minR, dc = cell.c - minC;
-    const nb = {
-      u: pmap[dr-1]?.[dc] === cell.color,
-      d: pmap[dr+1]?.[dc] === cell.color,
-      l: pmap[dr]?.[dc-1] === cell.color,
-      r: pmap[dr]?.[dc+1] === cell.color,
-    };
-    drawPuyo(nctx, ox+dc*cs, oy+dr*cs, cs, cell.color, nb, 1, false);
+function drawNext(){
+  nctx.fillStyle='#000';nctx.fillRect(0,0,nc.width,nc.height);
+  if(!nextTx)return;
+  const tmp=new Piece(nextTx),cells=tmp.abs();
+  const minR=Math.min(...cells.map(c=>c.r)),maxR=Math.max(...cells.map(c=>c.r));
+  const minC=Math.min(...cells.map(c=>c.c)),maxC=Math.max(...cells.map(c=>c.c));
+  const pw=maxC-minC+1,ph=maxR-minR+1;
+  const cs=Math.min(28,Math.floor(Math.min((nc.width-12)/pw,(nc.height-12)/ph)));
+  const ox=(nc.width-pw*cs)/2,oy=(nc.height-ph*cs)/2;
+  const pm={};
+  cells.forEach(c=>{const dr=c.r-minR,dc=c.c-minC;if(!pm[dr])pm[dr]={};pm[dr][dc]=c.color;});
+  cells.forEach(c=>{
+    const dr=c.r-minR,dc=c.c-minC;
+    const nb={u:pm[dr-1]&&pm[dr-1][dc]===c.color,d:pm[dr+1]&&pm[dr+1][dc]===c.color,
+      l:pm[dr]&&pm[dr][dc-1]===c.color,r:pm[dr]&&pm[dr][dc+1]===c.color};
+    // Draw at alpha=1 always — clear colors, no blinking
+    drawP(nctx,ox+dc*cs,oy+dr*cs,cs,c.color,nb,1);
   });
 }
 
-// ================================================================
-//  GAME LOOP
-// ================================================================
-function update() {
-  animFrame++;
-  stars.forEach(s => { s.y += s.vy; if(s.y>canvas.height){s.y=0;s.x=Math.random()*canvas.width;} });
-  for (let i=particles.length-1; i>=0; i--) {
-    particles[i].update();
-    if (particles[i].life <= 0) particles.splice(i,1);
+// ── GAME LOOP ──────────────────────────────────────────────────
+function update(){
+  AF++;
+  for(let i=parts.length-1;i>=0;i--){parts[i].step();if(parts[i].life<=0)parts.splice(i,1);}
+  if(!gameOn)return;
+  if(gState==='PLAY'){
+    if(!active){if(!nextTx){loadNext();return;}if(!spawn()){gameOver();return;}}
+    const soft=handleInput();
+    const iv=soft?3:Math.max(8,36-Math.floor(score/3000));
+    if(++dropT>=iv){dropT=0;if(!mv(1,0))lock();}
   }
-
-  if (!gameOn) return;
-
-  if (gameState === 'PLAY') {
-    if (!activePiece) {
-      if (!nextTxData) { loadNextTx(); return; }
-      if (!spawnPiece()) { gameOver(); return; }
-    }
-    const softDrop = handleMovInput();
-    const interval = softDrop ? 3 : getDropInterval();
-    dropTimer++;
-    if (dropTimer >= interval) {
-      dropTimer = 0;
-      if (!tryMove(1, 0)) lockPiece();
+  else if(gState==='FALL'){
+    if(!gravity()){
+      const gs=findGroups();
+      if(gs.length){eCells=gs.flat();eraseT=32;chain++;gState='ERASE';sfx('erase',chain);if(chain>=2)showChain(chain);}
+      else{chain=0;gState='PLAY';}
     }
   }
-  else if (gameState === 'FALL') {
-    if (!applyGravity()) {
-      const groups = findGroups();
-      if (groups.length > 0) {
-        erasingCells = groups.flat();
-        eraseTimer = 35;
-        currentChain++;
-        gameState = 'ERASE';
-        sfx('erase', currentChain);
-        if (currentChain >= 2) showChainPopup(currentChain);
-      } else {
-        currentChain = 0;
-        gameState = 'PLAY';
-      }
-    }
-  }
-  else if (gameState === 'ERASE') {
-    eraseTimer--;
-    if (eraseTimer <= 0) {
-      const pts = erasingCells.length * 100 * Math.pow(currentChain, 2);
-      score += pts;
-      linesCleared += erasingCells.length;
-      if (currentChain > maxChain) maxChain = currentChain;
-      if (score > highScore) { highScore = score; localStorage.setItem('bitpuyo_hi2', highScore); }
-      erasingCells.forEach(cell => {
-        for (let i=0; i<8; i++) particles.push(new Particle(cell.c*CELL+CELL/2, cell.r*CELL+CELL/2, board[cell.r][cell.c]));
-        board[cell.r][cell.c] = null;
-      });
-      erasingCells = [];
-      updateUI();
-      gameState = 'FALL';
+  else if(gState==='ERASE'){
+    if(--eraseT<=0){
+      const pts=eCells.length*100*chain*chain;
+      score+=pts;linesCl+=eCells.length;
+      if(chain>maxCh)maxCh=chain;
+      if(score>hi){hi=score;localStorage.setItem('bphi4',hi);}
+      eCells.forEach(c=>{for(let i=0;i<8;i++)parts.push(new Part(c.c*CELL+CELL/2,c.r*CELL+CELL/2,board[c.r][c.c]));board[c.r][c.c]=null;});
+      eCells=[];updateUI();gState='FALL';
     }
   }
 }
+function loop(){update();draw();drawNext();requestAnimationFrame(loop);}
 
-function getDropInterval() {
-  // Gets faster as score increases
-  return Math.max(8, 35 - Math.floor(score / 5000));
+// ── UI ─────────────────────────────────────────────────────────
+function updateUI(){
+  document.getElementById('score').textContent=score.toLocaleString();
+  document.getElementById('hiscore').textContent=hi.toLocaleString();
+  document.getElementById('mxchain').textContent=maxCh;
+  document.getElementById('lines').textContent=linesCl;
 }
-
-function loop() {
-  update();
-  draw();
-  drawNext();
-  requestAnimationFrame(loop);
+function updateSide(){
+  if(!active)return;
+  document.getElementById('ftx').textContent=fmtAmt(active.sats);
+  document.getElementById('ftx').style.color=active.tier.color;
+  document.getElementById('ffee').textContent=`fee: ${active.tx._fee||'?'} sat`;
+  document.getElementById('fsz').textContent=`×${active.tier.size} (${active.tier.label})`;
 }
-
-// ================================================================
-//  CHAIN POPUP
-// ================================================================
-function showChainPopup(n) {
-  const el = document.getElementById('chain-popup');
-  const msgs = ['','','2 Chain!!','3 Chain!!!','4 Chain!!!!','5 Chain!!!!!','Fever!!!!!'];
-  el.textContent = n >= 6 ? '🔥 FEVER!!' : (msgs[n] || n + ' Chain!!');
-  el.classList.remove('show');
-  void el.offsetWidth;
-  el.classList.add('show');
-  if (n >= 3) sfx('chain', n);
+function updateNextUI(){
+  if(!nextTx)return;
+  const s=txSats(nextTx),t=getTier(s);
+  document.getElementById('nxtier').textContent=t.name;
+  document.getElementById('nxtier').style.color=t.color;
+  document.getElementById('nxamt').textContent=fmtAmt(s);
 }
-
-// ================================================================
-//  BLOCK EXPLOSION
-// ================================================================
-function triggerBlockExplosion(height) {
-  document.getElementById('flash-h').textContent = `#${height.toLocaleString()}`;
-  const fl = document.getElementById('block-flash');
-  fl.classList.remove('show'); void fl.offsetWidth; fl.classList.add('show');
-  sfx('boom');
-
-  let cleared = 0;
-  for (let r=0; r<ROWS; r++) for (let c=0; c<COLS; c++) {
-    if (board[r][c]) {
-      cleared++;
-      for (let i=0; i<4; i++) particles.push(new Particle(c*CELL+CELL/2, r*CELL+CELL/2, board[r][c]));
-      board[r][c] = null;
-    }
-  }
-  score += cleared * 1000;
-  if (score > highScore) { highScore = score; localStorage.setItem('bitpuyo_hi2', highScore); }
-  activePiece = null;
-  erasingCells = [];
-  gameState = 'PLAY';
-  updateUI();
-}
-
-// ================================================================
-//  UI
-// ================================================================
-function updateUI() {
-  document.getElementById('score').textContent       = score.toLocaleString();
-  document.getElementById('hi-score').textContent    = highScore.toLocaleString();
-  document.getElementById('max-chain').textContent   = maxChain;
-  document.getElementById('lines-cleared').textContent = linesCleared;
-}
-
-function updateSideUI() {
-  // Falling TX info
-  if (activePiece) {
-    const sats = txSats(activePiece.tx);
-    const amtStr = sats >= 1e8 ? (sats/1e8).toFixed(4)+' ₿'
-                 : sats >= 1e5 ? (sats/1e5).toFixed(4)+' mBTC'
-                 : sats + ' sat';
-    document.getElementById('falling-tx').textContent = amtStr;
-    document.getElementById('falling-tx').style.color = activePiece.tier.color;
-    document.getElementById('piece-size').textContent  = activePiece.tier.size;
-    document.getElementById('piece-size-sub').textContent = activePiece.tier.label;
-  }
-}
-
-function updateNextUI() {
-  if (!nextTxData) return;
-  const sats = txSats(nextTxData);
-  const tier = getTier(sats);
-  const amtStr = sats >= 1e8 ? (sats/1e8).toFixed(4)+' ₿'
-               : sats >= 1e5 ? (sats/1e5).toFixed(4)+' mBTC'
-               : sats + ' sat';
-  document.getElementById('nx-tier').textContent   = tier.name;
-  document.getElementById('nx-tier').style.color   = tier.color;
-  document.getElementById('nx-tier').style.textShadow = `0 0 10px ${tier.glow}`;
-  document.getElementById('nx-amount').textContent = amtStr;
-  document.getElementById('nx-desc').textContent   = tier.label;
-}
-
-function updateQueue() {
-  const el = document.getElementById('queue-list');
-  if (txQueue.length === 0) {
-    el.innerHTML = '<div class="queue-item" style="color:var(--text-dim);font-style:italic;">empty</div>';
-    return;
-  }
-  el.innerHTML = txQueue.slice(0, 5).map(tx => {
-    const sats = txSats(tx);
-    const tier = getTier(sats);
-    const amt = sats >= 1e8 ? (sats/1e8).toFixed(2)+' ₿' : sats >= 1e5 ? (sats/1e5).toFixed(2)+' mBTC' : sats + ' sat';
-    return `<div class="queue-item">
-      <div class="queue-dot" style="background:${tier.color};box-shadow:0 0 6px ${tier.color}"></div>
-      <span style="color:${tier.color}">${tier.name}</span>
-      <span style="margin-left:auto">${amt}</span>
-    </div>`;
+function updateQ(){
+  const el=document.getElementById('ql');
+  document.getElementById('qcnt').textContent=txQ.length;
+  document.getElementById('qbar').style.width=Math.min(100,(txQ.length/40)*100)+'%';
+  if(!txQ.length){el.innerHTML='<div class="qi" style="color:#333;font-style:italic">empty</div>';return;}
+  el.innerHTML=txQ.slice(0,5).map(tx=>{const s=txSats(tx),t=getTier(s);
+    return `<div class="qi"><div class="qd" style="background:${t.color};box-shadow:0 0 5px ${t.color}"></div><span class="qn">${t.name}</span><span class="qa">${fmtAmt(s)}</span></div>`;
   }).join('');
 }
-
-function loadNextTx() {
-  if (!nextTxData && txQueue.length > 0) {
-    const idx = Math.floor(Math.random() * Math.min(txQueue.length, 5));
-    nextTxData = txQueue.splice(idx, 1)[0];
-    updateNextUI();
-    updateQueue();
+function addTxLine(tx,isBlock=false){
+  const el=document.getElementById('txstream');
+  const s=txSats(tx),t=getTier(s);
+  const div=document.createElement('div');div.className='txl';
+  if(isBlock){div.style.color='#ffd040';div.textContent=`⛏ BLOCK #${tx._bh||'?'}`;}
+  else{div.style.color=t.color;div.innerHTML=`<span class="tag">•</span>${t.name} ${fmtAmt(s)}`;}
+  el.insertBefore(div,el.firstChild);
+  while(el.children.length>8)el.removeChild(el.lastChild);
+}
+function loadNext(){
+  if(!nextTx&&txQ.length>0){
+    const idx=Math.floor(Math.random()*Math.min(txQ.length,5));
+    nextTx=txQ.splice(idx,1)[0];updateNextUI();updateQ();
   }
 }
 
-// ================================================================
-//  WEBSOCKET — mempool.space
-// ================================================================
-function connectWS() {
-  wsConn = new WebSocket('wss://mempool.space/api/v1/ws');
-  wsConn.onopen = () => {
-    wsConn.send(JSON.stringify({ action:'want', data:['stats','blocks','live-2h-chart'] }));
-    document.getElementById('ws-status').textContent = 'connected';
-    document.getElementById('ws-status').style.color = '#2eff8a';
-  };
-  wsConn.onmessage = e => {
-    try {
-      const d = JSON.parse(e.data);
-
-      if (d.block) {
-        blockHeight = d.block.height;
-        lastBlockMs = d.block.timestamp * 1000;
-        document.getElementById('block-height').textContent  = blockHeight.toLocaleString();
-        document.getElementById('last-block-ago').textContent = 'Just now ⛏';
-        if (gameOn) triggerBlockExplosion(blockHeight);
-      }
-
-      if (d.mempoolInfo) {
-        document.getElementById('mempool-size').textContent = d.mempoolInfo.size.toLocaleString();
-      }
-
-      // Fee rate from recommended fees
-      if (d.fees || d['recommended-fees']) {
-        const fees = d.fees || d['recommended-fees'];
-        const rate = fees.fastestFee || fees.halfHourFee || fees.hourFee;
-        if (rate) {
-          feeRate = rate;
-          document.getElementById('fee-rate').textContent = rate + ' sat/vB';
-          const pct = Math.min(100, (rate / 200) * 100);
-          document.getElementById('fee-bar').style.width = pct + '%';
-        }
-      }
-
-      if (d.transactions && gameOn) {
-        for (const tx of d.transactions) {
-          txQueue.push(tx);
-        }
-        if (txQueue.length > 60) {
-          txQueue.sort((a,b) => txSats(b) - txSats(a));
-          txQueue = txQueue.slice(0, 60);
-        }
-        if (!nextTxData) loadNextTx();
-        updateQueue();
-      }
-    } catch(err) {}
-  };
-  wsConn.onerror = () => {
-    document.getElementById('ws-status').textContent = 'reconnecting...';
-    document.getElementById('ws-status').style.color = '#ff6666';
-  };
-  wsConn.onclose = () => {
-    document.getElementById('ws-status').textContent = 'reconnecting...';
-    document.getElementById('ws-status').style.color = '#ffaa00';
-    setTimeout(connectWS, 3000);
-  };
+// CHAIN POPUP
+function showChain(n){
+  const el=document.getElementById('cpop');
+  const M=['','','2 CHAIN!!','3 CHAIN!!!','4 CHAIN!!!!','5 CHAIN!!!!!'];
+  el.textContent=n>=6?'🔥 FEVER!!!':(M[n]||n+' CHAIN!!');
+  el.classList.remove('show');void el.offsetWidth;el.classList.add('show');
+  if(n>=3)sfx('chain',n);
 }
 
-// Initial block height fetch
-fetch('https://mempool.space/api/blocks/tip/height')
-  .then(r => r.json())
-  .then(h => { blockHeight = h; document.getElementById('block-height').textContent = h.toLocaleString(); })
-  .catch(() => {});
-
-// Last block ago timer
-setInterval(() => {
-  if (lastBlockMs) {
-    const diff = Date.now() - lastBlockMs;
-    const m = Math.floor(diff/60000), s = Math.floor((diff%60000)/1000);
-    document.getElementById('last-block-ago').textContent = m>0 ? `${m}m ${s}s ago` : `${s}s ago`;
-  }
-}, 1000);
-
-// ================================================================
-//  GAME FLOW
-// ================================================================
-function startGame() {
-  document.getElementById('start-screen').style.display = 'none';
-  document.getElementById('go-screen').style.display   = 'none';
-  board = makeBoard();
-  score = 0; maxChain = 0; currentChain = 0; linesCleared = 0;
-  activePiece = null; nextTxData = null; txQueue = [];
-  particles = []; erasingCells = [];
-
-  stars = Array.from({length:50}, () => ({
-    x: Math.random()*canvas.width,
-    y: Math.random()*canvas.height,
-    r: Math.random()*1.2+0.3,
-    vy: Math.random()*0.2+0.05,
-    a: Math.random()*0.5+0.1,
-  }));
-
-  // Seed queue with dummy data for immediate start
-  for (let i=0; i<15; i++) {
-    const sats = Math.floor(Math.random() * 5000000);
-    txQueue.push({ _fakeSats: sats, vout: [{value: sats}] });
-  }
-  loadNextTx();
-  updateUI(); updateNextUI(); updateQueue();
-  getAC();
-  gameOn = true; gameState = 'PLAY';
-  if (!wsConn) connectWS();
+// BLOCK EXPLOSION
+function blockExplode(h){
+  document.getElementById('flh').textContent='#'+h.toLocaleString();
+  const fl=document.getElementById('bflash');fl.classList.remove('show');void fl.offsetWidth;fl.classList.add('show');
+  sfx('boom');
+  let cl=0;
+  for(let r=0;r<ROWS;r++)for(let c=0;c<COLS;c++)if(board[r][c]){cl++;
+    for(let i=0;i<5;i++)parts.push(new Part(c*CELL+CELL/2,r*CELL+CELL/2,board[r][c]));board[r][c]=null;}
+  score+=cl*1000;if(score>hi){hi=score;localStorage.setItem('bphi4',hi);}
+  active=null;eCells=[];gState='PLAY';updateUI();
 }
 
-function gameOver() {
-  gameOn = false; gameState = 'IDLE';
-  document.getElementById('go-score').textContent = score.toLocaleString();
-  document.getElementById('go-screen').style.display = 'flex';
+// ── WEBSOCKET ──────────────────────────────────────────────────
+function connectWS(){
+  ws=new WebSocket('wss://mempool.space/api/v1/ws');
+  ws.onopen=()=>{
+    ws.send(JSON.stringify({action:'want',data:['stats','blocks','live-2h-chart']}));
+    document.getElementById('wsdot').className='dot on';
+    document.getElementById('wslbl').textContent='mempool.space';
+  };
+  ws.onmessage=e=>{try{
+    const d=JSON.parse(e.data);
+    if(d.block){
+      blockH=d.block.height;lastBMs=d.block.timestamp*1000;
+      document.getElementById('bh').textContent=blockH.toLocaleString();
+      document.getElementById('bago').textContent='Just now ⛏';
+      addTxLine({_bh:blockH,_s:0},true);
+      if(gameOn)blockExplode(blockH);
+    }
+    if(d.mempoolInfo)document.getElementById('mps').textContent=d.mempoolInfo.size.toLocaleString();
+    if(d.fees||d['recommended-fees']){
+      const f=d.fees||d['recommended-fees'];const fr=f.fastestFee||f.halfHourFee||0;
+      if(fr){document.getElementById('feerate').textContent=fr+' sat/vB';
+        document.getElementById('feebar').style.width=Math.min(100,(fr/200)*100)+'%';}
+    }
+    if(d.transactions&&gameOn){
+      for(const tx of d.transactions){
+        tx._s=txSats(tx);tx._fee=tx.fee||0;
+        txQ.push(tx);if(txQ.length<=20)addTxLine(tx);
+      }
+      if(txQ.length>60){txQ.sort((a,b)=>txSats(b)-txSats(a));txQ=txQ.slice(0,60);}
+      if(!nextTx)loadNext();else updateQ();
+    }
+  }catch(err){}};
+  ws.onerror=()=>{document.getElementById('wsdot').className='dot err';};
+  ws.onclose=()=>{document.getElementById('wsdot').className='dot';document.getElementById('wslbl').textContent='reconnecting...';setTimeout(connectWS,3000);};
+}
+
+fetch('https://mempool.space/api/blocks/tip/height').then(r=>r.json())
+  .then(h=>{blockH=h;document.getElementById('bh').textContent=h.toLocaleString();}).catch(()=>{});
+setInterval(()=>{
+  if(lastBMs){const d=Date.now()-lastBMs,m=Math.floor(d/60000),s=Math.floor((d%60000)/1000);
+    document.getElementById('bago').textContent=m>0?`${m}m ${s}s ago`:`${s}s ago`;}
+},1000);
+
+// PIECE SIZE LEGEND
+(function(){
+  document.getElementById('sleg').innerHTML=TIERS.map(t=>
+    `<div class="srow"><div class="sw" style="background:${t.color};box-shadow:0 0 5px ${t.color}55"></div>${t.name} <span style="color:var(--text-dim)">${t.label}</span></div>`
+  ).join('');
+})();
+
+// ── GAME FLOW ──────────────────────────────────────────────────
+function startGame(){
+  document.getElementById('ss').style.display='none';
+  document.getElementById('gs').style.display='none';
+  board=mkB();score=0;maxCh=0;chain=0;linesCl=0;
+  active=null;nextTx=null;txQ=[];parts=[];eCells=[];
+  // Seed dummy TXs — spread across all tiers for fun
+  [5e5,2e6,1e4,8e7,3e5,5e8,1e3,4e6,2e3,1e5,6e4,9e8,5e3,3e4,7e5].forEach(s=>
+    txQ.push({_s:s,_fee:Math.floor(s*.0001),vout:[{value:s}]}));
+  loadNext();updateUI();updateNextUI();updateQ();gAC();
+  gameOn=true;gState='PLAY';
+  if(!ws)connectWS();
+}
+function gameOver(){
+  gameOn=false;gState='IDLE';
+  document.getElementById('goscore').textContent=score.toLocaleString();
+  document.getElementById('gs').style.display='flex';
   sfx('boom');
 }
+document.getElementById('startbtn').addEventListener('click',startGame);
+document.getElementById('restartbtn').addEventListener('click',startGame);
 
-document.getElementById('start-btn').addEventListener('click', startGame);
-document.getElementById('restart-btn').addEventListener('click', startGame);
-
-// ================================================================
-//  KICK OFF
-// ================================================================
 loop();
 </script>
 </body>
