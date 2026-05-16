@@ -12,7 +12,7 @@
   --bg:         #d4cec8;
   --panel:      #e8e4dc;
   --panel-bdr:  #b8b0a9;
-  --game-bg:    #2a2825; /* ゲーム盤面の背景(少しブラウンがかったダークグレー) */
+  --game-bg:    #2a2825;
   --text:       #423a31;
   --text-dim:   #756b62;
   --text-mid:   #5c5246;
@@ -47,7 +47,7 @@ header{
   position:relative;z-index:10;
   width:100%;max-width:1400px;
   display:flex;align-items:center;justify-content:space-between;
-  padding:12px 18px 10px;
+  padding:12px 20px 10px;
   border-bottom:1px solid var(--panel-bdr);
 }
 .logo{
@@ -66,11 +66,16 @@ header{
 .dot.on{background:var(--green);box-shadow:0 0 8px var(--green);}
 .dot.err{background:#ff4d4d;}
 
-/* LAYOUT — 3-col grid */
+/* LAYOUT — Grid Areas */
 #app{
   position:relative;z-index:10;
   display:grid;
-  grid-template-columns:220px 1fr 220px;
+  /* 中央カラム（ゲーム画面）を柔軟に拡大 */
+  grid-template-columns:220px minmax(300px, 1fr) 220px;
+  grid-template-rows: auto 1fr;
+  grid-template-areas: 
+    "lc cc next"
+    "lc cc rc";
   gap:16px;
   padding:16px 20px 24px;
   width:100%;max-width:1400px;
@@ -85,40 +90,33 @@ header{
   padding:10px 14px;
   box-shadow: 0 4px 10px rgba(0,0,0,0.03);
 }
-.pnl+.pnl{margin-top:12px;}
 .lbl{
   font-family:var(--font-hud);font-size:.55rem;font-weight:700;
   letter-spacing:.22em;color:var(--text-dim);text-transform:uppercase;
-  margin-bottom:5px;display:flex;align-items:center;gap:5px;
+  margin-bottom:6px;display:flex;align-items:center;gap:5px;
 }
 .ico{color:var(--amber);font-size:.7rem;}
 .vbig{font-family:var(--font-hud);font-size:2rem;font-weight:900;color:var(--amber);line-height:1;text-shadow:1px 1px 2px rgba(0,0,0,0.05);}
 .vmid{font-family:var(--font-hud);font-size:1.2rem;font-weight:700;color:var(--amber);line-height:1.2;}
 .vsub{font-size:.62rem;color:var(--text-dim);margin-top:2px;}
 
-/* LEFT */
-#lc{display:flex;flex-direction:column;gap:12px;}
+/* LEFT COL */
+#lc{grid-area:lc; display:flex;flex-direction:column;gap:12px;}
 
 .sleg{display:flex;flex-direction:column;gap:4px;margin-top:3px;}
 .srow{display:flex;align-items:center;gap:7px;font-size:.65rem;color:var(--text-mid);}
 .sw{width:26px;height:9px;border-radius:2px;flex-shrink:0;}
-
-#txstream{display:flex;flex-direction:column;gap:3px;max-height:100px;overflow:hidden;}
-.txl{font-size:.6rem;color:var(--text-mid);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;animation:si .25s ease;}
-@keyframes si{from{opacity:0;transform:translateY(-3px)}to{opacity:1}}
-
-.fbar{height:5px;background:#c2bbb0;border-radius:2px;margin-top:6px;overflow:hidden;}
-.ffill{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--green),var(--gold),var(--amber),#ff4d4d);transition:width .6s;}
-
 #ql{display:flex;flex-direction:column;gap:3px;}
 .qi{display:flex;align-items:center;gap:6px;font-size:.6rem;color:var(--text-dim);padding:3px 0;border-bottom:1px solid var(--panel-bdr);}
 .qi:last-child{border-bottom:none;}
 .qd{width:9px;height:9px;border-radius:50%;flex-shrink:0;}
 .qn{color:var(--text-mid);}
 .qa{margin-left:auto;color:var(--text);font-size:.62rem;}
+.fbar{height:5px;background:#c2bbb0;border-radius:2px;margin-top:6px;overflow:hidden;}
+.ffill{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--green),var(--gold),var(--amber),#ff4d4d);transition:width .6s;}
 
-/* CENTER */
-#cc{display:flex;flex-direction:column;align-items:center;gap:10px;}
+/* CENTER COL */
+#cc{grid-area:cc; display:flex;flex-direction:column;align-items:center;gap:10px;}
 
 #gw{
   position:relative;
@@ -170,7 +168,7 @@ header{
 .sbtn:active{transform:scale(.97);}
 
 /* MOBILE CTRL */
-#mctrl{display:none;flex-direction:column;gap:8px;width:100%;max-width:380px;}
+#mctrl{display:none;flex-direction:column;gap:8px;width:100%;max-width:400px;}
 .mr{display:flex;gap:8px;justify-content:center;}
 .mb{
   background:var(--panel);border:1px solid var(--panel-bdr);border-bottom:3px solid var(--panel-bdr);
@@ -182,16 +180,20 @@ header{
 #mb-drop{flex:2;font-size:.8rem;letter-spacing:.14em;color:#fff;background:var(--amber);border-color:var(--amber-dim);}
 #mb-drop:active{background:var(--amber-dim);}
 
-/* RIGHT */
-#rc{display:flex;flex-direction:column;gap:12px;}
-
+/* NEXT PANEL (独立配置) */
+#pnl-next{grid-area:next; margin-bottom:-4px;}
+.next-split{display:block;}
 #nwrap{
-  width:100%;height:160px;
+  width:100%;height:140px;
   background:var(--game-bg);border-radius:4px;border:2px solid var(--panel-bdr);
   display:flex;align-items:center;justify-content:center;
   overflow:hidden;margin-bottom:6px;
   box-shadow:inset 0 0 10px rgba(0,0,0,.4);
 }
+#nwrap canvas { width: 100%; height: 100%; object-fit: contain; }
+
+/* RIGHT COL */
+#rc{grid-area:rc; display:flex;flex-direction:column;gap:12px;}
 
 .clist{display:flex;flex-direction:column;gap:5px;}
 .cri{display:flex;align-items:center;gap:7px;font-size:.62rem;color:var(--text-dim);}
@@ -209,15 +211,55 @@ header{
 .sndbtn:hover{border-color:var(--amber-dim);color:var(--amber);}
 .sndbtn.on{color:var(--green);}
 
+#txstream{display:flex;flex-direction:column;gap:3px;max-height:100px;overflow:hidden;}
+.txl{font-size:.6rem;color:var(--text-mid);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;animation:si .25s ease;}
+
+/* SUPPORT & SHARE */
+.s-btns { display: flex; gap: 8px; margin-top: 8px; }
+.sbtn-sm {
+  flex: 1; text-align: center; padding: 8px 0; border-radius: 4px;
+  font-family: var(--font-hud); font-size: 0.65rem; font-weight: 700;
+  text-decoration: none; color: #fff; cursor: pointer;
+  display: flex; align-items: center; justify-content: center; gap: 4px;
+  transition: transform 0.15s, opacity 0.15s;
+}
+.sbtn-sm:hover { opacity: 0.85; transform: scale(1.02); }
+.ln-btn { background: #f5a623; color: #000; text-shadow: 0 1px 2px rgba(255,255,255,0.3); }
+.ln-btn .ico { color: #000; font-size: 0.75rem; }
+.x-btn { background: #0f1419; }
+.ln-addr {
+  font-size: 0.55rem; color: var(--text-dim); text-align: center;
+  margin-top: 6px; word-break: break-all; cursor: pointer;
+  padding: 4px; background: rgba(0,0,0,0.05); border-radius: 3px;
+}
+.ln-addr:hover { background: rgba(0,0,0,0.1); color: var(--text-mid); }
+
 /* ---- RESPONSIVE ---- */
 @media(max-width:960px){
-  #app{grid-template-columns:190px 1fr 190px;gap:10px;padding:12px;}
+  #app{
+    grid-template-columns:190px minmax(260px, 1fr) 190px;
+    gap:10px; padding:12px;
+  }
 }
 @media(max-width:720px){
-  #app{grid-template-columns:1fr;}
-  #lc,#rc{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
-  #lc .pnl+.pnl,#rc .pnl+.pnl{margin-top:0;}
-  #cc{order:-1; margin-bottom:10px;}
+  #app{
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto auto auto;
+    grid-template-areas: 
+      "next"
+      "cc"
+      "lc"
+      "rc";
+    gap: 12px;
+  }
+  #lc, #rc { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  
+  /* スマホの時はNEXTを横並びにして上に配置 */
+  #pnl-next { margin-bottom: 0; }
+  .next-split { display: flex; align-items: center; justify-content: space-around; gap: 10px; }
+  #nwrap { width: 100px; height: 100px; margin-bottom: 0; }
+  .next-info { text-align: left; }
+  
   #mctrl{display:flex;}
   .pc-only{display:none;}
 }
@@ -243,7 +285,7 @@ header{
 </header>
 
 <div id="app">
-  <!-- LEFT -->
+  <!-- LEFT COL -->
   <div id="lc">
     <div class="pnl">
       <div class="lbl"><span class="ico">⛏</span>Block Height</div>
@@ -284,7 +326,7 @@ header{
     </div>
   </div>
 
-  <!-- CENTER -->
+  <!-- CENTER COL -->
   <div id="cc">
     <div id="gw">
       <canvas id="gc"></canvas>
@@ -326,14 +368,20 @@ header{
     </div>
   </div>
 
-  <!-- RIGHT -->
-  <div id="rc">
-    <div class="pnl">
-      <div class="lbl"><span class="ico">→</span>Next</div>
+  <!-- NEXT PANEL (分離) -->
+  <div class="pnl" id="pnl-next">
+    <div class="lbl"><span class="ico">→</span>Next</div>
+    <div class="next-split">
       <div id="nwrap"><canvas id="nc" width="160" height="160"></canvas></div>
-      <div class="vmid" id="nxtier" style="font-size:.9rem;margin-bottom:2px">——</div>
-      <div class="vsub" id="nxamt">Awaiting data...</div>
+      <div class="next-info">
+        <div class="vmid" id="nxtier" style="font-size:.95rem;margin-bottom:2px">——</div>
+        <div class="vsub" id="nxamt">Awaiting data...</div>
+      </div>
     </div>
+  </div>
+
+  <!-- RIGHT COL -->
+  <div id="rc">
     <div class="pnl">
       <div class="lbl"><span class="ico">↓</span>Falling TX</div>
       <div class="vmid" id="ftx" style="font-size:.9rem">——</div>
@@ -360,6 +408,22 @@ header{
       <div class="lbl"><span class="ico">〜</span>TX Stream</div>
       <div id="txstream"></div>
     </div>
+    
+    <!-- SUPPORT & SHARE -->
+    <div class="pnl" id="pnl-support">
+      <div class="lbl"><span class="ico">♥</span>Support & Share</div>
+      <div class="s-btns">
+        <a href="lightning:brashridge65@walletofsatoshi.com" class="sbtn-sm ln-btn">
+          <span class="ico">⚡</span> Donate
+        </a>
+        <a href="https://twitter.com/intent/tweet?text=%E2%82%BF%E3%81%B3%E3%81%A3%E3%81%B7%E3%82%88%20-%20Bitcoin%20Puyo%0ABitcoin%20TX%E3%81%8C%E9%99%8D%E3%81%A3%E3%81%A6%E3%81%8F%E3%82%8B%E3%81%B7%E3%82%88%E3%81%B7%E3%82%88%EF%BC%81%E6%96%B0%E3%83%96%E3%83%AD%E3%83%83%E3%82%AF%E6%8E%A1%E6%8E%98%E3%81%A7%E5%85%A8%E6%B6%88%E3%81%97%EF%BC%81&url=https://mempool.space" target="_blank" class="sbtn-sm x-btn">
+          𝕏 Share
+        </a>
+      </div>
+      <div class="ln-addr" onclick="navigator.clipboard.writeText('brashridge65@walletofsatoshi.com');alert('Copied LN Address!')" title="Click to copy">
+        brashridge65@walletofsatoshi.com
+      </div>
+    </div>
   </div>
 </div>
 
@@ -367,7 +431,6 @@ header{
 // ── CONSTANTS ──────────────────────────────────────────────────
 const COLS=6, ROWS=12;
 
-// ぷよぷよのグラデーションカラー定義 (c1: ハイライト中心, c2: ベース)
 const PUYO_COLORS = [
   { id: 'red',    c1: 'rgba(255, 100, 100, 0.95)', c2: 'rgba(200, 20, 20, 0.85)' },
   { id: 'orange', c1: 'rgba(255, 180, 80, 0.95)',  c2: 'rgba(220, 100, 0, 0.85)' },
@@ -377,7 +440,6 @@ const PUYO_COLORS = [
   { id: 'dust',   c1: 'rgba(180, 190, 200, 0.95)', c2: 'rgba(100, 110, 120, 0.85)' }
 ];
 const PUYO_IDS = ['red', 'orange', 'cyan', 'green', 'yellow'];
-// UI用のソリッドカラー
 const C_MAP = { red: '#ff4d4d', orange: '#ff9933', cyan: '#33ccff', green: '#4dff79', yellow: '#ffdb4d', dust: '#99aabb' };
 
 const canvas=document.getElementById('gc');
@@ -390,15 +452,17 @@ function cellSz(){
   const h=window.innerHeight;
   let sz;
   if(w<=720){
-    // スマホ：幅優先でめいっぱい広げる
-    sz = Math.floor(Math.min((w - 20) / COLS, (h - 280) / ROWS));
+    // スマホ時: ヘッダー、NEXT、コントローラーの高さを考慮して最大限に広げる
+    sz = Math.floor(Math.min((w - 24) / COLS, (h - 220) / ROWS)); 
   } else if(w<=960){
-    sz = Math.floor(Math.min((w - 400) / COLS, (h - 160) / ROWS));
+    // タブレット時: 左右パネル分を差し引く
+    sz = Math.floor(Math.min((w - 430) / COLS, (h - 140) / ROWS));
   } else {
-    // PC：パネルの余白などを考慮してできるだけ大きく
-    sz = Math.floor(Math.min((w - 480) / COLS, (h - 140) / ROWS));
+    // PC時
+    sz = Math.floor(Math.min((w - 500) / COLS, (h - 140) / ROWS));
   }
-  return Math.max(20, Math.min(80, sz)); // 上限80pxに設定
+  // 上限100pxまで拡大可能にし、余白を埋める
+  return Math.max(20, Math.min(100, sz));
 }
 let CELL=cellSz();
 
@@ -407,6 +471,7 @@ function resize(){
   canvas.width=COLS*CELL; canvas.height=ROWS*CELL;
   const gw=document.getElementById('gw');
   gw.style.width=canvas.width+'px'; gw.style.height=canvas.height+'px';
+  drawNext();
 }
 resize();
 window.addEventListener('resize',resize);
@@ -416,7 +481,7 @@ let gameOn=false,gState='IDLE';
 let board=mkB();
 let score=0,hi=+localStorage.getItem('bphi4')||0;
 let chain=0,maxCh=0,linesCl=0;
-let active=null,nextTx=null,txQ=[];
+let active=null,nextPiece=null,txQ=[]; // ★ nextPieceとしてインスタンスを保持
 let dropT=0,eraseT=0;
 let eCells=[],parts=[],AF=0;
 let blockH=null,lastBMs=null;
@@ -525,8 +590,12 @@ function canPlace(cells){
   return true;
 }
 function spawn(){
-  if(!nextTx)return false;
-  active=new Piece(nextTx);nextTx=null;updateNextUI();updateSide();
+  if(!nextPiece)return false;
+  active=nextPiece;  // ★ 作成済みのインスタンスをそのまま受け継ぐ（色が完全に一致する）
+  active.pr=1; active.pc=Math.floor(COLS/2);
+  nextPiece=null;
+  updateNextUI();
+  updateSide();
   return canPlace(active.abs());
 }
 function lock(){
@@ -580,7 +649,7 @@ function rot(dir){
 function hardDrop(){if(!active||gState!=='PLAY')return;while(mv(1,0)){}lock();}
 
 window.addEventListener('keydown',e=>{
-  if (e.repeat) return; // OSのキーリピートによる不要な挙動を防止
+  if (e.repeat) return;
   keys[e.code]=true;
   if(gState!=='PLAY'||!active)return;
   if(e.code==='Space'){e.preventDefault();hardDrop();}
@@ -590,7 +659,7 @@ window.addEventListener('keydown',e=>{
   if(e.code==='ArrowLeft'){
     e.preventDefault();
     mv(0,-1);
-    kdl=10; krp=0; // タップ時の初動は即時、その後10フレームディレイ
+    kdl=10; krp=0;
   }
   if(e.code==='ArrowRight'){
     e.preventDefault();
@@ -610,8 +679,7 @@ function handleInput(){
   if(l||r){
     if(kdl===0){
       l?mv(0,-1):mv(0,1);
-      kdl=2; // 押しっぱなし時のリピート速度
-      krp++;
+      kdl=2; krp++;
     }else{
       kdl--;
     }
@@ -627,7 +695,7 @@ function bindM(id,key,fn){
     e.preventDefault();
     if(key){
       bs[key]=1;
-      if(active && gState==='PLAY'){ // タッチ時の初回移動
+      if(active && gState==='PLAY'){
         if(key==='l'){ mv(0,-1); kdl=10; krp=0; }
         if(key==='r'){ mv(0,1); kdl=10; krp=0; }
       }
@@ -678,7 +746,6 @@ function drawP(c,px,py,sz,colorId,nb={},al=1){
   const rad=sz*.41,cx=px+sz/2,cy=py+sz/2;
   c.globalAlpha=al;
 
-  // 美しいグラデーションで立体感と透明感を出す
   const grad = c.createRadialGradient(cx - rad*0.25, cy - rad*0.25, rad*0.1, cx, cy, rad);
   grad.addColorStop(0, colorDef.c1);
   grad.addColorStop(1, colorDef.c2);
@@ -687,51 +754,44 @@ function drawP(c,px,py,sz,colorId,nb={},al=1){
   c.shadowBlur = 6;
   c.shadowColor = 'rgba(0,0,0,0.25)';
 
-  // connection bridges
   const bw=rad*.75,h=sz/2;
   if(nb.u)c.fillRect(cx-bw/2,py,bw,h+2);
   if(nb.d)c.fillRect(cx-bw/2,cy-2,bw,h+2);
   if(nb.l)c.fillRect(px,cy-bw/2,h+2,bw);
   if(nb.r)c.fillRect(cx-2,cy-bw/2,h+2,bw);
 
-  // main blob
   c.beginPath();c.arc(cx,cy,rad,0,Math.PI*2);c.fill();
   c.shadowBlur=0;
 
-  // eyes — white base
   c.globalAlpha=al*.92;c.fillStyle='#fff';
   c.beginPath();c.ellipse(cx-rad*.28,cy-rad*.08,rad*.22,rad*.27,0,0,Math.PI*2);c.fill();
   c.beginPath();c.ellipse(cx+rad*.28,cy-rad*.08,rad*.22,rad*.27,0,0,Math.PI*2);c.fill();
   
-  // pupils
   c.fillStyle='#333';
   c.beginPath();c.arc(cx-rad*.24,cy-rad*.06,rad*.13,0,Math.PI*2);c.fill();
   c.beginPath();c.arc(cx+rad*.32,cy-rad*.06,rad*.13,0,Math.PI*2);c.fill();
   
-  // shine (ゼリーのような光沢エフェクト)
   c.fillStyle='rgba(255,255,255,.65)';
   c.beginPath();c.arc(cx-rad*.3,cy-rad*.26,rad*.13,0,Math.PI*2);c.fill();
-  c.beginPath();c.arc(cx+rad*.15,cy+rad*.25,rad*.08,0,Math.PI*2);c.fill(); // 下部の反射
+  c.beginPath();c.arc(cx+rad*.15,cy+rad*.25,rad*.08,0,Math.PI*2);c.fill(); 
 
   c.globalAlpha=1;
 }
 
 function draw(){
   ctx.clearRect(0,0,canvas.width,canvas.height);
-  // grid
   ctx.strokeStyle='rgba(255,255,255,.03)';ctx.lineWidth=1;ctx.beginPath();
   for(let x=0;x<=canvas.width;x+=CELL){ctx.moveTo(x,0);ctx.lineTo(x,canvas.height);}
   for(let y=0;y<=canvas.height;y+=CELL){ctx.moveTo(0,y);ctx.lineTo(canvas.width,y);}
   ctx.stroke();
   
-  // board
   const eSet=new Set(eCells.map(c=>`${c.r},${c.c}`));
   for(let r=0;r<ROWS;r++)for(let c=0;c<COLS;c++)if(board[r][c]){
     const isE=eSet.has(`${r},${c}`);
     const al=isE?(.4+.4*Math.abs(Math.sin(AF*.38))):1;
     drawP(ctx,c*CELL,r*CELL,CELL,board[r][c],nbB(r,c,board[r][c]),al);
   }
-  // ghost
+  
   if(gState==='PLAY'&&active){
     let gpr=active.pr;
     while(canPlace(active.cells.map(c=>({r:gpr+1+c.dr,c:active.pc+c.dc,colorId:c.colorId}))))gpr++;
@@ -747,31 +807,30 @@ function draw(){
       });
     }
   }
-  // active piece
+  
   if(gState==='PLAY'&&active){
     const pm=getPM(active.abs());
     active.abs().forEach(c=>{if(c.r>=0&&c.r<ROWS)drawP(ctx,c.c*CELL,c.r*CELL,CELL,c.colorId,nbM(c.r,c.c,c.colorId,pm));});
   }
-  // particles
   parts.forEach(p=>p.draw(ctx));
 }
 
-// ※毎フレーム呼ばず、データ更新時のみ呼び出して点滅を防ぐ
+// ★ NEXT描画処理を修正。保存された nextPiece のローカル座標(dr, dc)を使って表示
 function drawNext(){
   if(!nctx)return;
   nctx.clearRect(0,0,nc.width,nc.height);
-  if(!nextTx)return;
+  if(!nextPiece)return;
   
-  const tmp=new Piece(nextTx),cells=tmp.abs();
-  const minR=Math.min(...cells.map(c=>c.r)),maxR=Math.max(...cells.map(c=>c.r));
-  const minC=Math.min(...cells.map(c=>c.c)),maxC=Math.max(...cells.map(c=>c.c));
+  const cells = nextPiece.cells;
+  const minR=Math.min(...cells.map(c=>c.dr)),maxR=Math.max(...cells.map(c=>c.dr));
+  const minC=Math.min(...cells.map(c=>c.dc)),maxC=Math.max(...cells.map(c=>c.dc));
   const pw=maxC-minC+1,ph=maxR-minR+1;
   const cs=Math.min(32,Math.floor(Math.min((nc.width-12)/pw,(nc.height-12)/ph)));
   const ox=(nc.width-pw*cs)/2,oy=(nc.height-ph*cs)/2;
   const pm={};
-  cells.forEach(c=>{const dr=c.r-minR,dc=c.c-minC;if(!pm[dr])pm[dr]={};pm[dr][dc]=c.colorId;});
+  cells.forEach(c=>{const dr=c.dr-minR,dc=c.dc-minC;if(!pm[dr])pm[dr]={};pm[dr][dc]=c.colorId;});
   cells.forEach(c=>{
-    const dr=c.r-minR,dc=c.c-minC;
+    const dr=c.dr-minR,dc=c.dc-minC;
     const nb={u:pm[dr-1]&&pm[dr-1][dc]===c.colorId,d:pm[dr+1]&&pm[dr+1][dc]===c.colorId,
       l:pm[dr]&&pm[dr][dc-1]===c.colorId,r:pm[dr]&&pm[dr][dc+1]===c.colorId};
     drawP(nctx,ox+dc*cs,oy+dr*cs,cs,c.colorId,nb,1);
@@ -784,7 +843,7 @@ function update(){
   for(let i=parts.length-1;i>=0;i--){parts[i].step();if(parts[i].life<=0)parts.splice(i,1);}
   if(!gameOn)return;
   if(gState==='PLAY'){
-    if(!active){if(!nextTx){loadNext();return;}if(!spawn()){gameOver();return;}}
+    if(!active){if(!nextPiece){loadNext();return;}if(!spawn()){gameOver();return;}}
     const soft=handleInput();
     const iv=soft?3:Math.max(8,36-Math.floor(score/3000));
     if(++dropT>=iv){dropT=0;if(!mv(1,0))lock();}
@@ -828,17 +887,17 @@ function updateSide(){
   document.getElementById('fsz').textContent=`×${active.tier.size} (${active.tier.label})`;
 }
 function updateNextUI(){
-  if(!nextTx){
+  if(!nextPiece){
     nctx.clearRect(0,0,nc.width,nc.height);
     document.getElementById('nxtier').textContent='——';
     document.getElementById('nxamt').textContent='Awaiting data...';
     return;
   }
-  const s=txSats(nextTx),t=getTier(s);
+  const s=nextPiece.sats, t=nextPiece.tier;
   document.getElementById('nxtier').textContent=t.name;
   document.getElementById('nxtier').style.color=C_MAP[t.colorId];
   document.getElementById('nxamt').textContent=fmtAmt(s);
-  drawNext(); // ここで描画してチラつきを防止
+  drawNext();
 }
 function updateQ(){
   const el=document.getElementById('ql');
@@ -860,9 +919,10 @@ function addTxLine(tx,isBlock=false){
   while(el.children.length>8)el.removeChild(el.lastChild);
 }
 function loadNext(){
-  if(!nextTx&&txQ.length>0){
+  if(!nextPiece && txQ.length>0){
     const idx=Math.floor(Math.random()*Math.min(txQ.length,5));
-    nextTx=txQ.splice(idx,1)[0];
+    const tx = txQ.splice(idx,1)[0];
+    nextPiece = new Piece(tx); // ★ ここでピースの色情報を確定させる
     updateNextUI();
     updateQ();
   }
@@ -918,7 +978,7 @@ function connectWS(){
         txQ.push(tx);if(txQ.length<=20)addTxLine(tx);
       }
       if(txQ.length>60){txQ.sort((a,b)=>txSats(b)-txSats(a));txQ=txQ.slice(0,60);}
-      if(!nextTx)loadNext();else updateQ();
+      if(!nextPiece)loadNext();else updateQ();
     }
   }catch(err){}};
   ws.onerror=()=>{document.getElementById('wsdot').className='dot err';};
@@ -945,7 +1005,7 @@ function startGame(){
   document.getElementById('ss').style.display='none';
   document.getElementById('gs').style.display='none';
   board=mkB();score=0;maxCh=0;chain=0;linesCl=0;
-  active=null;nextTx=null;txQ=[];parts=[];eCells=[];
+  active=null;nextPiece=null;txQ=[];parts=[];eCells=[];
   [5e5,2e6,1e4,8e7,3e5,5e8,1e3,4e6,2e3,1e5,6e4,9e8,5e3,3e4,7e5].forEach(s=>
     txQ.push({_s:s,_fee:Math.floor(s*.0001),vout:[{value:s}]}));
   loadNext();updateUI();updateNextUI();updateQ();gAC();
