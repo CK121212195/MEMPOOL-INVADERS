@@ -13,8 +13,8 @@
   --panel:      #e8e4dc;
   --panel-bdr:  #b8b0a9;
   
-  /* ネオンが映えるようにゲーム盤面はよりダークに */
-  --game-bg:    #151311; 
+  /* ネオン発光を最高に際立たせるため、ゲーム盤面は漆黒に近いディープグレー */
+  --game-bg:    #110f0d; 
   
   --text:       #423a31;
   --text-dim:   #756b62;
@@ -69,19 +69,21 @@ header{
 .dot.on{background:var(--green);box-shadow:0 0 8px var(--green);}
 .dot.err{background:#ff4d4d;}
 
-/* LAYOUT — Grid Areas (PC用: Bitrisのようなスマートな配置) */
+/* LAYOUT — Bitrisのようなスマートな配置 */
 #app{
   position:relative;z-index:10;
   display:grid;
-  grid-template-columns:220px auto 220px;
+  /* PC用：左右パネルを固定、中央を可変にしつつ最大幅を制限 */
+  grid-template-columns: 220px minmax(300px, 450px) 220px;
   grid-template-areas: 
     "lc cc next"
     "lc cc rc";
-  gap:20px;
-  padding:24px 20px 30px;
-  width:100%;max-width:1400px;
+  gap: 20px;
+  padding: 24px 20px 40px;
+  width: 100%;
+  max-width: 1200px;
   justify-content: center;
-  align-items:start;
+  align-items: start;
 }
 
 /* PANEL */
@@ -117,7 +119,7 @@ header{
 .fbar{height:5px;background:#c2bbb0;border-radius:2px;margin-top:6px;overflow:hidden;}
 .ffill{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--green),var(--gold),var(--amber),#ff4d4d);transition:width .6s;}
 
-/* CENTER COL (ゲーム盤面) */
+/* CENTER COL (ゲーム盤面コンテナ) */
 #cc{
   grid-area:cc; 
   display:flex;
@@ -126,15 +128,29 @@ header{
   gap:10px;
 }
 
+/* ★ゲーム盤面：自動で比率(1:2)を保ちつつ、無駄な余白を消す最新の手法 */
 #gw{
   position:relative;
   background:var(--game-bg);
   border:2px solid var(--amber-dim);
   border-radius:6px;
-  box-shadow:0 0 30px rgba(0,0,0,.15),inset 0 0 40px rgba(0,0,0,.8);
-  /* JSで固定ピクセル幅・高さが指定されます */
+  box-shadow:0 0 35px rgba(0,0,0,.15),inset 0 0 50px rgba(0,0,0,.8);
+  overflow: hidden;
+  
+  /* PCでは画面の高さに合わせてサイズを決定 */
+  height: 70vh;
+  min-height: 500px;
+  max-height: 840px;
+  aspect-ratio: 1 / 2;
+  margin: 0 auto;
 }
-#gc{display:block;}
+
+/* 内部の高解像度キャンバスをピタッと合わせる */
+#gc{
+  width: 100%;
+  height: 100%;
+  display: block;
+}
 
 #bflash{
   position:absolute;inset:0;
@@ -248,6 +264,8 @@ header{
     gap:16px; padding:16px;
   }
 }
+
+/* スマホ用：横幅を限界まで広げる */
 @media(max-width:768px){
   #app{
     grid-template-columns: 1fr;
@@ -266,9 +284,18 @@ header{
   #nwrap { width: 110px; height: 110px; margin-bottom: 0; }
   .next-info { text-align: left; }
   
+  /* スマホの盤面：横幅を100%取り、それに合わせて高さを自動調整（スクロールで遊ぶ特大サイズ） */
+  #gw {
+    width: 100%;
+    max-width: 400px;
+    height: auto;
+    aspect-ratio: 1 / 2;
+  }
+  
   #mctrl{display:flex;}
   .pc-only{display:none;}
 }
+
 @media(max-width:480px){
   .logo{font-size:1.3rem;}
   header{padding:10px 14px;}
@@ -436,55 +463,39 @@ header{
 </div>
 
 <script>
-// ── CONSTANTS ──────────────────────────────────────────────────
+// ── 高解像度・固定アスペクト比設定 ──────────────────────────
+// JS側で動的にキャンバスサイズを変更するのをやめ、内部解像度を固定。
+// あとはCSSの `aspect-ratio` と `width: 100%` が全自動でスマホ・PCに最適化してくれます。
 const COLS=6, ROWS=12;
-
-// ★ Bitrisのようなスマートな固定サイズキャンバスに調整
-function cellSz(){
-  const w = window.innerWidth;
-  if(w <= 420) return 36; // 盤面 216x432 px
-  if(w <= 768) return 42; // 盤面 252x504 px
-  return 48;              // 盤面 288x576 px (PC用最適サイズ)
-}
-let CELL = cellSz(); 
-
-// ★ 添付画像のような「ハイグレードな透明感＆ネオン発光」の設定
-const PUYO_COLORS = {
-  red:    { base: 'rgba(255, 30, 30, 0.4)',  glow: '#ff1111', edge: 'rgba(255, 120, 120, 0.95)' },
-  orange: { base: 'rgba(255, 80, 10, 0.4)',  glow: '#ff5500', edge: 'rgba(255, 180, 100, 0.95)' },
-  cyan:   { base: 'rgba(10, 150, 255, 0.4)', glow: '#0088ff', edge: 'rgba(120, 220, 255, 0.95)' },
-  green:  { base: 'rgba(30, 255, 30, 0.4)',  glow: '#11ff11', edge: 'rgba(150, 255, 150, 0.95)' },
-  yellow: { base: 'rgba(255, 200, 10, 0.4)', glow: '#ffcc00', edge: 'rgba(255, 250, 120, 0.95)' },
-  dust:   { base: 'rgba(100, 100, 100, 0.4)',glow: '#888888', edge: 'rgba(220, 220, 220, 0.95)' }
-};
-
-const PUYO_IDS = ['red', 'orange', 'cyan', 'green', 'yellow'];
-// UI用ソリッドカラー
-const C_MAP = { red: '#ff5555', orange: '#ff8800', cyan: '#00ddff', green: '#55ff55', yellow: '#ffea00', dust: '#aaaaaa' };
+const CELL=60; // 内部解像度: 横360px × 縦720px で超クッキリ描画
 
 const canvas=document.getElementById('gc');
 const ctx=canvas.getContext('2d');
+canvas.width = COLS * CELL;
+canvas.height = ROWS * CELL;
+
 const nc=document.getElementById('nc');
 const nctx=nc.getContext('2d');
 nc.width = 240; 
 nc.height = 240;
 
-function resize(){
-  CELL = cellSz();
-  canvas.width = COLS * CELL;
-  canvas.height = ROWS * CELL;
-  const gw = document.getElementById('gw');
-  gw.style.width = canvas.width + 'px';
-  gw.style.height = canvas.height + 'px';
-  drawNext();
-}
-resize();
-window.addEventListener('resize',resize);
+// ★ 透明感・ネオン発光・ワイヤーフレーム風のハイグレードな質感設定
+const PUYO_COLORS = {
+  red:    { base: 'rgba(255, 20,  20,  0.15)', glow: '#ff0033', edge: 'rgba(255, 100, 100, 1)' },
+  orange: { base: 'rgba(255, 100, 0,   0.15)', glow: '#ff6600', edge: 'rgba(255, 180, 50,  1)' },
+  cyan:   { base: 'rgba(0,   200, 255, 0.15)', glow: '#00ccff', edge: 'rgba(150, 240, 255, 1)' },
+  green:  { base: 'rgba(20,  255, 20,  0.15)', glow: '#00ff33', edge: 'rgba(150, 255, 150, 1)' },
+  yellow: { base: 'rgba(255, 220, 0,   0.15)', glow: '#ffcc00', edge: 'rgba(255, 255, 150, 1)' },
+  dust:   { base: 'rgba(150, 150, 150, 0.15)', glow: '#aaaaaa', edge: 'rgba(230, 230, 230, 1)' }
+};
+const PUYO_IDS = ['red', 'orange', 'cyan', 'green', 'yellow'];
+// UIパネル用の色
+const C_MAP = { red: '#ff5555', orange: '#ff8800', cyan: '#00ddff', green: '#55ff55', yellow: '#ffea00', dust: '#aaaaaa' };
 
 // ── STATE ──────────────────────────────────────────────────────
 let gameOn=false,gState='IDLE';
 let board=mkB();
-let score=0,hi=+localStorage.getItem('bphi4')||0;
+let hi=0, score=0;
 let chain=0,maxCh=0,linesCl=0;
 let active=null,nextPiece=null,txQ=[];
 let dropT=0,eraseT=0;
@@ -494,6 +505,12 @@ let snd=true,ws=null;
 let keys={},bs={l:0,r:0,d:0};
 let kdl=0,krp=0;
 
+// ★【超重要バグ修正】localStorageのアクセス拒否エラーによるゲーム停止を完全に防ぐ
+try {
+  hi = +localStorage.getItem('bphi4') || 0;
+} catch (e) {
+  console.warn("localStorage not available in this environment.");
+}
 document.getElementById('hiscore').textContent=hi.toLocaleString();
 
 function mkB(){return Array.from({length:ROWS},()=>new Array(COLS).fill(null));}
@@ -523,7 +540,7 @@ function gAC(){
       AC=new(window.AudioContext||window.webkitAudioContext)();
     }
     if(AC && AC.state==='suspended')AC.resume();
-  }catch(e){ console.warn("Audio Context Error", e); }
+  }catch(e){}
   return AC;
 }
 function sfx(type,n=1){
@@ -603,14 +620,13 @@ function canPlace(cells){
   return true;
 }
 
-// ★【バグ修正済】次のピースを盤面に出しつつ、裏で即座に補充する
 function spawn(){
   if(!nextPiece) return false;
   active=nextPiece;  
   active.pr=1; active.pc=Math.floor(COLS/2);
   nextPiece=null;
   
-  loadNext(); // 必ずキューから補充
+  loadNext(); // キューからすぐ補充
   updateSide();
   
   return canPlace(active.abs());
@@ -732,7 +748,9 @@ bindM('mb-drop',null,hardDrop);
 // ── PARTICLES ──────────────────────────────────────────────────
 class Part{
   constructor(x,y,colId){
-    this.x=x;this.y=y;this.color=C_MAP[colId]||'#fff';
+    this.x=x;this.y=y;
+    // エフェクトもネオンカラーを使用
+    this.color=PUYO_COLORS[colId]?.glow || '#fff';
     const a=Math.random()*Math.PI*2,s=Math.random()*5+1.5;
     this.vx=Math.cos(a)*s;this.vy=Math.sin(a)*s-2.5;
     this.life=1;this.decay=Math.random()*.04+.02;this.r=Math.random()*4+2;
@@ -740,13 +758,13 @@ class Part{
   step(){this.x+=this.vx;this.vy+=.18;this.y+=this.vy;this.life-=this.decay;}
   draw(c){
     c.globalAlpha=Math.max(0,this.life);c.fillStyle=this.color;
-    c.shadowColor=this.color;c.shadowBlur=7;
+    c.shadowColor=this.color;c.shadowBlur=10;
     c.beginPath();c.arc(this.x,this.y,this.r,0,Math.PI*2);c.fill();
     c.shadowBlur=0;c.globalAlpha=1;
   }
 }
 
-// ── DRAW PUYO (ハイグレードなネオン＆ガラス質感) ─────────────────────────
+// ── DRAW PUYO (★超高解像度ガラス・ネオンワイヤーフレーム質感) ──
 function getPM(cells){
   const m={};cells.forEach(c=>{if(!m[c.r])m[c.r]={};m[c.r][c.c]=c.colorId;});return m;
 }
@@ -761,65 +779,62 @@ function nbM(r,c,col,m){
 
 function drawP(c,px,py,sz,colorId,nb={},al=1){
   const colorDef = PUYO_COLORS[colorId] || PUYO_COLORS.red;
-  const rad=sz*.42, cx=px+sz/2, cy=py+sz/2;
+  const cx = px + sz/2, cy = py + sz/2;
   
   c.globalAlpha = al;
-
-  // 1. 全体のベース（強いグロー発光 ＋ 半透明の塗り）
-  c.shadowBlur = 22;
+  
+  const rad = sz * 0.44; 
+  const bw = sz * 0.6; // 太めの接続部
+  
+  // 1. パスの作成（角を少し丸めた美しい結合）
+  c.beginPath();
+  c.arc(cx, cy, rad, 0, Math.PI*2);
+  if(nb.u) c.rect(cx - bw/2, py, bw, sz/2);
+  if(nb.d) c.rect(cx - bw/2, cy, bw, sz/2);
+  if(nb.l) c.rect(px, cy - bw/2, sz/2, bw);
+  if(nb.r) c.rect(cx, cy - bw/2, sz/2, bw);
+  
+  // 2. 非常に透明感のあるベース（強いグロー発光）
+  c.shadowBlur = 25;
   c.shadowColor = colorDef.glow;
   c.fillStyle = colorDef.base;
-
-  c.beginPath();
-  c.arc(cx, cy, rad, 0, Math.PI*2);
-  const bw=rad*.8, h=sz/2;
-  if(nb.u) c.rect(cx-bw/2, py, bw, h+2);
-  if(nb.d) c.rect(cx-bw/2, cy-2, bw, h+2);
-  if(nb.l) c.rect(px, cy-bw/2, h+2, bw);
-  if(nb.r) c.rect(cx-2, cy-bw/2, h+2, bw);
   c.fill();
-  c.fill(); // グローを強調するために重ね塗り
-
-  // 2. エッジのガラス感（内側から外へ向かう放射状グラデーション）
+  c.fill(); // 深みと光沢を出すために2度塗り
+  
+  // 3. アウターネオンフレーム（ワイヤーフレームのような強いエッジ）
+  c.shadowBlur = 12;
+  c.strokeStyle = colorDef.edge;
+  c.lineWidth = 3.5;
+  c.stroke();
+  
+  // 4. クリスプなガラス風インナー反射
   c.shadowBlur = 0;
-  const grad = c.createRadialGradient(cx, cy, rad*0.3, cx, cy, rad);
-  grad.addColorStop(0, 'rgba(255,255,255,0)');
-  grad.addColorStop(0.7, colorDef.edge);
-  grad.addColorStop(1, colorDef.glow);
+  c.strokeStyle = 'rgba(255, 255, 255, 0.7)';
+  c.lineWidth = 1;
+  c.stroke();
 
-  c.fillStyle = grad;
-  c.beginPath();
-  c.arc(cx, cy, rad, 0, Math.PI*2);
-  // 接続部にも薄くグラデーションを乗せる
-  if(nb.u) c.rect(cx-bw/2+2, py, bw-4, h+2);
-  if(nb.d) c.rect(cx-bw/2+2, cy-2, bw-4, h+2);
-  if(nb.l) c.rect(px, cy-bw/2+2, h+2, bw-4);
-  if(nb.r) c.rect(cx-2, cy-bw/2+2, h+2, bw-4);
-  c.fill();
-
-  // 3. 目
-  c.globalAlpha = al * 0.95;
-  c.fillStyle = '#fff';
-  c.beginPath();c.ellipse(cx-rad*.25,cy-rad*.1,rad*.2,rad*.25,0,0,Math.PI*2);c.fill();
-  c.beginPath();c.ellipse(cx+rad*.25,cy-rad*.1,rad*.2,rad*.25,0,0,Math.PI*2);c.fill();
-  c.fillStyle = '#111';
-  c.beginPath();c.arc(cx-rad*.2,cy-rad*.08,rad*.12,0,Math.PI*2);c.fill();
-  c.beginPath();c.arc(cx+rad*.3,cy-rad*.08,rad*.12,0,Math.PI*2);c.fill();
-
-  // 4. 強い光沢（ハイライト）
-  c.fillStyle = 'rgba(255, 255, 255, 0.9)';
-  c.beginPath();c.arc(cx-rad*.25,cy-rad*.3,rad*.1,0,Math.PI*2);c.fill();
-  c.beginPath();c.arc(cx+rad*.15,cy+rad*.25,rad*.06,0,Math.PI*2);c.fill();
-
+  // 5. ぷよぷよの目（デザインに溶け込むようシャープに）
+  c.fillStyle = 'rgba(255,255,255,0.9)';
+  c.beginPath(); c.ellipse(cx-sz*.14, cy-sz*.06, sz*.09, sz*.13, 0, 0, Math.PI*2); c.fill();
+  c.beginPath(); c.ellipse(cx+sz*.14, cy-sz*.06, sz*.09, sz*.13, 0, 0, Math.PI*2); c.fill();
+  
+  c.fillStyle = '#0a0a0a';
+  c.beginPath(); c.arc(cx-sz*.11, cy-sz*.04, sz*.05, 0, Math.PI*2); c.fill();
+  c.beginPath(); c.arc(cx+sz*.17, cy-sz*.04, sz*.05, 0, Math.PI*2); c.fill();
+  
+  // 6. 宝石のようなハイライト
+  c.fillStyle = 'rgba(255,255,255,0.6)';
+  c.beginPath(); c.arc(cx - sz*.22, cy - sz*.22, sz*.06, 0, Math.PI*2); c.fill();
+  
   c.globalAlpha = 1;
 }
 
 function draw(){
   ctx.clearRect(0,0,canvas.width,canvas.height);
   
-  // ネオンが映えるように、薄いグリッド線を引く
+  // ワイヤーフレーム背景に合う薄いグリッド線
   ctx.strokeStyle='rgba(255, 255, 255, 0.04)';
-  ctx.lineWidth=1;
+  ctx.lineWidth=2;
   ctx.beginPath();
   for(let x=0;x<=canvas.width;x+=CELL){ctx.moveTo(x,0);ctx.lineTo(x,canvas.height);}
   for(let y=0;y<=canvas.height;y+=CELL){ctx.moveTo(0,y);ctx.lineTo(canvas.width,y);}
@@ -883,8 +898,12 @@ function update(){
   AF++;
   for(let i=parts.length-1;i>=0;i--){parts[i].step();if(parts[i].life<=0)parts.splice(i,1);}
   if(!gameOn)return;
+  
   if(gState==='PLAY'){
-    if(!active){if(!nextPiece){loadNext();return;}if(!spawn()){gameOver();return;}}
+    if(!active){
+      if(!nextPiece){loadNext();return;}
+      if(!spawn()){gameOver();return;}
+    }
     const soft=handleInput();
     const iv=soft?3:Math.max(8,36-Math.floor(score/3000));
     if(++dropT>=iv){dropT=0;if(!mv(1,0))lock();}
@@ -901,7 +920,10 @@ function update(){
       const pts=eCells.length*100*chain*chain;
       score+=pts;linesCl+=eCells.length;
       if(chain>maxCh)maxCh=chain;
-      if(score>hi){hi=score;localStorage.setItem('bphi4',hi);}
+      if(score>hi){
+        hi=score;
+        try{localStorage.setItem('bphi4',hi);}catch(e){} // エラー回避
+      }
       eCells.forEach(c=>{for(let i=0;i<8;i++)parts.push(new Part(c.c*CELL+CELL/2,c.r*CELL+CELL/2,board[c.r][c.c]));board[c.r][c.c]=null;});
       eCells=[];updateUI();gState='FALL';
     }
@@ -986,7 +1008,11 @@ function blockExplode(h){
   let cl=0;
   for(let r=0;r<ROWS;r++)for(let c=0;c<COLS;c++)if(board[r][c]){cl++;
     for(let i=0;i<5;i++)parts.push(new Part(c*CELL+CELL/2,r*CELL+CELL/2,board[r][c]));board[r][c]=null;}
-  score+=cl*1000;if(score>hi){hi=score;localStorage.setItem('bphi4',hi);}
+  score+=cl*1000;
+  if(score>hi){
+    hi=score;
+    try{localStorage.setItem('bphi4',hi);}catch(e){}
+  }
   active=null;eCells=[];gState='PLAY';updateUI();
 }
 
@@ -1049,7 +1075,7 @@ function startGame(){
     board=mkB();score=0;maxCh=0;chain=0;linesCl=0;
     active=null;nextPiece=null;txQ=[];parts=[];eCells=[];
     
-    // シードデータ
+    // 即座にプレイできるようシードデータを生成
     [5e5,2e6,1e4,8e7,3e5,5e8,1e3,4e6,2e3,1e5,6e4,9e8,5e3,3e4,7e5].forEach(s=>
       txQ.push({_s:s,_fee:Math.floor(s*.0001),vout:[{value:s}]}));
       
@@ -1072,10 +1098,11 @@ function gameOver(){
   sfx('boom');
 }
 
+// イベントリスナーの登録（ここで確実に処理が行われます）
 document.getElementById('startbtn').addEventListener('click',startGame);
 document.getElementById('restartbtn').addEventListener('click',startGame);
 
-// ゲームループ開始
+// ゲームループの開始
 loop();
 </script>
 </body>
