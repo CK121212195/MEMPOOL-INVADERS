@@ -3,9 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MEMPOOL / CHAIN REACTION</title>
+<title>₿びっぷよ</title>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,700&family=Montserrat:wght@300;400;600&family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&display=swap');
+/* VOGUE風フォント + 美しい明朝体 + サイバーフォント */
+@import url('https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,700&family=Montserrat:wght@300;400;600&family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&family=Shippori+Mincho:wght@600;700&display=swap');
 
 :root {
   /* VOGUE Theme */
@@ -17,7 +18,7 @@
   /* Tesseract Theme */
   --game-bg: #050505;
   
-  --font-vogue: 'Bodoni Moda', serif;
+  --font-vogue: 'Bodoni Moda', 'Shippori Mincho', serif;
   --font-sans: 'Montserrat', sans-serif;
   --font-orbitron: 'Orbitron', monospace;
   --font-mono: 'Share Tech Mono', monospace;
@@ -49,7 +50,7 @@ header {
 }
 h1 {
   font-family: var(--font-vogue); font-size: 2.8rem; font-weight: 700;
-  letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 5px;
+  letter-spacing: 0.1em; margin-bottom: 5px; color: var(--text-main);
 }
 .subtitle {
   font-family: var(--font-sans); font-size: 0.65rem; font-weight: 300;
@@ -127,7 +128,7 @@ h1 {
   display: flex; flex-direction: column; align-items: center; justify-content: center;
   background: rgba(247,246,242,0.95); z-index: 20; text-align: center; border: 6px solid transparent;
 }
-.overlay-title { font-family: var(--font-vogue); font-size: 2rem; font-weight: 700; color: var(--text-main); letter-spacing: 0.1em; margin-bottom: 15px; }
+.overlay-title { font-family: var(--font-vogue); font-size: 2.5rem; font-weight: 700; color: var(--text-main); letter-spacing: 0.05em; margin-bottom: 15px; }
 .overlay-desc { font-size: 0.75rem; color: var(--text-sub); line-height: 2; margin-bottom: 30px; letter-spacing: 0.1em; }
 .btn {
   font-family: var(--font-sans); font-size: 0.8rem; font-weight: 500; letter-spacing: 0.2em;
@@ -162,8 +163,8 @@ h1 {
 <body>
 
 <header>
-  <h1>Mempool</h1>
-  <div class="subtitle">Chain Reaction</div>
+  <h1>₿びっぷよ</h1>
+  <div class="subtitle">CHAIN REACTION</div>
 </header>
 
 <div id="app">
@@ -203,7 +204,7 @@ h1 {
     </div>
 
     <div id="start-screen" class="screen-overlay">
-      <div class="overlay-title">Mempool</div>
+      <div class="overlay-title">₿びっぷよ</div>
       <div class="overlay-desc">
         Connect 4 or more transactions of the same color.<br>
         Create Chain Reactions for massive score multipliers.<br>
@@ -565,11 +566,9 @@ function drawActivePair(ctx) {
   if (!activePair) return;
   const s = CELL;
   
-  // Axis
   let ax = OX + activePair.c * s;
   let ay = OY + activePair.r * s;
   
-  // Child
   let cr = activePair.r, cc = activePair.c;
   if(activePair.rot === 0) cr -= 1;
   else if(activePair.rot === 1) cc += 1;
@@ -578,7 +577,7 @@ function drawActivePair(ctx) {
   let cx = OX + cc * s;
   let cy = OY + cr * s;
 
-  // Axis Draw (繋がりなしの単体として描画)
+  // Axis Draw 
   ctx.strokeStyle = activePair.colorAxis; ctx.lineWidth = 2;
   ctx.fillStyle = activePair.colorAxis; ctx.globalAlpha = 0.3;
   ctx.fillRect(ax, ay, s, s);
@@ -627,7 +626,6 @@ function updateNextUI() {
   let cy = nextCanvas.height / 2;
   let s = 24;
   
-  // Child (上)
   nextCtx.strokeStyle = nextPair.color1; nextCtx.lineWidth = 2;
   nextCtx.fillStyle = nextPair.color1; nextCtx.globalAlpha = 0.3;
   nextCtx.fillRect(cx - s/2, cy - s - 2, s, s);
@@ -635,7 +633,6 @@ function updateNextUI() {
   nextCtx.strokeRect(cx - s/2, cy - s - 2, s, s);
   nextCtx.shadowBlur = 0;
 
-  // Axis (下)
   nextCtx.strokeStyle = nextPair.color2; nextCtx.lineWidth = 2;
   nextCtx.fillStyle = nextPair.color2; nextCtx.globalAlpha = 0.3;
   nextCtx.fillRect(cx - s/2, cy + 2, s, s);
@@ -666,7 +663,6 @@ function handleInput() {
   }
 }
 
-// 1回だけ押すキー（長押し防止）
 window.addEventListener('keydown', e => { 
   keys[e.code] = true; 
   if(e.code==='Space') { e.preventDefault(); if(gameState === STATE.PLAY && activePair) rotateActive(); }
@@ -680,32 +676,33 @@ function update() {
 
   if (gameState === STATE.PLAY) {
     if (!activePair) {
+      if (!nextPair) return; // ★ 修正: 通信を待つ（即時ゲームオーバーの回避）
       if (!spawnPair()) { gameOver(); return; }
     }
     
-    handleInput();
-    
-    // 落下処理
-    let dropInterval = (keys['ArrowDown'] || keys['KeyS'] || btnStates.down) ? 2 : 30;
-    dropTimer++;
-    if (dropTimer >= dropInterval) {
-      dropTimer = 0;
-      if (canMove(activePair.r + 1, activePair.c, activePair.rot)) {
-        activePair.r += 1;
-      } else {
-        lockActive();
+    if (activePair) {
+      handleInput();
+      
+      let dropInterval = (keys['ArrowDown'] || keys['KeyS'] || btnStates.down) ? 2 : 30;
+      dropTimer++;
+      if (dropTimer >= dropInterval) {
+        dropTimer = 0;
+        if (canMove(activePair.r + 1, activePair.c, activePair.rot)) {
+          activePair.r += 1;
+        } else {
+          lockActive();
+        }
       }
     }
   } 
   else if (gameState === STATE.DROP) {
-    // スムーズな落下アニメーションのため数フレーム毎に処理
     if (frameCount % 3 === 0) {
       if (!applyGravity()) {
         let toErase = checkErase();
         if (toErase.length > 0) {
           erasingCells = toErase;
           gameState = STATE.ERASE_WAIT;
-          eraseWaitTimer = 25; // ピカピカ光る時間
+          eraseWaitTimer = 25; 
           currentChain++;
           playSound('erase', currentChain);
         } else {
@@ -747,13 +744,11 @@ function draw() {
     ctx.beginPath(); ctx.arc(s.x, s.y, s.s, 0, Math.PI*2); ctx.fill();
   });
 
-  // フィールド枠（エレガントな極細ライン）
   ctx.strokeStyle = 'rgba(255,255,255,0.2)';
   ctx.lineWidth = 1;
-  ctx.strokeRect(OX, OY + CELL, BOARD_W, BOARD_H - CELL); // 0行目は見えないエリアとして枠をずらす
+  ctx.strokeRect(OX, OY + CELL, BOARD_W, BOARD_H - CELL); 
 
-  // ボード内のぷよ描画
-  for(let r=1; r<ROWS; r++) { // 1行目から描画
+  for(let r=1; r<ROWS; r++) { 
     for(let c=0; c<COLS; c++) {
       if(board[r][c] !== null) {
         let isErasing = erasingCells.some(cell => cell.r === r && cell.c === c);
@@ -804,7 +799,15 @@ function startGame() {
   document.getElementById('go-screen').style.display = 'none';
   score = 0; maxChain = 0; currentChain = 0;
   for(let r=0; r<ROWS; r++) board[r] = new Array(COLS).fill(null);
-  activePair = null; nextPair = null; txQueue = [];
+  activePair = null; nextPair = null; 
+  txQueue = [];
+  
+  // ★ 待ち時間ゼロにするための初期ダミーデータ
+  for(let i=0; i<10; i++){
+    txQueue.push({vout: [{value: Math.floor(Math.random() * 2000000)}]});
+  }
+  loadNextPair();
+  
   particles = [];
   gameState = STATE.PLAY;
   
@@ -830,7 +833,6 @@ function triggerBlockExplosion(height) {
   flashEl.classList.remove('show'); void flashEl.offsetWidth; flashEl.classList.add('show');
   
   playSound('boom');
-  // 全消しボーナス
   let cleared = 0;
   for(let r=0; r<ROWS; r++) {
     for(let c=0; c<COLS; c++) {
@@ -841,7 +843,7 @@ function triggerBlockExplosion(height) {
       }
     }
   }
-  score += cleared * 1000; // 特大ボーナス
+  score += cleared * 1000; 
   activePair = null;
   gameState = STATE.PLAY;
   updateUI();
@@ -878,7 +880,6 @@ function connectWS() {
       if (d.transactions && gameOn) {
         for (const tx of d.transactions) txQueue.push(tx);
         if (txQueue.length > 50) {
-           // 大口優先で残す
            txQueue.sort((a, b) => txSatoshis(b) - txSatoshis(a));
            txQueue = txQueue.slice(0, 50); 
         }
