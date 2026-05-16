@@ -5,19 +5,32 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>MEMPOOL / EDITORIAL DEFENSE</title>
 <style>
-/* VOGUE風のエレガントなフォント構成 */
-@import url('https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,700;1,6..96,400&family=Montserrat:wght@300;400;500;600&display=swap');
+/* VOGUE風エレガントフォント + BITRIS風サイバーフォント */
+@import url('https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,700&family=Montserrat:wght@300;400;600&family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&display=swap');
 
 :root {
-  --bg-color: #F7F6F2;       /* 高級紙のような上品なオフホワイト */
-  --text-main: #1A1A1A;      /* 墨のような深い黒 */
-  --text-sub: #555555;       /* 洗練されたグレー */
-  --border-color: #1A1A1A;   /* シャープな黒ライン */
-  --accent-gold: #B89758;    /* シャンパンゴールド */
+  /* VOGUE Theme */
+  --bg-color: #F7F6F2;
+  --text-main: #1A1A1A;
+  --text-sub: #666666;
+  --border-color: #1A1A1A;
   
-  --canvas-bg: #0D0D0D;      /* 深淵の黒 */
-  --font-serif: 'Bodoni Moda', serif;
+  /* BITRIS Theme */
+  --game-bg: #1A120A;
+  --btc: #f7931a;
+  
+  --c-red: #ff3355;
+  --c-orange: #ff8800;
+  --c-yellow: #ffee00;
+  --c-green: #00ff88;
+  --c-cyan: #00e5ff;
+  --c-purple: #cc44ff;
+  --c-blue: #4466ff;
+  
+  --font-vogue: 'Bodoni Moda', serif;
   --font-sans: 'Montserrat', sans-serif;
+  --font-orbitron: 'Orbitron', monospace;
+  --font-mono: 'Share Tech Mono', monospace;
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -38,205 +51,120 @@ body {
 /* ===== HEADER ===== */
 header {
   text-align: center;
-  margin-bottom: 30px;
+  margin-bottom: 20px;
   border-bottom: 1px solid var(--border-color);
   padding-bottom: 10px;
   width: 100%;
   max-width: 900px;
 }
-
 h1 {
-  font-family: var(--font-serif);
-  font-size: 3rem;
-  font-weight: 700;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  margin-bottom: 5px;
+  font-family: var(--font-vogue); font-size: 2.8rem; font-weight: 700;
+  letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 5px;
 }
-
 .subtitle {
-  font-family: var(--font-sans);
-  font-size: 0.65rem;
-  font-weight: 300;
-  letter-spacing: 0.3em;
-  color: var(--text-sub);
-  text-transform: uppercase;
+  font-family: var(--font-sans); font-size: 0.65rem; font-weight: 300;
+  letter-spacing: 0.3em; color: var(--text-sub); text-transform: uppercase;
 }
 
 /* ===== LAYOUT ===== */
 #app {
-  display: flex;
-  gap: 30px;
-  align-items: flex-start;
-  max-width: 1000px;
-  width: 100%;
-  justify-content: center;
+  display: flex; gap: 20px; align-items: flex-start;
+  max-width: 1000px; width: 100%; justify-content: center;
 }
-
-.col {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-#left-col { width: 220px; }
-#right-col { width: 220px; }
+.col { display: flex; flex-direction: column; gap: 15px; }
+#left-col, #right-col { width: 220px; }
 
 /* ===== EDITORIAL PANELS ===== */
 .panel {
-  background: transparent;
-  border: 1px solid var(--border-color);
-  padding: 15px;
-  position: relative;
+  background: transparent; border: 1px solid var(--border-color);
+  padding: 12px; position: relative;
 }
-
 .panel-title {
-  font-family: var(--font-sans);
-  font-size: 0.65rem;
-  font-weight: 600;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  border-bottom: 1px solid var(--border-color);
-  padding-bottom: 5px;
-  margin-bottom: 12px;
+  font-family: var(--font-sans); font-size: 0.65rem; font-weight: 600;
+  letter-spacing: 0.2em; text-transform: uppercase;
+  border-bottom: 1px solid var(--border-color); padding-bottom: 5px; margin-bottom: 10px;
 }
-
 .pvalue {
-  font-family: var(--font-serif);
-  font-size: 1.8rem;
-  font-weight: 400;
-  line-height: 1;
-  color: var(--text-main);
-  margin-bottom: 4px;
+  font-family: var(--font-vogue); font-size: 1.8rem; font-weight: 400;
+  line-height: 1; color: var(--text-main); margin-bottom: 4px;
 }
-
-.psub {
-  font-family: var(--font-sans);
-  font-size: 0.6rem;
-  font-weight: 300;
-  color: var(--text-sub);
-  letter-spacing: 0.05em;
-}
+.psub { font-family: var(--font-sans); font-size: 0.6rem; font-weight: 300; color: var(--text-sub); letter-spacing: 0.05em; }
 
 /* ===== NEXT PANEL (BITRIS STYLE) ===== */
 #next-canvas-wrap {
-  width: 100%;
-  height: 120px;
-  background: var(--canvas-bg);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 10px;
-  border: 1px solid var(--border-color);
+  width: 100%; height: 110px; background: var(--game-bg);
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 10px; border: 1px solid var(--border-color);
+  position: relative;
 }
 #next-canvas { image-rendering: pixelated; }
 
-.tx-detail {
-  font-size: 0.65rem;
-  line-height: 1.5;
-  color: var(--text-main);
-}
+/* TX Detail - BITRIS風 */
+.tx-detail { font-family: var(--font-mono); font-size: 0.65rem; line-height: 1.4; color: var(--text-main); }
 .tx-tier {
-  font-family: var(--font-serif);
-  font-size: 1.1rem;
-  font-weight: 700;
-  margin-bottom: 5px;
-  font-style: italic;
+  font-family: var(--font-orbitron); font-size: 1.1rem; font-weight: 900;
+  margin-bottom: 3px; letter-spacing: 1px;
 }
-.tx-amount {
-  font-family: var(--font-sans);
-  font-weight: 600;
-  font-size: 0.75rem;
-  margin-bottom: 5px;
-}
+.tx-amount { font-size: 0.75rem; margin-bottom: 4px; color: var(--text-main); }
+.tx-sub { color: var(--text-sub); }
+
+/* ===== PIECE SIZE LEGEND (BITRIS REPLICA) ===== */
+.legend-row { display: flex; align-items: center; gap: 6px; font-family: var(--font-mono); font-size: 0.65rem; margin-bottom: 4px; }
+.l-box { font-size: 0.65rem; font-weight: 900; display: inline-block; width: 35px;}
+.l-text { color: var(--text-sub); }
 
 /* ===== GAME CANVAS ===== */
 #game-wrap {
-  position: relative;
-  border: 4px solid var(--text-main);
-  background: #fff;
-  padding: 6px;
-  box-shadow: 0 20px 40px rgba(0,0,0,0.05);
+  position: relative; border: 4px solid var(--text-main);
+  background: #fff; padding: 6px; box-shadow: 0 20px 40px rgba(0,0,0,0.05);
 }
-
-#game-canvas {
-  display: block;
-  background-color: var(--canvas-bg);
-  image-rendering: pixelated;
-}
+#game-canvas { display: block; background-color: var(--game-bg); image-rendering: pixelated; }
 
 /* FLASH OVERLAY */
 #block-flash {
-  position: absolute; top: 0; left: 0; right: 0; bottom: 0;
-  background: #fff;
+  position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: #fff;
   display: flex; flex-direction: column; align-items: center; justify-content: center;
   pointer-events: none; opacity: 0; transition: opacity 0.1s; z-index: 10;
 }
 #block-flash.show { opacity: 1; animation: flashAnim 4s forwards; }
 @keyframes flashAnim {
-  0% { opacity: 1; background: #fff; }
-  30% { opacity: 1; background: #F7F6F2; }
-  100% { opacity: 0; background: transparent; }
+  0% { opacity: 1; background: #fff; } 30% { opacity: 1; background: #F7F6F2; } 100% { opacity: 0; background: transparent; }
 }
 
-.flash-title {
-  font-family: var(--font-serif); font-size: 1.5rem; font-style: italic;
-  color: var(--text-main); letter-spacing: 0.2em;
-}
-.flash-height {
-  font-family: var(--font-sans); font-size: 2.5rem; font-weight: 300;
-  color: var(--text-main); margin-top: 10px; letter-spacing: 0.1em;
-}
+.flash-title { font-family: var(--font-vogue); font-size: 1.5rem; font-style: italic; color: var(--text-main); letter-spacing: 0.2em; }
+.flash-height { font-family: var(--font-sans); font-size: 2.5rem; font-weight: 300; color: var(--text-main); margin-top: 10px; letter-spacing: 0.1em; }
 
 /* ===== SCREEN OVERLAYS ===== */
 .screen-overlay {
   position: absolute; top: 0; left: 0; right: 0; bottom: 0;
   display: flex; flex-direction: column; align-items: center; justify-content: center;
-  background: rgba(247,246,242,0.95); z-index: 20; text-align: center;
-  border: 6px solid transparent;
+  background: rgba(247,246,242,0.95); z-index: 20; text-align: center; border: 6px solid transparent;
 }
-
-.overlay-title {
-  font-family: var(--font-serif); font-size: 2rem; font-weight: 700;
-  color: var(--text-main); letter-spacing: 0.1em; margin-bottom: 15px; text-transform: uppercase;
-}
-
-.overlay-desc {
-  font-size: 0.75rem; color: var(--text-sub); line-height: 2; margin-bottom: 30px; letter-spacing: 0.1em;
-}
-
+.overlay-title { font-family: var(--font-vogue); font-size: 2rem; font-weight: 700; color: var(--text-main); letter-spacing: 0.1em; margin-bottom: 15px; }
+.overlay-desc { font-size: 0.75rem; color: var(--text-sub); line-height: 2; margin-bottom: 30px; letter-spacing: 0.1em; }
 .btn {
   font-family: var(--font-sans); font-size: 0.8rem; font-weight: 500; letter-spacing: 0.2em;
   padding: 14px 40px; background: var(--text-main); color: #fff;
-  border: 1px solid var(--text-main); cursor: pointer; transition: all 0.3s ease;
-  text-transform: uppercase;
+  border: 1px solid var(--text-main); cursor: pointer; transition: all 0.3s ease; text-transform: uppercase;
 }
 .btn:hover { background: #fff; color: var(--text-main); }
 
 /* ===== SHIELD BAR ===== */
-#shield-wrap {
-  width: 100%; height: 2px; background: #ddd; margin-top: 10px;
-}
-#shield-bar {
-  height: 100%; background: var(--text-main); width: 100%; transition: width 0.3s;
-}
+#shield-wrap { width: 100%; height: 2px; background: #ddd; margin-top: 10px; }
+#shield-bar { height: 100%; background: var(--text-main); width: 100%; transition: width 0.3s; }
 
-/* ===== CONTROLS ===== */
-.ctrl-text {
-  font-size: 0.65rem; color: var(--text-sub); line-height: 2; letter-spacing: 0.05em;
-}
-
-#mobile-controls { display: none; width: 100%; max-width: 400px; margin-top: 20px; }
+/* ===== RESPONSIVE & CONTROLS ===== */
+.ctrl-text { font-family: var(--font-mono); font-size: 0.65rem; color: var(--text-sub); line-height: 1.8; }
+#mobile-controls { display: none; width: 100%; max-width: 400px; margin-top: 15px; }
 .ctrl-row { display: flex; gap: 10px; justify-content: center; }
 .cbtn {
-  background: transparent; border: 1px solid var(--border-color);
-  color: var(--text-main); font-family: var(--font-sans); font-size: 1.2rem; font-weight: 300;
-  cursor: pointer; display: flex; align-items: center; justify-content: center;
-  height: 50px; flex: 1; transition: background 0.2s; touch-action: manipulation;
+  background: transparent; border: 1px solid var(--border-color); color: var(--text-main);
+  font-family: var(--font-sans); font-size: 1.2rem; font-weight: 300; cursor: pointer;
+  display: flex; align-items: center; justify-content: center; height: 50px; flex: 1; touch-action: manipulation;
 }
 .cbtn:active { background: var(--border-color); color: #fff; }
 #btn-shoot { flex: 2; font-size: 0.9rem; letter-spacing: 0.1em; font-weight: 500; }
 
-/* ===== RESPONSIVE ===== */
 @media (max-width: 900px) {
   h1 { font-size: 2rem; }
   #app { flex-direction: column; align-items: center; }
@@ -258,38 +186,62 @@ h1 {
 <div id="app">
   <!-- LEFT COLUMN -->
   <div class="col" id="left-col">
-    <div class="panel">
-      <div class="panel-title">Score</div>
-      <div class="pvalue" id="score">0</div>
-      <div class="psub">Elegance & Precision</div>
-    </div>
-
     <!-- NEXT PANEL -->
     <div class="panel">
       <div class="panel-title">Next Threat</div>
       <div id="next-canvas-wrap">
-        <canvas id="next-canvas" width="100" height="100"></canvas>
+        <canvas id="next-canvas" width="160" height="100"></canvas>
       </div>
       <div class="tx-detail" id="next-detail">
         <div class="tx-tier" id="nx-tier" style="color:var(--text-sub);">——</div>
         <div class="tx-amount" id="nx-amount">Awaiting Data...</div>
-        <div id="nx-fee">fee: ——</div>
-        <div id="nx-rate">rate: ——</div>
-        <div id="nx-size" style="margin-top:4px; font-style:italic; color:var(--text-sub);">——</div>
+        <div class="tx-sub" id="nx-fee">fee: —— sat</div>
+        <div class="tx-sub" id="nx-rate">fee rate: —— sat/vB</div>
+        <div class="tx-sub" id="nx-size">×1 (cells)</div>
       </div>
     </div>
 
+    <!-- PIECE SIZE LEGEND -->
     <div class="panel">
-      <div class="panel-title">Shield</div>
-      <div class="pvalue" style="font-size:1.4rem;" id="shield-val">100%</div>
-      <div id="shield-wrap"><div id="shield-bar"></div></div>
+      <div class="panel-title">Piece Size</div>
+      <div class="legend-row">
+        <span class="l-box" style="color:var(--c-red); text-shadow:0 0 5px var(--c-red);">████</span>
+        <span class="l-text">&gt;100₿ 🟥</span>
+      </div>
+      <div class="legend-row">
+        <span class="l-box" style="color:var(--c-orange); text-shadow:0 0 5px var(--c-orange);">███</span>
+        <span class="l-text">&gt;10₿ 🟧</span>
+      </div>
+      <div class="legend-row">
+        <span class="l-box" style="color:var(--c-yellow); text-shadow:0 0 4px var(--c-yellow);">██</span>
+        <span class="l-text">&gt;1₿ 🟨</span>
+      </div>
+      <div class="legend-row">
+        <span class="l-box" style="color:var(--c-green); text-shadow:0 0 3px var(--c-green);">■</span>
+        <span class="l-text">&gt;0.1₿ 🟩</span>
+      </div>
+      <div class="legend-row">
+        <span class="l-box" style="color:var(--c-cyan); text-shadow:0 0 3px var(--c-cyan);">■</span>
+        <span class="l-text">&gt;0.05₿ 🟦</span>
+      </div>
+      <div class="legend-row" style="margin: 6px 0;">
+        <span class="l-text" style="color:#888;">7 standard pieces</span>
+      </div>
+      <div class="legend-row">
+        <span class="l-box" style="color:var(--c-purple); text-shadow:0 0 3px var(--c-purple);">▬</span>
+        <span class="l-text">≤0.0001₿ 🟣</span>
+      </div>
+      <div class="legend-row">
+        <span class="l-box" style="color:var(--c-blue); font-weight:900;">·</span>
+        <span class="l-text">≤0.00001₿ dust</span>
+      </div>
     </div>
   </div>
 
   <!-- CENTER COLUMN (Game) -->
   <div id="game-wrap">
-    <!-- キャンバス: 幅広・高さを抑えて見やすく -->
-    <canvas id="game-canvas" width="420" height="560"></canvas>
+    <!-- BITRIS風 黒背景キャンバス -->
+    <canvas id="game-canvas" width="400" height="520"></canvas>
 
     <div id="block-flash">
       <div class="flash-title">Block Mined</div>
@@ -300,8 +252,8 @@ h1 {
     <div id="start-screen" class="screen-overlay">
       <div class="overlay-title">Mempool</div>
       <div class="overlay-desc">
-        Eliminate the unconfirmed transactions with precision.<br>
-        Larger TXs move slowly but possess immense resilience.<br>
+        Eliminate unconfirmed transactions.<br>
+        Larger TXs appear as huge Tetriminos.<br>
         <br>
         ← / A : Move Left<br>
         → / D : Move Right<br>
@@ -320,6 +272,18 @@ h1 {
 
   <!-- RIGHT COLUMN -->
   <div class="col" id="right-col">
+    <div class="panel">
+      <div class="panel-title">Score</div>
+      <div class="pvalue" id="score">0</div>
+      <div class="psub">Elegance & Precision</div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-title">Shield</div>
+      <div class="pvalue" style="font-size:1.4rem;" id="shield-val">100%</div>
+      <div id="shield-wrap"><div id="shield-bar"></div></div>
+    </div>
+
     <div class="panel">
       <div class="panel-title">Block Height</div>
       <div class="pvalue" style="font-size:1.5rem;" id="block-height">——</div>
@@ -372,14 +336,18 @@ let player;
 let bullets = [];
 let enemies = [];
 let particles = [];
-let stars = [];
 
 let keys = {};
 let txQueue = [];
 let nextEnemyData = null; 
 let spawnTimer = 0;
-const MAX_ENEMIES = 4; // 画面上の敵は最大4体で余裕をもたせる
 
+// ★ プレイヤーに余裕を与える設定
+const MAX_ENEMIES = 4;        // 画面上は最大4体まで
+const SPAWN_INTERVAL = 120;   // スポーン間隔（ゆったり）
+const BASE_SPEED = 0.5;       // 敵の基本落下速度（非常に遅い）
+
+// Bitcoin Stats
 let blockHeight = "----";
 let lastBlockMs = null;
 let wsConn = null;
@@ -405,16 +373,17 @@ function playSound(type) {
       osc.type = 'square';
       osc.frequency.setValueAtTime(1200, t);
       osc.frequency.exponentialRampToValueAtTime(300, t + 0.05);
-      gain.gain.setValueAtTime(0.03, t);
+      gain.gain.setValueAtTime(0.02, t);
       gain.gain.exponentialRampToValueAtTime(0.001, t + 0.05);
       osc.start(t); osc.stop(t + 0.06);
     } else if (type === 'hit') {
+      // コツンというブロックを叩く音
       osc.type = 'triangle';
-      osc.frequency.setValueAtTime(300, t);
-      osc.frequency.exponentialRampToValueAtTime(100, t + 0.1);
+      osc.frequency.setValueAtTime(400, t);
+      osc.frequency.exponentialRampToValueAtTime(100, t + 0.05);
       gain.gain.setValueAtTime(0.05, t);
-      gain.gain.exponentialRampToValueAtTime(0.001, t + 0.1);
-      osc.start(t); osc.stop(t + 0.1);
+      gain.gain.exponentialRampToValueAtTime(0.001, t + 0.05);
+      osc.start(t); osc.stop(t + 0.06);
     } else if (type === 'boom') {
       osc.type = 'sawtooth';
       osc.frequency.setValueAtTime(150, t);
@@ -429,11 +398,13 @@ function playSound(type) {
 // ================================================================
 //  CLASSES
 // ================================================================
+
+// プレイヤー：Bitcoinの「₿」ロゴをモチーフにした洗練された機体
 class Player {
   constructor() {
-    this.w = 32; this.h = 24;
+    this.w = 40; this.h = 40;
     this.x = W / 2 - this.w / 2;
-    this.y = H - 50;
+    this.y = H - 55;
     this.speed = 4.5;
     this.fireCooldown = 0;
   }
@@ -443,26 +414,45 @@ class Player {
     this.x = Math.max(10, Math.min(W - this.w - 10, this.x));
 
     if (this.fireCooldown > 0) this.fireCooldown--;
-    // 連射速度は控えめ（1/10のゆとり感）
+    // ゆとりのある連射速度
     if ((keys['Space'] || btnStates.shoot) && this.fireCooldown <= 0) {
       this.shoot();
-      this.fireCooldown = 15; // やや遅めの連射
+      this.fireCooldown = 12; 
     }
   }
   shoot() {
-    bullets.push(new Bullet(this.x + this.w / 2 - 2, this.y, 4, 14, 8, '#ffffff'));
+    // 2連装ビーム
+    bullets.push(new Bullet(this.x + 8, this.y + 10, 3, 12, 10, '#ffffff'));
+    bullets.push(new Bullet(this.x + this.w - 11, this.y + 10, 3, 12, 10, '#ffffff'));
     playSound('shoot');
   }
   draw(ctx) {
+    ctx.save();
+    ctx.translate(this.x, this.y);
+    
+    // ベース機体 (白くシャープなシルエット)
     ctx.fillStyle = '#ffffff';
-    // 洗練された幾何学的な自機デザイン
     ctx.beginPath();
-    ctx.moveTo(this.x + this.w/2, this.y);
-    ctx.lineTo(this.x + this.w, this.y + this.h);
-    ctx.lineTo(this.x + this.w/2, this.y + this.h - 6);
-    ctx.lineTo(this.x, this.y + this.h);
+    ctx.moveTo(this.w/2, 0);
+    ctx.lineTo(this.w, this.h);
+    ctx.lineTo(this.w/2, this.h - 10);
+    ctx.lineTo(0, this.h);
     ctx.closePath();
     ctx.fill();
+
+    // 中央に Bitcoin Orange の「₿」ロゴ
+    ctx.fillStyle = 'var(--btc)';
+    ctx.beginPath();
+    ctx.arc(this.w/2, this.h/2 + 2, 10, 0, Math.PI*2);
+    ctx.fill();
+    
+    ctx.fillStyle = '#ffffff';
+    ctx.font = 'bold 14px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('₿', this.w/2, this.h/2 + 3);
+    
+    ctx.restore();
   }
 }
 
@@ -474,18 +464,39 @@ class Bullet {
   update() { this.y -= this.speed; }
   draw(ctx) {
     ctx.fillStyle = this.color;
+    ctx.shadowBlur = 10; ctx.shadowColor = this.color;
     ctx.fillRect(this.x, this.y, this.w, this.h);
+    ctx.shadowBlur = 0;
   }
 }
 
-// エレガントな幾何学エイリアンパターン
-const PATTERNS = {
-  dust:   [ [0,1,0], [1,1,1], [0,1,0] ],
-  normal: [ [1,0,1], [0,1,0], [1,0,1], [1,1,1] ],
-  mid:    [ [0,1,1,0], [1,1,1,1], [1,0,0,1], [0,1,1,0] ],
-  big:    [ [1,0,0,1], [1,1,1,1], [0,1,1,0], [1,0,0,1], [0,1,1,0] ],
-  huge:   [ [1,1,0,1,1], [1,1,1,1,1], [0,1,1,1,0], [1,0,1,0,1], [1,0,0,0,1] ]
+// テトリミノ形状（BITRIS互換）
+const SHAPES = {
+  Z: [[1,1,0],[0,1,1]],
+  L: [[0,0,1],[1,1,1]],
+  O: [[1,1],[1,1]],
+  S: [[0,1,1],[1,1,0]],
+  I: [[1,1,1,1]],
+  T: [[0,1,0],[1,1,1]],
+  J: [[1,0,0],[1,1,1]],
+  domino: [[1,1]],
+  dot: [[1]]
 };
+
+// BITRIS風の「内側ハイライト＆シャドウ付きブロック」描画関数
+function drawBlockCell(ctx, x, y, size, color) {
+  ctx.fillStyle = color;
+  ctx.fillRect(x, y, size, size);
+  // Top highlight
+  ctx.fillStyle = 'rgba(255,255,255,0.3)';
+  ctx.fillRect(x, y, size, size * 0.15);
+  // Left highlight
+  ctx.fillStyle = 'rgba(255,255,255,0.15)';
+  ctx.fillRect(x, y, size * 0.15, size);
+  // Bottom shadow
+  ctx.fillStyle = 'rgba(0,0,0,0.3)';
+  ctx.fillRect(x, y + size * 0.85, size, size * 0.15);
+}
 
 class Enemy {
   constructor(tier, x) {
@@ -493,50 +504,50 @@ class Enemy {
     this.hp = tier.hp; this.maxHp = tier.hp;
     this.color = tier.color;
     this.points = tier.pts;
-    this.pattern = PATTERNS[tier.pattern] || PATTERNS.normal;
+    this.shape = SHAPES[tier.shape] || SHAPES.T;
     
-    this.cols = this.pattern[0].length;
-    this.rows = this.pattern.length;
-    this.cellSize = tier.scale * 4; // スケールに応じて描画サイズ変更
+    this.cols = this.shape[0].length;
+    this.rows = this.shape.length;
+    
+    // スケールごとにブロックのサイズを変える
+    // (Dust=10px, Normal=15px, Huge=30px, Whale=45px など)
+    this.cellSize = 10 + (tier.scale * 6); 
     
     this.w = this.cols * this.cellSize;
     this.h = this.rows * this.cellSize;
     
     this.x = x; 
-    this.y = -this.h;
+    this.y = -this.h - 10;
     
-    // スピードは1/10。大きいほどさらに遅く、重厚感を持たせる
-    this.speedX = tier.speedX * (Math.random() > 0.5 ? 1 : -1);
-    this.speedY = tier.speedY;
+    // スピードは1/10。大きいほど重厚にゆっくり降りてくる。
+    // x方向には移動せず、真下に圧をかけてくる
+    this.speedY = BASE_SPEED * tier.speedMod;
     
     this.hitFlash = 0;
   }
   update() {
-    this.x += this.speedX;
     this.y += this.speedY;
-    
-    // 壁で優雅にバウンド
-    if (this.x <= 10 || this.x + this.w >= W - 10) {
-      this.speedX *= -1;
-      this.x += this.speedX; // 埋まり防止
-    }
     if (this.hitFlash > 0) this.hitFlash--;
   }
   draw(ctx) {
     ctx.save();
     ctx.translate(this.x, this.y);
     
-    ctx.fillStyle = this.hitFlash > 0 ? '#ffffff' : this.color;
-    
-    // ネオンブルーやVOGUE風のクリーンな描画
-    if (this.hitFlash > 0) {
-      ctx.shadowBlur = 15; ctx.shadowColor = '#ffffff';
-    }
+    // ネオン発光
+    ctx.shadowBlur = this.hitFlash > 0 ? 30 : 15; 
+    ctx.shadowColor = this.hitFlash > 0 ? '#ffffff' : this.color;
 
     for(let r=0; r<this.rows; r++){
       for(let c=0; c<this.cols; c++){
-        if(this.pattern[r][c]) {
-          ctx.fillRect(c * this.cellSize, r * this.cellSize, this.cellSize-1, this.cellSize-1);
+        if(this.shape[r][c]) {
+          const px = c * this.cellSize;
+          const py = r * this.cellSize;
+          if (this.hitFlash > 0) {
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(px, py, this.cellSize-1, this.cellSize-1);
+          } else {
+            drawBlockCell(ctx, px, py, this.cellSize-1, this.color);
+          }
         }
       }
     }
@@ -545,9 +556,9 @@ class Enemy {
     if (this.hp < this.maxHp && this.maxHp > 1) {
       ctx.shadowBlur = 0;
       ctx.fillStyle = 'rgba(255,255,255,0.2)';
-      ctx.fillRect(0, -5, this.w, 2);
+      ctx.fillRect(0, -6, this.w, 3);
       ctx.fillStyle = this.color;
-      ctx.fillRect(0, -5, this.w * (this.hp / this.maxHp), 2);
+      ctx.fillRect(0, -6, this.w * (this.hp / this.maxHp), 3);
     }
     ctx.restore();
   }
@@ -557,11 +568,11 @@ class Particle {
   constructor(x, y, color) {
     this.x = x; this.y = y;
     const a = Math.random() * Math.PI * 2;
-    const s = Math.random() * 2 + 0.5;
+    const s = Math.random() * 3 + 1;
     this.vx = Math.cos(a) * s; this.vy = Math.sin(a) * s;
     this.life = 1.0; this.decay = Math.random() * 0.02 + 0.01;
     this.color = color;
-    this.size = Math.random() * 2 + 1;
+    this.size = Math.random() * 3 + 2;
   }
   update() { this.x += this.vx; this.y += this.vy; this.life -= this.decay; }
   draw(ctx) {
@@ -573,25 +584,41 @@ class Particle {
 }
 
 // ================================================================
-//  TIERS (敵の強さ・大きさ定義 - 大きく重厚に)
+//  TIERS (BITRIS 完全準拠の閾値とカラー)
 // ================================================================
 function getEnemyTier(sats) {
   const btc = sats / 1e8;
-  // scale: セルサイズ倍率, hp: 耐久力, speed: 移動速度
-  if (btc >= 10)   return { scale: 8, hp: 50, color: '#C91A1A', pts: 2000, speedX: 0.2, speedY: 0.1, pattern: 'huge', name: '> 10 BTC (WHALE)' };
-  if (btc >= 1)    return { scale: 6, hp: 20, color: '#D4AF37', pts: 500,  speedX: 0.3, speedY: 0.15, pattern: 'huge', name: '> 1 BTC' };
-  if (btc >= 0.1)  return { scale: 5, hp: 10, color: '#4A90E2', pts: 100,  speedX: 0.4, speedY: 0.2, pattern: 'big',   name: '> 0.1 BTC' };
-  if (btc >= 0.05) return { scale: 4, hp: 5,  color: '#50E3C2', pts: 50,   speedX: 0.5, speedY: 0.25, pattern: 'mid',  name: '> 0.05 BTC' };
-  if (sats > 1000) return { scale: 3, hp: 2,  color: '#E2E2E2', pts: 10,   speedX: 0.6, speedY: 0.3, pattern: 'normal',name: 'NORMAL TX' };
-  return           { scale: 2, hp: 1,  color: '#777777', pts: 2,    speedX: 0.8, speedY: 0.4, pattern: 'dust',  name: 'DUST' };
+  // 大きなTXほどHPが高く、落下速度(speedMod)が遅い
+  if (btc >= 100)  return { scale: 6, hp: 150, color: 'var(--c-red)',    pts: 5000, speedMod: 0.3, shape: 'Z', name: '>100₿ 🟥' };
+  if (btc >= 10)   return { scale: 5, hp: 50,  color: 'var(--c-orange)', pts: 1000, speedMod: 0.4, shape: 'L', name: '>10₿ 🟧' };
+  if (btc >= 1)    return { scale: 4, hp: 20,  color: 'var(--c-yellow)', pts: 300,  speedMod: 0.5, shape: 'O', name: '>1₿ 🟨' };
+  if (btc >= 0.1)  return { scale: 3, hp: 8,   color: 'var(--c-green)',  pts: 100,  speedMod: 0.6, shape: 'S', name: '>0.1₿ 🟩' };
+  if (btc >= 0.05) return { scale: 2, hp: 4,   color: 'var(--c-cyan)',   pts: 50,   speedMod: 0.8, shape: 'I', name: '>0.05₿ 🟦' };
+  if (sats > 10000) return { scale: 1, hp: 2,  color: 'var(--text-sub)', pts: 10,   speedMod: 1.0, shape: ['T','J','L','S','Z'][Math.floor(Math.random()*5)], name: '<0.05₿ (Normal)' };
+  if (sats > 1000) return { scale: 1, hp: 1,  color: 'var(--c-purple)', pts: 5,    speedMod: 1.2, shape: 'domino', name: '≤0.0001₿ 🟣' };
+  return           { scale: 0.5,hp: 1,  color: 'var(--c-blue)',   pts: 2,    speedMod: 1.5, shape: 'dot',    name: 'dust ●' };
+}
+
+function txSatoshis(tx) {
+  if (Array.isArray(tx.vout)) return tx.vout.reduce((s, o) => s + (o.value||0), 0);
+  return 0;
 }
 
 // ================================================================
-//  NEXT PANEL LOGIC
+//  SMART SPAWNER & NEXT PANEL LOGIC
 // ================================================================
+
+// キューの中から「最も送金額が大きいTX」を優先的に抽出するスマートロジック
 function loadNextEnemy() {
   if (!nextEnemyData && txQueue.length > 0) {
-    nextEnemyData = txQueue.shift();
+    // キューをSatsの降順（大きい順）にソート
+    txQueue.sort((a, b) => txSatoshis(b) - txSatoshis(a));
+    
+    // 常に一番大きいものを出すと偏るので、上位3つの中からランダムで選ぶ
+    let maxIdx = Math.min(2, txQueue.length - 1);
+    let idx = Math.floor(Math.random() * (maxIdx + 1));
+    
+    nextEnemyData = txQueue.splice(idx, 1)[0];
     updateNextUI();
   }
 }
@@ -601,51 +628,52 @@ function updateNextUI() {
   
   if (!nextEnemyData) {
     document.getElementById('nx-tier').textContent = '——';
+    document.getElementById('nx-tier').style.color = 'var(--text-sub)';
     document.getElementById('nx-amount').textContent = 'Awaiting Data...';
-    document.getElementById('nx-fee').textContent = 'fee: ——';
-    document.getElementById('nx-rate').textContent = 'rate: ——';
+    document.getElementById('nx-fee').textContent = 'fee: —— sat';
+    document.getElementById('nx-rate').textContent = 'fee rate: —— sat/vB';
     document.getElementById('nx-size').textContent = '——';
     return;
   }
 
-  let sats = 0;
-  if (Array.isArray(nextEnemyData.vout)) sats = nextEnemyData.vout.reduce((s, o) => s + (o.value||0), 0);
+  const sats = txSatoshis(nextEnemyData);
   const tier = getEnemyTier(sats);
   const fee = nextEnemyData.fee || 0;
   const vsize = nextEnemyData.weight ? Math.round(nextEnemyData.weight/4) : 0;
   const rate = vsize > 0 ? Math.round(fee / vsize) : 0;
   
-  // 値のフォーマット
   let amtStr = "";
-  if (sats >= 1e8) amtStr = (sats/1e8).toFixed(4) + " BTC";
+  if (sats >= 1e8) amtStr = (sats/1e8).toFixed(4) + " ₿";
   else if (sats > 1000) amtStr = (sats/1e5).toFixed(4) + " mBTC";
   else amtStr = sats + " sat";
 
-  document.getElementById('nx-tier').textContent = tier.name;
-  document.getElementById('nx-tier').style.color = tier.color;
+  const tierEl = document.getElementById('nx-tier');
+  tierEl.textContent = tier.name.split(' ')[0]; // 絵文字を除去して名前だけ
+  tierEl.style.color = tier.color;
+  tierEl.style.textShadow = `0 0 10px ${tier.color}`; // ネオン効果
+  
   document.getElementById('nx-amount').textContent = amtStr;
   document.getElementById('nx-fee').textContent = `fee: ${fee.toLocaleString()} sat`;
   document.getElementById('nx-rate').textContent = `fee rate: ${rate} sat/vB`;
   
-  const pat = PATTERNS[tier.pattern] || PATTERNS.normal;
-  const cols = pat[0].length;
-  const rows = pat.length;
-  document.getElementById('nx-size').textContent = `Size: ${cols}×${rows} cells (Scale ×${tier.scale})`;
+  const shape = SHAPES[tier.shape] || SHAPES.T;
+  const cols = shape[0].length;
+  const rows = shape.length;
+  document.getElementById('nx-size').textContent = `×${Math.max(1, tier.scale)} (${cols}×${rows} cells)`;
 
-  // NEXT キャンバスへの描画 (中央配置)
-  const drawScale = tier.scale * 3; // プレビュー用のサイズ
+  // NEXT キャンバス描画 (中央配置)
+  const drawScale = 16; 
   const tw = cols * drawScale;
   const th = rows * drawScale;
   const ox = (nextCanvas.width - tw) / 2;
   const oy = (nextCanvas.height - th) / 2;
 
-  nextCtx.fillStyle = tier.color;
-  nextCtx.shadowBlur = 10;
+  nextCtx.shadowBlur = 15;
   nextCtx.shadowColor = tier.color;
   for(let r=0; r<rows; r++){
     for(let c=0; c<cols; c++){
-      if(pat[r][c]) {
-        nextCtx.fillRect(ox + c * drawScale, oy + r * drawScale, drawScale-1, drawScale-1);
+      if(shape[r][c]) {
+        drawBlockCell(nextCtx, ox + c * drawScale, oy + r * drawScale, drawScale-1, tier.color);
       }
     }
   }
@@ -654,15 +682,12 @@ function updateNextUI() {
 
 function trySpawnEnemy() {
   spawnTimer++;
-  // 画面内の敵が MAX_ENEMIES 未満のときのみ、ゆっくり(約3秒に1体)スポーン
-  if (spawnTimer > 180 && nextEnemyData && enemies.length < MAX_ENEMIES) {
-    let sats = 0;
-    if (Array.isArray(nextEnemyData.vout)) sats = nextEnemyData.vout.reduce((s, o) => s + (o.value||0), 0);
+  if (spawnTimer > SPAWN_INTERVAL && nextEnemyData && enemies.length < MAX_ENEMIES) {
+    const sats = txSatoshis(nextEnemyData);
     const tier = getEnemyTier(sats);
     
-    // 幅の中に収まるようにX座標をランダム決定
-    const pat = PATTERNS[tier.pattern] || PATTERNS.normal;
-    const w = pat[0].length * tier.scale * 4;
+    const shape = SHAPES[tier.shape] || SHAPES.T;
+    const w = shape[0].length * (10 + (tier.scale * 6));
     const safeX = 10 + Math.random() * (W - w - 20);
     
     enemies.push(new Enemy(tier, safeX));
@@ -676,11 +701,6 @@ function trySpawnEnemy() {
 // ================================================================
 //  MAIN LOGIC
 // ================================================================
-function initBackground() {
-  stars = [];
-  for(let i=0; i<30; i++) stars.push({ x: Math.random()*W, y: Math.random()*H, s: Math.random()*1.5, v: Math.random()*0.2+0.05 });
-}
-
 function triggerBlockExplosion(height) {
   const flashEl = document.getElementById('block-flash');
   document.getElementById('flash-height-val').textContent = `#${height.toLocaleString()}`;
@@ -715,7 +735,7 @@ function update() {
 
     // 防壁到達
     if (e.y + e.h >= H - 10) {
-      shield -= e.maxHp * 2; // でかいやつほど大ダメージ
+      shield -= Math.max(5, e.maxHp); // でかいやつほど大ダメージ
       if(shield < 0) shield = 0;
       updateUI();
       for(let k=0; k<10; k++) particles.push(new Particle(e.x+e.w/2, H-10, e.color));
@@ -732,7 +752,7 @@ function update() {
         e.hp--;
         e.hitFlash = 3;
         playSound('hit');
-        for(let k=0; k<3; k++) particles.push(new Particle(b.x, b.y, '#fff'));
+        for(let k=0; k<2; k++) particles.push(new Particle(b.x, b.y, '#fff'));
         
         if (e.hp <= 0) {
           score += e.points;
@@ -750,22 +770,18 @@ function update() {
     particles[i].update();
     if (particles[i].life <= 0) particles.splice(i, 1);
   }
-  stars.forEach(s => { s.y += s.v; if(s.y > H) { s.y = 0; s.x = Math.random()*W; } });
 }
 
 function draw() {
-  ctx.fillStyle = varColor('--canvas-bg');
+  ctx.fillStyle = 'var(--game-bg)';
   ctx.fillRect(0, 0, W, H);
   
-  // 優雅な極細グリッド
-  ctx.strokeStyle = 'rgba(255,255,255,0.03)';
+  // うっすらとしたグリッド線
+  ctx.strokeStyle = 'rgba(200,150,80,0.08)';
   ctx.lineWidth = 1; ctx.beginPath();
   for(let x=0; x<W; x+=40) { ctx.moveTo(x,0); ctx.lineTo(x,H); }
   for(let y=0; y<H; y+=40) { ctx.moveTo(0,y); ctx.lineTo(W,y); }
   ctx.stroke();
-
-  ctx.fillStyle = 'rgba(255,255,255,0.2)';
-  stars.forEach(s => ctx.fillRect(s.x, s.y, s.s, s.s));
 
   if (!gameOn && shield === 0) {
     particles.forEach(p => p.draw(ctx));
@@ -773,7 +789,7 @@ function draw() {
   }
 
   // 防御ライン
-  ctx.strokeStyle = `rgba(255, 255, 255, ${shield/100 * 0.5})`;
+  ctx.strokeStyle = `rgba(255, 255, 255, ${shield/100 * 0.3})`;
   ctx.beginPath(); ctx.moveTo(0, H - 10); ctx.lineTo(W, H - 10); ctx.stroke();
 
   if(player) player.draw(ctx);
@@ -791,10 +807,6 @@ function loop() {
 // ================================================================
 //  UI & CONTROLS
 // ================================================================
-function varColor(name) {
-  return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
-}
-
 function updateUI() {
   document.getElementById('score').textContent = score.toLocaleString();
   const sBar = document.getElementById('shield-bar');
@@ -802,8 +814,8 @@ function updateUI() {
   sVal.textContent = `${shield}%`;
   sBar.style.width = `${shield}%`;
   
-  if(shield > 50) { sBar.style.background = varColor('--text-main'); sVal.style.color = varColor('--text-main'); }
-  else { sBar.style.background = '#C91A1A'; sVal.style.color = '#C91A1A'; }
+  if(shield > 50) { sBar.style.background = 'var(--text-main)'; sVal.style.color = 'var(--text-main)'; }
+  else { sBar.style.background = 'var(--c-red)'; sVal.style.color = 'var(--c-red)'; }
 }
 
 window.addEventListener('keydown', e => { keys[e.code] = true; if(e.code==='Space') e.preventDefault(); });
@@ -812,6 +824,7 @@ window.addEventListener('keyup', e => { keys[e.code] = false; });
 const btnStates = { left:false, right:false, shoot:false };
 function bindBtn(id, key) {
   const el = document.getElementById(id);
+  if(!el) return;
   const press = (e) => { e.preventDefault(); btnStates[key] = true; };
   const release = (e) => { e.preventDefault(); btnStates[key] = false; };
   el.addEventListener('touchstart', press, {passive:false});
@@ -841,7 +854,7 @@ function gameOver() {
   document.getElementById('go-score').textContent = score.toLocaleString();
   document.getElementById('go-screen').style.display = 'flex';
   if(player) {
-    for(let i=0; i<30; i++) particles.push(new Particle(player.x+16, player.y+12, '#ffffff'));
+    for(let i=0; i<30; i++) particles.push(new Particle(player.x+20, player.y+20, 'var(--btc)'));
     playSound('boom');
   }
 }
@@ -878,10 +891,14 @@ function connectWS() {
       if (d.mempoolInfo) document.getElementById('mempool-size').textContent = d.mempoolInfo.size.toLocaleString();
       
       if (d.transactions && gameOn) {
-        // 少数精鋭にするため、一度にキューに入れる数を制限
+        // ストリーム制限を撤廃し、全てのTXをキューに入れる（大口を逃さないため）
         for (const tx of d.transactions) {
-          if (txQueue.length > 20) break; 
           txQueue.push(tx);
+        }
+        // メモリ肥大化を防ぐため、キューが多すぎたら古い(小さい)ものを捨てる
+        if (txQueue.length > 100) {
+           txQueue.sort((a, b) => txSatoshis(b) - txSatoshis(a));
+           txQueue = txQueue.slice(0, 50); // 上位50個だけ残す
         }
       }
     } catch(err) {}
@@ -895,7 +912,6 @@ fetch('https://mempool.space/api/blocks/tip/height')
     blockHeight = h; document.getElementById('block-height').textContent = h.toLocaleString();
   }).catch(()=>{});
 
-initBackground();
 loop();
 </script>
 </body>
