@@ -1,9 +1,41 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-71N3QXSFED"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-71N3QXSFED');
+</script>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>₿びっぷよ — Bitcoin Puyo</title>
+
+<!-- タイトルの変更 -->
+<title>₿びっぷよ — mempool PuyoPuyo</title>
+
+<!-- Favicon / Apple Touch Icon -->
+<link rel="icon" type="image/png" href="./favicon.png">
+<link rel="apple-touch-icon" href="./favicon.png">
+
+<!-- OGP設定 -->
+<meta name="description" content="Bitcoin TXが降ってくるぷよぷよ！新ブロック採掘で全消し！">
+<meta property="og:title" content="₿びっぷよ — mempool PuyoPuyo">
+<meta property="og:description" content="Bitcoin TXが降ってくるぷよぷよ！新ブロック採掘で全消し！">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://ck121212195.github.io/Bitcoin-Puyo/">
+<meta property="og:image" content="./og-image.png">
+<meta property="og:site_name" content="₿びっぷよ">
+
+<!-- Twitter Card設定 -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="₿びっぷよ — mempool PuyoPuyo">
+<meta name="twitter:description" content="Bitcoin TXが降ってくるぷよぷよ！新ブロック採掘で全消し！">
+<meta name="twitter:image" content="./og-image.png">
+
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&family=Zen+Kaku+Gothic+New:wght@700;900&display=swap');
 
@@ -257,6 +289,50 @@ header{
 }
 .ln-addr:hover { background: rgba(0,0,0,0.1); color: var(--text-mid); }
 
+/* ---- RELATED SITES FOOTER ---- */
+footer {
+  position: relative; z-index: 10;
+  width: 100%; max-width: 1200px;
+  margin: 0 auto 40px;
+  padding: 0 20px;
+}
+.rel-pnl {
+  background: var(--panel);
+  border: 1px solid var(--panel-bdr);
+  border-radius: 5px;
+  padding: 24px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+}
+.rel-pnl .lbl {
+  font-size: 0.75rem; margin-bottom: 20px; justify-content: center;
+}
+.rel-links {
+  display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;
+}
+.rel-card {
+  flex: 1; min-width: 240px; max-width: 320px;
+  background: var(--game-bg);
+  border: 2px solid var(--panel-bdr);
+  border-radius: 6px;
+  padding: 20px 15px;
+  text-decoration: none;
+  text-align: center;
+  transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px;
+}
+.rel-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+  border-color: var(--amber);
+}
+.rel-card-title {
+  font-family: var(--font-hud); font-size: 1.05rem; font-weight: 700;
+  letter-spacing: 0.05em; color: var(--gold);
+}
+.rel-card-desc {
+  font-family: var(--font-mono); font-size: 0.75rem; color: #a0978d;
+}
+
 /* ---- RESPONSIVE ---- */
 @media(max-width:960px){
   #app{
@@ -293,6 +369,9 @@ header{
   
   #mctrl{display:flex;}
   .pc-only{display:none;}
+  
+  .rel-pnl { padding: 16px; }
+  .rel-card { min-width: 100%; padding: 15px; }
 }
 
 @media(max-width:480px){
@@ -460,6 +539,27 @@ header{
     </div>
   </div>
 </div>
+
+<!-- 関連サイト フッター -->
+<footer>
+  <div class="rel-pnl">
+    <div class="lbl"><span class="ico">🔗</span>Related Games & Tools</div>
+    <div class="rel-links">
+      <a href="https://ck121212195.github.io/market-price/" target="_blank" class="rel-card">
+        <div class="rel-card-title">📈 Market Price</div>
+        <div class="rel-card-desc">Bitcoin Price Tracker</div>
+      </a>
+      <a href="https://ck121212195.github.io/Bitcoin-Run/" target="_blank" class="rel-card">
+        <div class="rel-card-title">🏃 Bitcoin Run</div>
+        <div class="rel-card-desc">Endless Runner Game</div>
+      </a>
+      <a href="https://ck121212195.github.io/Plinko-Bitcoin/" target="_blank" class="rel-card">
+        <div class="rel-card-title">🎯 Plinko Bitcoin</div>
+        <div class="rel-card-desc">Drop & Win Satoshis</div>
+      </a>
+    </div>
+  </div>
+</footer>
 
 <script>
 // ── 高解像度・固定アスペクト比設定 ──────────────────────────
@@ -1078,7 +1178,7 @@ setInterval(()=>{
 
 // ★ Twitterシェア用URLの動的生成（自身のURLを取得してセット）
 document.getElementById('x-share-btn').href = "https://twitter.com/intent/tweet?text=" + 
-  encodeURIComponent("₿びっぷよ - Bitcoin Puyo\nBitcoin TXが降ってくるぷよぷよ！新ブロック採掘で全消し！\n\n") + 
+  encodeURIComponent("₿びっぷよ - mempool PuyoPuyo\nBitcoin TXが降ってくるぷよぷよ！新ブロック採掘で全消し！\n\n") + 
   "&url=" + encodeURIComponent(window.location.href);
 
 // ── GAME FLOW ──────────────────────────────────────────────────
