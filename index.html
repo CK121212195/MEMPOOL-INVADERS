@@ -21,20 +21,20 @@
 <link rel="icon" type="image/png" href="./favicon.png">
 <link rel="apple-touch-icon" href="./favicon.png">
 
-<!-- OGP設定 -->
+<!-- OGP設定（絶対URLに変更） -->
 <meta name="description" content="Bitcoin TXが降ってくるぷよぷよ！新ブロック採掘で全消し！">
 <meta property="og:title" content="₿びっぷよ — mempool PuyoPuyo">
 <meta property="og:description" content="Bitcoin TXが降ってくるぷよぷよ！新ブロック採掘で全消し！">
 <meta property="og:type" content="website">
-<meta property="og:url" content="https://ck121212195.github.io/Bitcoin-Puyo/">
-<meta property="og:image" content="./og-image.png">
+<meta property="og:url" content="https://ck121212195.github.io/BITPUYO/">
+<meta property="og:image" content="https://ck121212195.github.io/BITPUYO/og-image.png">
 <meta property="og:site_name" content="₿びっぷよ">
 
-<!-- Twitter Card設定 -->
+<!-- Twitter Card設定（絶対URLに変更） -->
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="₿びっぷよ — mempool PuyoPuyo">
 <meta name="twitter:description" content="Bitcoin TXが降ってくるぷよぷよ！新ブロック採掘で全消し！">
-<meta name="twitter:image" content="./og-image.png">
+<meta name="twitter:image" content="https://ck121212195.github.io/BITPUYO/og-image.png">
 
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&family=Zen+Kaku+Gothic+New:wght@700;900&display=swap');
@@ -1176,10 +1176,11 @@ setInterval(()=>{
   }).join('');
 })();
 
-// ★ Twitterシェア用URLの動的生成（自身のURLを取得してセット）
-document.getElementById('x-share-btn').href = "https://twitter.com/intent/tweet?text=" + 
-  encodeURIComponent("₿びっぷよ - mempool PuyoPuyo\nBitcoin TXが降ってくるぷよぷよ！新ブロック採掘で全消し！\n\n") + 
-  "&url=" + encodeURIComponent(window.location.href);
+// ★ Twitterシェア用文言とURLの動的生成
+const tweetText = "ビットコインのMempoolがぷよぷよになった！？\n詰まったトランザクションを、ぷよっと繋げてブロックに叩き込め！\n大連鎖でハッシュレートをぶち上げろ！🚀\n\n" 
+  + window.location.href 
+  + "\n\n#びっぷよ\n#Mempool\n#ぷよぷよ";
+document.getElementById('x-share-btn').href = "https://twitter.com/intent/tweet?text=" + encodeURIComponent(tweetText);
 
 // ── GAME FLOW ──────────────────────────────────────────────────
 function startGame(){
