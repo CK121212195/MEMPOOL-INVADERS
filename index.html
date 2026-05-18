@@ -282,7 +282,7 @@ h1.logo .b{color:var(--gold);}
 }
 .ln-addr:hover { background: rgba(0,0,0,0.1); color: var(--text-mid); }
 
-/* リーダーボード UI CSS */
+/* リーダーボード UI */
 .lb-row { display: flex; justify-content: space-between; font-size: 0.65rem; padding: 4px 0; border-bottom: 1px solid var(--panel-bdr); }
 .lb-row:last-child { border-bottom: none; }
 .lb-rank { color: var(--gold); font-weight: bold; width: 20px; font-family: var(--font-hud); }
@@ -296,81 +296,39 @@ footer {
   padding: 0 20px;
 }
 .rel-pnl {
-  background: var(--panel);
-  border: 1px solid var(--panel-bdr);
-  border-radius: 5px;
-  padding: 24px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+  background: var(--panel); border: 1px solid var(--panel-bdr); border-radius: 5px; padding: 24px; box-shadow: 0 4px 10px rgba(0,0,0,0.03);
 }
-.rel-pnl .lbl {
-  font-size: 0.75rem; margin-bottom: 20px; justify-content: center;
-}
-.rel-links {
-  display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;
-}
+.rel-pnl .lbl { font-size: 0.75rem; margin-bottom: 20px; justify-content: center; }
+.rel-links { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
 .rel-card {
-  flex: 1; min-width: 240px; max-width: 320px;
-  background: var(--game-bg);
-  border: 2px solid var(--panel-bdr);
-  border-radius: 6px;
-  padding: 20px 15px;
-  text-decoration: none;
-  text-align: center;
-  transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+  flex: 1; min-width: 240px; max-width: 320px; background: var(--game-bg); border: 2px solid var(--panel-bdr); border-radius: 6px;
+  padding: 20px 15px; text-decoration: none; text-align: center; transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
   display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px;
 }
-.rel-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 20px rgba(0,0,0,0.2);
-  border-color: var(--amber);
-}
-.rel-card-title {
-  font-family: var(--font-hud); font-size: 1.05rem; font-weight: 700;
-  letter-spacing: 0.05em; color: var(--gold);
-}
-.rel-card-desc {
-  font-family: var(--font-mono); font-size: 0.75rem; color: #a0978d;
-}
+.rel-card:hover { transform: translateY(-4px); box-shadow: 0 8px 20px rgba(0,0,0,0.2); border-color: var(--amber); }
+.rel-card-title { font-family: var(--font-hud); font-size: 1.05rem; font-weight: 700; letter-spacing: 0.05em; color: var(--gold); }
+.rel-card-desc { font-family: var(--font-mono); font-size: 0.75rem; color: #a0978d; }
 
 @media(max-width:960px){
-  #app{
-    grid-template-columns:190px auto 190px;
-    gap:16px; padding:16px;
-  }
+  #app{ grid-template-columns:190px auto 190px; gap:16px; padding:16px; }
 }
-
 @media(max-width:768px){
   #app{
     grid-template-columns: 1fr;
-    grid-template-areas: 
-      "next"
-      "cc"
-      "lc"
-      "rc";
+    grid-template-areas: "next" "cc" "lc" "rc";
     gap: 16px;
   }
   #lc, #rc { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-  
   #pnl-next { margin-bottom: 0; }
   .next-split { display: flex; align-items: center; justify-content: space-around; gap: 10px; }
   #nwrap { width: 110px; height: 110px; margin-bottom: 0; }
   .next-info { text-align: left; }
-  
-  #gw {
-    width: 100%;
-    max-width: 280px; 
-    height: auto;
-    aspect-ratio: 1 / 2;
-    margin: 0 auto;
-  }
-  
+  #gw { width: 100%; max-width: 280px; height: auto; aspect-ratio: 1 / 2; margin: 0 auto; }
   #mctrl{display:flex;}
   .pc-only{display:none;}
-  
   .rel-pnl { padding: 16px; }
   .rel-card { min-width: 100%; padding: 15px; }
 }
-
 @media(max-width:480px){
   h1.logo{font-size:1.3rem;}
   header{padding:10px 14px;}
@@ -394,7 +352,6 @@ footer {
 </header>
 
 <div id="app">
-  <!-- LEFT COL -->
   <div id="lc">
     <div class="pnl">
       <div class="lbl"><span class="ico">⛏</span>Block Height</div>
@@ -435,7 +392,6 @@ footer {
     </div>
   </div>
 
-  <!-- CENTER COL -->
   <div id="cc">
     <div id="gw">
       <canvas id="gc"></canvas>
@@ -461,20 +417,16 @@ footer {
         <div class="stitle" style="color:#ff4d4d">GAME OVER</div>
         <div class="sdesc">Mempool Overflow...</div>
         <div class="sscore" id="goscore" style="margin-bottom:10px;">0</div>
-        
-        <!-- ★ リーダーボード送信フォーム（GAS連携済） -->
         <div id="score-form">
           <input type="text" id="player-name" placeholder="Enter your name" maxlength="10">
           <br>
           <button class="sbtn" id="submit-score-btn">SUBMIT SCORE</button>
         </div>
         <div id="submit-msg">Score Submitted!</div>
-
         <button class="sbtn" id="restartbtn">PLAY AGAIN</button>
       </div>
     </div>
 
-    <!-- モバイル用コントローラー -->
     <div id="mctrl">
       <div class="mr">
         <div class="mb" id="mb-rl">↺</div>
@@ -487,7 +439,6 @@ footer {
     </div>
   </div>
 
-  <!-- NEXT PANEL -->
   <div class="pnl" id="pnl-next">
     <div class="lbl"><span class="ico">→</span>Next</div>
     <div class="next-split">
@@ -499,7 +450,6 @@ footer {
     </div>
   </div>
 
-  <!-- RIGHT COL -->
   <div id="rc">
     <div class="pnl">
       <div class="lbl"><span class="ico">↓</span>Falling TX</div>
@@ -512,15 +462,12 @@ footer {
       <div class="vbig" id="mxchain">0</div>
       <div class="vsub">consecutive clears</div>
     </div>
-    
-    <!-- ★ リーダーボード表示パネル -->
     <div class="pnl">
       <div class="lbl"><span class="ico">🏆</span>Leaderboard</div>
       <div id="leaderboard-list" style="display: flex; flex-direction: column; gap: 4px;">
         <div style="font-size: 0.65rem; color: var(--text-dim); text-align: center;">Loading...</div>
       </div>
     </div>
-
     <div class="pnl pc-only">
       <div class="lbl"><span class="ico">⌨</span>Controls</div>
       <div class="clist">
@@ -536,17 +483,11 @@ footer {
       <div class="lbl"><span class="ico">〜</span>TX Stream</div>
       <div id="txstream"></div>
     </div>
-    
-    <!-- SUPPORT & SHARE -->
     <div class="pnl" id="pnl-support">
       <div class="lbl"><span class="ico">♥</span>Support & Share</div>
       <div class="s-btns">
-        <a href="lightning:brashridge65@walletofsatoshi.com" class="sbtn-sm ln-btn">
-          <span class="ico">⚡</span> Donate
-        </a>
-        <a href="#" target="_blank" class="sbtn-sm x-btn" id="x-share-btn">
-          𝕏 Share
-        </a>
+        <a href="lightning:brashridge65@walletofsatoshi.com" class="sbtn-sm ln-btn"><span class="ico">⚡</span> Donate</a>
+        <a href="#" target="_blank" class="sbtn-sm x-btn" id="x-share-btn">𝕏 Share</a>
       </div>
       <div class="ln-addr" onclick="navigator.clipboard.writeText('brashridge65@walletofsatoshi.com');alert('Copied LN Address!')" title="Click to copy">
         brashridge65@walletofsatoshi.com
@@ -555,7 +496,6 @@ footer {
   </div>
 </div>
 
-<!-- 関連サイト フッター -->
 <footer>
   <div class="rel-pnl">
     <div class="lbl"><span class="ico">🔗</span>Related Games & Tools</div>
@@ -577,7 +517,7 @@ footer {
 </footer>
 
 <script>
-// ── ★GAS連携 API設定（公開済みのURL） ──────────────────────────
+// ── GAS連携 API設定 ──────────────────────────
 const GAS_URL = "https://script.google.com/macros/s/AKfycbytecaHWkd8eyMP5yU_azLtsCuf_dly_Ot5COaLjdsc98Epv4YxbPz_iMJmmH368sx-/exec"; 
 
 async function loadLeaderboard() {
@@ -612,17 +552,15 @@ async function submitScore() {
   btn.textContent = 'Submitting...';
 
   try {
-    // text/plain にすることで、GAS側でのCORSブロック（OPTIONSリクエスト）を回避します
     await fetch(GAS_URL, {
       method: "POST",
       body: JSON.stringify({ name: name, score: score }),
       headers: { "Content-Type": "text/plain" }
     });
-    
     document.getElementById('score-form').style.display = 'none';
     msg.style.display = 'block';
     msg.textContent = 'Score Submitted!';
-    loadLeaderboard(); // スコア送信後にランキングを再読み込み
+    loadLeaderboard(); 
   } catch(e) {
     btn.disabled = false;
     btn.textContent = 'RETRY';
@@ -641,8 +579,7 @@ canvas.height = ROWS * CELL;
 
 const nc=document.getElementById('nc');
 const nctx=nc.getContext('2d');
-nc.width = 240; 
-nc.height = 240;
+nc.width = 240; nc.height = 240;
 
 const PUYO_COLORS = {
   red:    { base: 'rgba(255, 20,  20,  0.2)', glow: '#ff0033', edge: 'rgba(255, 120, 120, 1)', inner: 'rgba(220, 0,   0,   0.8)' },
@@ -655,23 +592,28 @@ const PUYO_COLORS = {
 const PUYO_IDS = ['red', 'orange', 'cyan', 'green', 'yellow'];
 const C_MAP = { red: '#ff5555', orange: '#ff8800', cyan: '#00ddff', green: '#55ff55', yellow: '#ffea00', dust: '#aaaaaa' };
 
+// ── STATE & EFFECTS ──────────────────────────
 let gameOn=false,gState='IDLE';
 let board=mkB();
 let hi=0, score=0;
 let chain=0,maxCh=0,linesCl=0;
 let active=null,nextPiece=null,txQ=[];
 let dropT=0,eraseT=0;
-let eCells=[],parts=[],AF=0;
+let eCells=[],parts=[],fTexts=[],lightnings=[],AF=0;
 let blockH=null,lastBMs=null;
 let snd=true,ws=null;
 let keys={},bs={l:0,r:0,d:0};
 let kdl=0,krp=0;
+
+// ★ 画面揺れ用変数
+let shakeT = 0, shakeMag = 0;
 
 try { hi = +localStorage.getItem('bphi4') || 0; } catch (e) {}
 document.getElementById('hiscore').textContent=hi.toLocaleString();
 
 function mkB(){return Array.from({length:ROWS},()=>new Array(COLS).fill(null));}
 
+// ── AUDIO & VOICE (Web Speech API) ──────────────────────────
 let AC=null;
 function gAC(){
   try{
@@ -680,6 +622,28 @@ function gAC(){
   }catch(e){}
   return AC;
 }
+
+// ユーザーアクション時に音声合成を初期化（ブラウザ制限回避）
+document.addEventListener('click', () => {
+  if (!window.speechInitialized && window.speechSynthesis) {
+    let u = new SpeechSynthesisUtterance(""); u.volume = 0;
+    window.speechSynthesis.speak(u);
+    window.speechInitialized = true;
+  }
+}, {once:true});
+
+function playVoice(c) {
+  if (!snd || !window.speechSynthesis) return;
+  window.speechSynthesis.cancel(); // 連続で鳴らすために前をキャンセル
+  const txts = ["", "いちれんさ！", "にれんさ！", "さんれんさ！", "よんれんさ！", "ごれんさ！", "ろくれんさ！", "ななれんさ！", "はちれんさ！", "きゅうれんさ！"];
+  const t = txts[c] || `${c}れんさ！`;
+  let u = new SpeechSynthesisUtterance(t);
+  u.lang = 'ja-JP';
+  u.rate = 1.6; // テンポよく
+  u.pitch = 1.0 + Math.min(1.0, c * 0.08); // 連鎖で声が高くなる
+  window.speechSynthesis.speak(u);
+}
+
 function sfx(type,n=1){
   if(!snd)return;
   try{
@@ -694,11 +658,9 @@ function sfx(type,n=1){
       boom:{tp:'sawtooth',f:[130,12],d:.55,v:.28},
     };
     const c=C[type]||C.rotate;
-    o.type=c.tp;
-    o.frequency.setValueAtTime(c.f[0],t);
-    o.frequency.exponentialRampToValueAtTime(c.f[1],t+c.d);
-    g.gain.setValueAtTime(c.v,t);g.gain.exponentialRampToValueAtTime(.001,t+c.d+.02);
-    o.start(t);o.stop(t+c.d+.05);
+    o.type=c.tp; o.frequency.setValueAtTime(c.f[0],t); o.frequency.exponentialRampToValueAtTime(c.f[1],t+c.d);
+    g.gain.setValueAtTime(c.v,t); g.gain.exponentialRampToValueAtTime(.001,t+c.d+.02);
+    o.start(t); o.stop(t+c.d+.05);
   }catch(e){}
 }
 document.getElementById('sndbtn').addEventListener('click',function(){
@@ -719,7 +681,6 @@ const TIERS=[
 function getTier(s){for(const t of TIERS)if(s>=t.min)return t;return TIERS[TIERS.length-1];}
 function txSats(tx){if(tx._s!==undefined)return tx._s;if(Array.isArray(tx.vout))return tx.vout.reduce((a,o)=>a+(o.value||0),0);return 0;}
 function fmtAmt(s){if(s>=1e8)return (s/1e8).toFixed(4)+' ₿';if(s>=1e5)return (s/1e5).toFixed(4)+' mBTC';return s.toLocaleString()+' sat';}
-
 function rCol(){return PUYO_IDS[Math.floor(Math.random()*PUYO_IDS.length)];}
 
 function buildCells(tier){
@@ -745,9 +706,7 @@ function buildCells(tier){
     return shapes[Math.floor(Math.random()*shapes.length)].map(p=>({...p,colorId:col(tier)}));
   }
   if(sz===6){
-    return [
-      {dr:0,dc:-3},{dr:0,dc:-2},{dr:0,dc:-1},{dr:0,dc:0},{dr:0,dc:1},{dr:0,dc:2}
-    ].map(p=>({...p,colorId:c0}));
+    return [{dr:0,dc:-3},{dr:0,dc:-2},{dr:0,dc:-1},{dr:0,dc:0},{dr:0,dc:1},{dr:0,dc:2}].map(p=>({...p,colorId:c0}));
   }
   return Array.from({length:sz},(_,i)=>({dr:-i,dc:0,colorId:c0}));
 }
@@ -775,8 +734,7 @@ function spawn(){
   active=nextPiece;  
   active.pr=1; active.pc=Math.floor(COLS/2);
   nextPiece=null;
-  loadNext();
-  updateSide();
+  loadNext(); updateSide();
   return canPlace(active.abs());
 }
 
@@ -829,8 +787,7 @@ function rot(dir){
 function hardDrop(){if(!active||gState!=='PLAY')return;while(mv(1,0)){}lock();}
 
 window.addEventListener('keydown',e=>{
-  if (e.repeat) return;
-  keys[e.code]=true;
+  if (e.repeat) return; keys[e.code]=true;
   if(gState!=='PLAY'||!active)return;
   if(e.code==='Space'){e.preventDefault();hardDrop();}
   if(e.code==='KeyZ'){e.preventDefault();rot('ccw');}
@@ -844,9 +801,7 @@ window.addEventListener('keyup',e=>{keys[e.code]=false;});
 function handleInput(){
   if(gState!=='PLAY'||!active)return false;
   const l=keys['ArrowLeft']||bs.l,r=keys['ArrowRight']||bs.r;
-  if(l||r){
-    if(kdl===0){ l?mv(0,-1):mv(0,1); kdl=2; krp++; } else { kdl--; }
-  } else { kdl=0; krp=0; }
+  if(l||r){ if(kdl===0){ l?mv(0,-1):mv(0,1); kdl=2; krp++; } else { kdl--; } } else { kdl=0; krp=0; }
   return !!(keys['ArrowDown']||keys['KeyS']||bs.d);
 }
 
@@ -866,26 +821,70 @@ bindM('mb-rl',null,()=>{if(gState==='PLAY')rot('ccw');});
 bindM('mb-rr',null,()=>{if(gState==='PLAY')rot('cw');});
 bindM('mb-drop',null,hardDrop);
 
-class Part{
-  constructor(x,y,colId){
-    this.x=x;this.y=y;
+// ── EFFECTS CLASSES ──────────────────────────────────────────────────
+// ★ パーティクル（円、Bitcoinマーク、炎）
+class Part {
+  constructor(x,y,colId, type='circle'){
+    this.x=x; this.y=y; this.type=type;
     this.color=PUYO_COLORS[colId]?.glow || '#fff';
-    const a=Math.random()*Math.PI*2,s=Math.random()*5+1.5;
-    this.vx=Math.cos(a)*s;this.vy=Math.sin(a)*s-2.5;
-    this.life=1;this.decay=Math.random()*.04+.02;this.r=Math.random()*4+2;
+    const a=Math.random()*Math.PI*2, s=Math.random()*6+1.5;
+    this.vx=Math.cos(a)*s; this.vy=Math.sin(a)*s-2.5;
+    this.life=1; this.decay=Math.random()*.04+.02; this.r=Math.random()*5+3;
   }
-  step(){this.x+=this.vx;this.vy+=.18;this.y+=this.vy;this.life-=this.decay;}
+  step(){ this.x+=this.vx; this.vy+=0.2; this.y+=this.vy; this.life-=this.decay; }
   draw(c){
-    c.globalAlpha=Math.max(0,this.life);c.fillStyle=this.color;
-    c.shadowColor=this.color;c.shadowBlur=10;
-    c.beginPath();c.arc(this.x,this.y,this.r,0,Math.PI*2);c.fill();
-    c.shadowBlur=0;c.globalAlpha=1;
+    c.globalAlpha=Math.max(0,this.life);
+    if(this.type==='circle'){
+      c.fillStyle=this.color; c.shadowColor=this.color; c.shadowBlur=12;
+      c.beginPath();c.arc(this.x,this.y,this.r,0,Math.PI*2);c.fill();
+    } else if (this.type==='btc') {
+      c.fillStyle='#ffd040'; c.shadowColor='#ffd040'; c.shadowBlur=15;
+      c.font = `900 ${this.r*4}px Orbitron`;
+      c.fillText('₿', this.x, this.y);
+    } else if (this.type==='fire') {
+      c.fillStyle=`rgba(255, ${Math.random()*150+50}, 0, 1)`; c.shadowColor='#ff3300'; c.shadowBlur=15;
+      c.beginPath();c.arc(this.x,this.y,this.r*1.5,0,Math.PI*2);c.fill();
+    }
+    c.shadowBlur=0; c.globalAlpha=1;
   }
 }
 
-function getPM(cells){
-  const m={};cells.forEach(c=>{if(!m[c.r])m[c.r]={};m[c.r][c.c]=c.colorId;});return m;
+// ★ 連鎖文字のポップアップアニメーション
+class FloatingText {
+  constructor(x, y, text, color, size=30) {
+    this.x = x; this.y = y; this.text = text; this.color = color;
+    this.life = 60; this.vy = -2.0; this.size = size;
+  }
+  step() { 
+    this.y += this.vy; this.vy *= 0.92; // 上にシュッと出てフワッと止まる
+    this.life--; 
+  }
+  draw(c) {
+    c.save();
+    c.globalAlpha = Math.max(0, this.life/60);
+    // 出現時にボヨンと拡大するアニメーション
+    let scale = 1;
+    if(this.life > 50) scale = 1 + (this.life - 50) * 0.08;
+    
+    c.translate(this.x, this.y);
+    c.scale(scale, scale);
+    
+    c.textAlign = 'center'; c.textBaseline = 'middle';
+    c.font = `900 ${this.size}px 'Zen Kaku Gothic New', sans-serif`;
+    
+    // ネオン発光＋太い黒フチで目立たせる
+    c.shadowColor = this.color; c.shadowBlur = 20;
+    c.lineWidth = 6; c.strokeStyle = '#111';
+    c.strokeText(this.text, 0, 0);
+    
+    c.shadowBlur = 0; c.fillStyle = this.color;
+    c.fillText(this.text, 0, 0);
+    c.restore();
+  }
 }
+
+// ── DRAW PUYO ────────────────────────────
+function getPM(cells){ const m={};cells.forEach(c=>{if(!m[c.r])m[c.r]={};m[c.r][c.c]=c.colorId;});return m; }
 function nbB(r,c,col){
   const g=(dr,dc)=>{const nr=r+dr,nc=c+dc;return nr>=0&&nr<ROWS&&nc>=0&&nc<COLS&&board[nr][nc]===col;};
   return{u:g(-1,0),d:g(1,0),l:g(0,-1),r:g(0,1)};
@@ -899,43 +898,25 @@ function drawP(c,px,py,sz,colorId,nb={},al=1){
   const colorDef = PUYO_COLORS[colorId] || PUYO_COLORS.red;
   const cx = px + sz/2, cy = py + sz/2;
   c.globalAlpha = al;
-  const rad = sz * 0.44; 
-  const bw = sz * 0.7;
-  const h = sz/2 + 2;
+  const rad = sz * 0.44, bw = sz * 0.7, h = sz/2 + 2;
   
-  // 1. アウターグロー
-  c.shadowBlur = 25;
-  c.shadowColor = colorDef.glow;
-  c.fillStyle = colorDef.base;
+  c.shadowBlur = 25; c.shadowColor = colorDef.glow; c.fillStyle = colorDef.base;
   c.beginPath(); c.arc(cx, cy, rad, 0, Math.PI*2); c.fill(); c.fill();
-  if(nb.u) c.fillRect(cx - bw/2, py - 1, bw, h);
-  if(nb.d) c.fillRect(cx - bw/2, cy - 1, bw, h);
-  if(nb.l) c.fillRect(px - 1, cy - bw/2, h, bw);
-  if(nb.r) c.fillRect(cx - 1, cy - bw/2, h, bw);
+  if(nb.u) c.fillRect(cx - bw/2, py - 1, bw, h); if(nb.d) c.fillRect(cx - bw/2, cy - 1, bw, h);
+  if(nb.l) c.fillRect(px - 1, cy - bw/2, h, bw); if(nb.r) c.fillRect(cx - 1, cy - bw/2, h, bw);
   
-  // 2. ネオンエッジ
-  c.shadowBlur = 10;
-  c.fillStyle = colorDef.edge;
-  const irad = sz * 0.40;
-  const ibw = sz * 0.55;
+  c.shadowBlur = 10; c.fillStyle = colorDef.edge;
+  const irad = sz * 0.40, ibw = sz * 0.55;
   c.beginPath(); c.arc(cx, cy, irad, 0, Math.PI*2); c.fill();
-  if(nb.u) c.fillRect(cx - ibw/2, py - 1, ibw, h);
-  if(nb.d) c.fillRect(cx - ibw/2, cy - 1, ibw, h);
-  if(nb.l) c.fillRect(px - 1, cy - ibw/2, h, ibw);
-  if(nb.r) c.fillRect(cx - 1, cy - ibw/2, h, ibw);
+  if(nb.u) c.fillRect(cx - ibw/2, py - 1, ibw, h); if(nb.d) c.fillRect(cx - ibw/2, cy - 1, ibw, h);
+  if(nb.l) c.fillRect(px - 1, cy - ibw/2, h, ibw); if(nb.r) c.fillRect(cx - 1, cy - ibw/2, h, ibw);
   
-  // 3. インナーコア（黒くくり抜かず、ぷよの色で中身を塗りつぶす）
-  c.shadowBlur = 0;
-  c.fillStyle = colorDef.inner;
-  const iirad = sz * 0.32;
-  const iibw = sz * 0.44;
+  c.shadowBlur = 0; c.fillStyle = colorDef.inner;
+  const iirad = sz * 0.32, iibw = sz * 0.44;
   c.beginPath(); c.arc(cx, cy, iirad, 0, Math.PI*2); c.fill();
-  if(nb.u) c.fillRect(cx - iibw/2, py - 1, iibw, h);
-  if(nb.d) c.fillRect(cx - iibw/2, cy - 1, iibw, h);
-  if(nb.l) c.fillRect(px - 1, cy - iibw/2, h, iibw);
-  if(nb.r) c.fillRect(cx - 1, cy - iibw/2, h, iibw);
+  if(nb.u) c.fillRect(cx - iibw/2, py - 1, iibw, h); if(nb.d) c.fillRect(cx - iibw/2, cy - 1, iibw, h);
+  if(nb.l) c.fillRect(px - 1, cy - iibw/2, h, iibw); if(nb.r) c.fillRect(cx - 1, cy - iibw/2, h, iibw);
   
-  // 4. 目
   c.fillStyle = 'rgba(255,255,255,0.95)';
   c.beginPath(); c.ellipse(cx-sz*.14, cy-sz*.06, sz*.09, sz*.13, 0, 0, Math.PI*2); c.fill();
   c.beginPath(); c.ellipse(cx+sz*.14, cy-sz*.06, sz*.09, sz*.13, 0, 0, Math.PI*2); c.fill();
@@ -944,20 +925,27 @@ function drawP(c,px,py,sz,colorId,nb={},al=1){
   c.beginPath(); c.arc(cx-sz*.11, cy-sz*.04, sz*.05, 0, Math.PI*2); c.fill();
   c.beginPath(); c.arc(cx+sz*.17, cy-sz*.04, sz*.05, 0, Math.PI*2); c.fill();
 
-  // 5. ガラスのハイライト
   c.fillStyle = 'rgba(255,255,255,0.6)';
   c.beginPath(); c.arc(cx - sz*.16, cy - sz*.18, sz*.06, 0, Math.PI*2); c.fill();
   c.beginPath(); c.arc(cx + sz*.16, cy + sz*.18, sz*.03, 0, Math.PI*2); c.fill();
-  
   c.globalAlpha = 1;
 }
 
 function draw(){
   ctx.clearRect(0,0,canvas.width,canvas.height);
   
+  // ★ 画面揺れ (Screen Shake) 適用
+  ctx.save();
+  if (shakeT > 0) {
+    const dx = (Math.random() - 0.5) * shakeMag;
+    const dy = (Math.random() - 0.5) * shakeMag;
+    ctx.translate(dx, dy);
+    shakeT--;
+    shakeMag *= 0.9; // だんだん収まる
+  }
+  
   ctx.strokeStyle='rgba(255, 255, 255, 0.04)';
-  ctx.lineWidth=2;
-  ctx.beginPath();
+  ctx.lineWidth=2; ctx.beginPath();
   for(let x=0;x<=canvas.width;x+=CELL){ctx.moveTo(x,0);ctx.lineTo(x,canvas.height);}
   for(let y=0;y<=canvas.height;y+=CELL){ctx.moveTo(0,y);ctx.lineTo(canvas.width,y);}
   ctx.stroke();
@@ -965,8 +953,23 @@ function draw(){
   const eSet=new Set(eCells.map(c=>`${c.r},${c.c}`));
   for(let r=0;r<ROWS;r++)for(let c=0;c<COLS;c++)if(board[r][c]){
     const isE=eSet.has(`${r},${c}`);
-    const al=isE?(.4+.4*Math.abs(Math.sin(AF*.38))):1;
-    drawP(ctx,c*CELL,r*CELL,CELL,board[r][c],nbB(r,c,board[r][c]),al);
+    let al=1, sx=1, sy=1;
+    
+    // ★ 消去前のバウンシーアニメーション（ブルブル震えて潰れる）
+    if(isE && gState==='ERASE') {
+      const prog = (32 - eraseT) / 32; // 0 to 1
+      const elastic = Math.sin(prog * Math.PI * 6) * (1 - prog);
+      sx = 1 + elastic * 0.4;
+      sy = 1 - elastic * 0.4;
+      al = 1 - Math.pow(prog, 4); // 最後だけフワッと消える
+    }
+    
+    ctx.save();
+    ctx.translate(c*CELL + CELL/2, r*CELL + CELL/2);
+    ctx.scale(sx, sy);
+    ctx.translate(-(c*CELL + CELL/2), -(r*CELL + CELL/2));
+    drawP(ctx, c*CELL, r*CELL, CELL, board[r][c], nbB(r,c,board[r][c]), al);
+    ctx.restore();
   }
   
   if(gState==='PLAY'&&active){
@@ -976,8 +979,7 @@ function draw(){
       active.cells.forEach(c=>{
         const gr=gpr+c.dr,gc=active.pc+c.dc;
         if(gr>=0&&gr<ROWS&&gc>=0&&gc<COLS){
-          ctx.globalAlpha=.15;
-          ctx.fillStyle=C_MAP[c.colorId];
+          ctx.globalAlpha=.15; ctx.fillStyle=C_MAP[c.colorId];
           ctx.beginPath();ctx.arc(gc*CELL+CELL/2,gr*CELL+CELL/2,CELL*.38,0,Math.PI*2);ctx.fill();
           ctx.globalAlpha=1;
         }
@@ -989,22 +991,37 @@ function draw(){
     const pm=getPM(active.abs());
     active.abs().forEach(c=>{if(c.r>=0&&c.r<ROWS)drawP(ctx,c.c*CELL,c.r*CELL,CELL,c.colorId,nbM(c.r,c.c,c.colorId,pm));});
   }
+  
+  ctx.restore(); // 画面揺れここまで
+  
+  // ★ 稲妻エフェクト描画
+  lightnings.forEach((l) => {
+    ctx.beginPath(); ctx.moveTo(l.x, 0);
+    let lx = l.x, ly = 0;
+    while(ly < canvas.height) {
+      lx += (Math.random()-0.5)*50; ly += Math.random()*40 + 10;
+      ctx.lineTo(lx, ly);
+    }
+    ctx.strokeStyle = `rgba(255, 255, 220, ${l.life/15})`;
+    ctx.lineWidth = Math.random()*8+3;
+    ctx.shadowColor = '#fff'; ctx.shadowBlur = 20;
+    ctx.stroke(); ctx.shadowBlur = 0;
+  });
+  
   parts.forEach(p=>p.draw(ctx));
+  fTexts.forEach(f=>f.draw(ctx));
 }
 
 function drawNext(){
   if(!nctx)return;
   nctx.clearRect(0,0,nc.width,nc.height);
   if(!nextPiece)return;
-  
   const cells = nextPiece.cells;
   const minR=Math.min(...cells.map(c=>c.dr)),maxR=Math.max(...cells.map(c=>c.dr));
   const minC=Math.min(...cells.map(c=>c.dc)),maxC=Math.max(...cells.map(c=>c.dc));
   const pw=maxC-minC+1,ph=maxR-minR+1;
-  
   const cs=Math.min(45,Math.floor(Math.min((nc.width-30)/pw,(nc.height-30)/ph)));
   const ox=(nc.width-pw*cs)/2,oy=(nc.height-ph*cs)/2;
-  
   const pm={};
   cells.forEach(c=>{const dr=c.dr-minR,dc=c.dc-minC;if(!pm[dr])pm[dr]={};pm[dr][dc]=c.colorId;});
   cells.forEach(c=>{
@@ -1018,6 +1035,9 @@ function drawNext(){
 function update(){
   AF++;
   for(let i=parts.length-1;i>=0;i--){parts[i].step();if(parts[i].life<=0)parts.splice(i,1);}
+  for(let i=fTexts.length-1;i>=0;i--){fTexts[i].step();if(fTexts[i].life<=0)fTexts.splice(i,1);}
+  for(let i=lightnings.length-1;i>=0;i--){lightnings[i].life--;if(lightnings[i].life<=0)lightnings.splice(i,1);}
+  
   if(!gameOn)return;
   
   if(gState==='PLAY'){
@@ -1032,8 +1052,31 @@ function update(){
   else if(gState==='FALL'){
     if(!gravity()){
       const gs=findGroups();
-      if(gs.length){eCells=gs.flat();eraseT=32;chain++;gState='ERASE';sfx('erase',chain);if(chain>=2)showChain(chain);}
-      else{chain=0;gState='PLAY';}
+      if(gs.length){
+        eCells=gs.flat();
+        eraseT=32;
+        chain++;
+        gState='ERASE';
+        sfx('erase',chain);
+        
+        // ★ 連鎖文字ポップアップ ＆ ボイス ＆ 画面揺れ設定
+        let cx = 0, cy = 0;
+        eCells.forEach(c => { cx += c.c*CELL + CELL/2; cy += c.r*CELL + CELL/2; });
+        cx /= eCells.length; cy /= eCells.length;
+        
+        const chainColor = chain === 1 ? '#ffd040' : chain === 2 ? '#ff6600' : chain === 3 ? '#ff3333' : '#cc00ff';
+        const chainTexts = ["", "1連鎖！ ₿⚡️", "2連鎖！ ❤⚡️", "3連鎖！ 🚀⚡️", "4連鎖！ 🔥⚡️", "5連鎖！ 💎⚡️"];
+        let txt = chainTexts[chain] || `${chain}連鎖！ 🌈⚡️`;
+        
+        fTexts.push(new FloatingText(cx, cy - 20, txt, chainColor, 34));
+        playVoice(chain);
+        
+        shakeT = 10 + chain*2;
+        shakeMag = 4 + chain*1.5;
+        
+      } else {
+        chain=0;gState='PLAY';
+      }
     }
   }
   else if(gState==='ERASE'){
@@ -1041,11 +1084,14 @@ function update(){
       const pts=eCells.length*100*chain*chain;
       score+=pts;linesCl+=eCells.length;
       if(chain>maxCh)maxCh=chain;
-      if(score>hi){
-        hi=score;
-        try{localStorage.setItem('bphi4',hi);}catch(e){} 
-      }
-      eCells.forEach(c=>{for(let i=0;i<8;i++)parts.push(new Part(c.c*CELL+CELL/2,c.r*CELL+CELL/2,board[c.r][c.c]));board[c.r][c.c]=null;});
+      if(score>hi){ hi=score; try{localStorage.setItem('bphi4',hi);}catch(e){} }
+      
+      // ★ 消滅時に通常の破片とビットコイン破片を散らす
+      eCells.forEach(c=>{
+        for(let i=0;i<6;i++) parts.push(new Part(c.c*CELL+CELL/2, c.r*CELL+CELL/2, board[c.r][c.c], 'circle'));
+        for(let i=0;i<2;i++) parts.push(new Part(c.c*CELL+CELL/2, c.r*CELL+CELL/2, board[c.r][c.c], 'btc'));
+        board[c.r][c.c]=null;
+      });
       eCells=[];updateUI();gState='FALL';
     }
   }
@@ -1070,21 +1116,14 @@ function updateSide(){
   document.getElementById('fsz').textContent=`×${active.tier.size} (${active.tier.label})`;
 }
 function updateNextUI(){
-  if(!nextPiece){
-    nctx.clearRect(0,0,nc.width,nc.height);
-    document.getElementById('nxtier').textContent='——';
-    document.getElementById('nxamt').textContent='Awaiting data...';
-    return;
-  }
+  if(!nextPiece){ nctx.clearRect(0,0,nc.width,nc.height); document.getElementById('nxtier').textContent='——'; document.getElementById('nxamt').textContent='Awaiting data...'; return; }
   const s=nextPiece.sats, t=nextPiece.tier;
-  document.getElementById('nxtier').textContent=t.name;
-  document.getElementById('nxtier').style.color=C_MAP[t.colorId];
+  document.getElementById('nxtier').textContent=t.name; document.getElementById('nxtier').style.color=C_MAP[t.colorId];
   document.getElementById('nxamt').textContent=fmtAmt(s);
   drawNext();
 }
 function updateQ(){
-  const el=document.getElementById('ql');
-  document.getElementById('qcnt').textContent=txQ.length;
+  const el=document.getElementById('ql'); document.getElementById('qcnt').textContent=txQ.length;
   document.getElementById('qbar').style.width=Math.min(100,(txQ.length/40)*100)+'%';
   if(!txQ.length){el.innerHTML='<div class="qi" style="color:var(--text-dim);font-style:italic">empty</div>';return;}
   el.innerHTML=txQ.slice(0,5).map(tx=>{
@@ -1093,21 +1132,17 @@ function updateQ(){
   }).join('');
 }
 function addTxLine(tx,isBlock=false){
-  const el=document.getElementById('txstream');
-  const s=txSats(tx),t=getTier(s);
+  const el=document.getElementById('txstream'); const s=txSats(tx),t=getTier(s);
   const div=document.createElement('div');div.className='txl';
   if(isBlock){div.style.color='var(--gold)';div.textContent=`⛏ BLOCK #${tx._bh||'?'}`;}
   else{div.style.color=C_MAP[t.colorId];div.innerHTML=`<span class="tag">•</span>${t.name} ${fmtAmt(s)}`;}
-  el.insertBefore(div,el.firstChild);
-  while(el.children.length>8)el.removeChild(el.lastChild);
+  el.insertBefore(div,el.firstChild); while(el.children.length>8)el.removeChild(el.lastChild);
 }
 function loadNext(){
   if(!nextPiece && txQ.length>0){
     const idx=Math.floor(Math.random()*Math.min(txQ.length,5));
-    const tx = txQ.splice(idx,1)[0];
-    nextPiece = new Piece(tx);
-    updateNextUI();
-    updateQ();
+    nextPiece = new Piece(txQ.splice(idx,1)[0]);
+    updateNextUI(); updateQ();
   }
 }
 
@@ -1116,51 +1151,47 @@ function showChain(n){
   const M=['','','2 CHAIN!!','3 CHAIN!!!','4 CHAIN!!!!','5 CHAIN!!!!!'];
   el.textContent=n>=6?'🔥 FEVER!!!':(M[n]||n+' CHAIN!!');
   el.classList.remove('show');void el.offsetWidth;el.classList.add('show');
-  if(n>=3)sfx('chain',n);
 }
 
+// ★ ド派手なブロック爆発エフェクト
 function blockExplode(h){
   document.getElementById('flh').textContent='#'+h.toLocaleString();
   const fl=document.getElementById('bflash');fl.classList.remove('show');void fl.offsetWidth;fl.classList.add('show');
   sfx('boom');
+  
+  shakeT = 40; shakeMag = 25; // 画面大揺れ
+  for(let i=0; i<8; i++) lightnings.push({ life: 15 + Math.random()*15, x: Math.random()*canvas.width }); // 稲妻
+  fTexts.push(new FloatingText(canvas.width/2, canvas.height/2, "BLOCK MINED!!", '#ff3333', 60)); // ドデカテキスト
+  
   let cl=0;
   for(let r=0;r<ROWS;r++)for(let c=0;c<COLS;c++)if(board[r][c]){cl++;
-    for(let i=0;i<5;i++)parts.push(new Part(c*CELL+CELL/2,r*CELL+CELL/2,board[r][c]));board[r][c]=null;}
-  score+=cl*1000;
-  if(score>hi){
-    hi=score;
-    try{localStorage.setItem('bphi4',hi);}catch(e){}
+    for(let i=0;i<4;i++)parts.push(new Part(c*CELL+CELL/2,r*CELL+CELL/2,board[r][c], 'circle'));
+    for(let i=0;i<3;i++)parts.push(new Part(c*CELL+CELL/2,r*CELL+CELL/2,board[r][c], 'btc')); // ₿が飛び散る
+    for(let i=0;i<3;i++)parts.push(new Part(c*CELL+CELL/2,r*CELL+CELL/2,board[r][c], 'fire')); // 炎が吹き出る
+    board[r][c]=null;
   }
+  score+=cl*1000;
+  if(score>hi){ hi=score; try{localStorage.setItem('bphi4',hi);}catch(e){} }
   active=null;eCells=[];gState='PLAY';updateUI();
 }
 
 function connectWS(){
   ws=new WebSocket('wss://mempool.space/api/v1/ws');
-  ws.onopen=()=>{
-    ws.send(JSON.stringify({action:'want',data:['stats','blocks','live-2h-chart']}));
-    document.getElementById('wsdot').className='dot on';
-    document.getElementById('wslbl').textContent='mempool.space';
-  };
+  ws.onopen=()=>{ ws.send(JSON.stringify({action:'want',data:['stats','blocks','live-2h-chart']})); document.getElementById('wsdot').className='dot on'; document.getElementById('wslbl').textContent='mempool.space'; };
   ws.onmessage=e=>{try{
     const d=JSON.parse(e.data);
     if(d.block){
       blockH=d.block.height;lastBMs=d.block.timestamp*1000;
-      document.getElementById('bh').textContent=blockH.toLocaleString();
-      document.getElementById('bago').textContent='Just now ⛏';
-      addTxLine({_bh:blockH,_s:0},true);
-      if(gameOn)blockExplode(blockH);
+      document.getElementById('bh').textContent=blockH.toLocaleString(); document.getElementById('bago').textContent='Just now ⛏';
+      addTxLine({_bh:blockH,_s:0},true); if(gameOn)blockExplode(blockH);
     }
     if(d.mempoolInfo)document.getElementById('mps').textContent=d.mempoolInfo.size.toLocaleString();
     if(d.fees||d['recommended-fees']){
       const f=d.fees||d['recommended-fees'];const fr=f.fastestFee||f.halfHourFee||0;
-      if(fr){document.getElementById('feerate').textContent=fr+' sat/vB';
-        document.getElementById('feebar').style.width=Math.min(100,(fr/200)*100)+'%';}
+      if(fr){document.getElementById('feerate').textContent=fr+' sat/vB'; document.getElementById('feebar').style.width=Math.min(100,(fr/200)*100)+'%';}
     }
     if(d.transactions&&gameOn){
-      for(const tx of d.transactions){
-        tx._s=txSats(tx);tx._fee=tx.fee||0;
-        txQ.push(tx);if(txQ.length<=20)addTxLine(tx);
-      }
+      for(const tx of d.transactions){ tx._s=txSats(tx);tx._fee=tx.fee||0; txQ.push(tx);if(txQ.length<=20)addTxLine(tx); }
       if(txQ.length>60){txQ.sort((a,b)=>txSats(b)-txSats(a));txQ=txQ.slice(0,60);}
       if(!nextPiece)loadNext();else updateQ();
     }
@@ -1172,38 +1203,27 @@ function connectWS(){
 fetch('https://mempool.space/api/blocks/tip/height').then(r=>r.json())
   .then(h=>{blockH=h;document.getElementById('bh').textContent=h.toLocaleString();}).catch(()=>{});
 setInterval(()=>{
-  if(lastBMs){const d=Date.now()-lastBMs,m=Math.floor(d/60000),s=Math.floor((d%60000)/1000);
-    document.getElementById('bago').textContent=m>0?`${m}m ${s}s ago`:`${s}s ago`;}
+  if(lastBMs){const d=Date.now()-lastBMs,m=Math.floor(d/60000),s=Math.floor((d%60000)/1000); document.getElementById('bago').textContent=m>0?`${m}m ${s}s ago`:`${s}s ago`;}
 },1000);
 
 (function(){
-  document.getElementById('sleg').innerHTML=TIERS.map(t=>{
-    const c=C_MAP[t.colorId];
-    return `<div class="srow"><div class="sw" style="background:${c};box-shadow:0 0 5px ${c}55"></div>${t.name} <span style="color:var(--text-dim)">${t.label}</span></div>`;
-  }).join('');
+  document.getElementById('sleg').innerHTML=TIERS.map(t=>{ const c=C_MAP[t.colorId]; return `<div class="srow"><div class="sw" style="background:${c};box-shadow:0 0 5px ${c}55"></div>${t.name} <span style="color:var(--text-dim)">${t.label}</span></div>`; }).join('');
 })();
 
 const tweetText = "ビットコインの未承認トランザクション（Mempool）が落ち物パズルになった！🔗\n同じ色をつなげて連鎖を狙え！新ブロック採掘で一斉爆発！⛏️🔥\n\n" 
-  + window.location.href 
-  + "\n\n#びっぷよ\n#ビットコイン\n#落ち物パズル";
+  + window.location.href + "\n\n#びっぷよ\n#ビットコイン\n#落ち物パズル";
 document.getElementById('x-share-btn').href = "https://twitter.com/intent/tweet?text=" + encodeURIComponent(tweetText);
 
 function startGame(){
   try {
-    document.getElementById('ss').style.display='none';
-    document.getElementById('gs').style.display='none';
+    document.getElementById('ss').style.display='none'; document.getElementById('gs').style.display='none';
     board=mkB();score=0;maxCh=0;chain=0;linesCl=0;
-    active=null;nextPiece=null;txQ=[];parts=[];eCells=[];
+    active=null;nextPiece=null;txQ=[];parts=[];eCells=[];fTexts=[];lightnings=[];
     
-    [5e5,2e6,1e4,8e7,3e5,5e8,1e3,4e6,2e3,1e5,6e4,9e8,5e3,3e4,7e5].forEach(s=>
-      txQ.push({_s:s,_fee:Math.floor(s*.0001),vout:[{value:s}]}));
-      
-    loadNext(); 
-    updateUI();
-    gAC(); 
+    [5e5,2e6,1e4,8e7,3e5,5e8,1e3,4e6,2e3,1e5,6e4,9e8,5e3,3e4,7e5].forEach(s=> txQ.push({_s:s,_fee:Math.floor(s*.0001),vout:[{value:s}]}));
+    loadNext(); updateUI(); gAC(); 
     
-    gameOn=true;
-    gState='PLAY';
+    gameOn=true; gState='PLAY';
     
     document.getElementById('score-form').style.display = 'block';
     document.getElementById('submit-msg').style.display = 'none';
@@ -1211,9 +1231,7 @@ function startGame(){
     document.getElementById('submit-score-btn').textContent = 'SUBMIT SCORE';
 
     if(!ws)connectWS();
-  } catch(e) {
-    console.error("Start Game Error:", e);
-  }
+  } catch(e) { console.error("Start Game Error:", e); }
 }
 
 function gameOver(){
