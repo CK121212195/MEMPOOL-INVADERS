@@ -608,18 +608,15 @@ let keys={},bs={l:0,r:0,d:0};
 let kdl=0,krp=0;
 let shakeT = 0, shakeMag = 0;
 
-// ★ Web Speech APIの事前準備 (自然な声を見つける)
-let availableVoices = [];
-if (window.speechSynthesis) {
-  window.speechSynthesis.onvoiceschanged = () => {
-    availableVoices = window.speechSynthesis.getVoices();
-  };
-}
-
 try { hi = +localStorage.getItem('bphi4') || 0; } catch (e) {}
 document.getElementById('hiscore').textContent=hi.toLocaleString();
 
 function mkB(){return Array.from({length:ROWS},()=>new Array(COLS).fill(null));}
+
+// ★ ユーザーインタラクション時にAudioContextを初期化
+document.addEventListener('click', () => {
+  if (snd) gAC();
+}, {once: true});
 
 let AC=null;
 function gAC(){
@@ -630,53 +627,47 @@ function gAC(){
   return AC;
 }
 
-document.addEventListener('click', () => {
-  if (!window.speechInitialized && window.speechSynthesis) {
-    let u = new SpeechSynthesisUtterance(""); u.volume = 0;
-    window.speechSynthesis.speak(u);
-    window.speechInitialized = true;
-  }
-}, {once:true});
-
-// ★ 【改善版】可愛いアニメ声・数字のみ発声ロジック
-function playVoice(c) {
-  if (!snd || !window.speechSynthesis) return;
-  window.speechSynthesis.cancel(); 
-  
-  // 数字のみの短い掛け声
-  const txts = ["", "いちっ！", "にっ！", "さんっ！", "よんっ！", "ごっ！", "ろくっ！", "ななっ！", "はちっ！", "きゅうっ！", "じゅうっ！"];
-  const t = txts[c] || `${c}！`;
-  
-  let u = new SpeechSynthesisUtterance(t);
-  u.lang = 'ja-JP';
-  
-  // 自然な声を探す（Google, Microsoft, Siri等の中から女性らしい名前を優先）
-  if (availableVoices.length === 0) availableVoices = window.speechSynthesis.getVoices();
-  const femaleVoice = availableVoices.find(v => v.lang === 'ja-JP' && (
-      v.name.includes('Google') || v.name.includes('Microsoft') || v.name.includes('Siri') ||
-      v.name.includes('Kyoko') || v.name.includes('Haruka') || v.name.includes('Female') || v.name.includes('Mei') || v.name.includes('Nanami')
-  ));
-  if (femaleVoice) u.voice = femaleVoice;
-  
-  // 早すぎず、適度に可愛いピッチとスピードに微調整
-  u.rate = 1.1; 
-  u.pitch = 1.1 + Math.min(0.2, c * 0.02); // やりすぎない自然な高さ
-  
-  window.speechSynthesis.speak(u);
-}
-
-function sfx(type,n=1){
-  if(!snd)return;
+function sfx(type, n=1){
+  if(!snd) return;
   try{
-    const ac=gAC(),t=ac.currentTime;
-    const o=ac.createOscillator(),g=ac.createGain();
-    o.connect(g);g.connect(ac.destination);
+    const ac=gAC(), t=ac.currentTime;
+    
+    // ★ 連鎖時のとびっきり可愛い効果音（キラキラ・ポワッ）
+    if(type === 'chain') {
+      const o1 = ac.createOscillator(), g1 = ac.createGain();
+      const o2 = ac.createOscillator(), g2 = ac.createGain();
+      o1.connect(g1); g1.connect(ac.destination);
+      o2.connect(g2); g2.connect(ac.destination);
+      
+      // 連鎖数に応じてピッチが全音（2半音）ずつ上がる魔法のような音階
+      const baseFreq = 440 * Math.pow(1.059463, n * 2 + 3); 
+      
+      // メイン音（キュイーン）
+      o1.type = 'sine';
+      o1.frequency.setValueAtTime(baseFreq, t);
+      o1.frequency.exponentialRampToValueAtTime(baseFreq * 2, t + 0.15);
+      g1.gain.setValueAtTime(0.15, t);
+      g1.gain.exponentialRampToValueAtTime(0.001, t + 0.3);
+      
+      // サブ音（遅れて鳴るキラキラ音）
+      o2.type = 'sine';
+      o2.frequency.setValueAtTime(baseFreq * 1.5, t + 0.05);
+      o2.frequency.exponentialRampToValueAtTime(baseFreq * 3, t + 0.2);
+      g2.gain.setValueAtTime(0, t);
+      g2.gain.setValueAtTime(0.1, t + 0.05);
+      g2.gain.exponentialRampToValueAtTime(0.001, t + 0.3);
+      
+      o1.start(t); o1.stop(t + 0.35);
+      o2.start(t); o2.stop(t + 0.35);
+      return;
+    }
+
+    const o=ac.createOscillator(), g=ac.createGain();
+    o.connect(g); g.connect(ac.destination);
     const C={
-      rotate:{tp:'sine',f:[700,1100],d:.06,v:.04},
-      land:{tp:'triangle',f:[170,85],d:.08,v:.06},
-      erase:{tp:'square',f:[350+n*60,600+n*80],d:.22,v:.09},
-      chain:{tp:'sawtooth',f:[240+n*80,480+n*110],d:.32,v:.12},
-      boom:{tp:'sawtooth',f:[130,12],d:.55,v:.28},
+      rotate: {tp:'sine',     f:[700,1100], d:.06, v:.04},
+      land:   {tp:'triangle', f:[170,85],   d:.08, v:.06},
+      boom:   {tp:'sawtooth', f:[130,12],   d:.55, v:.28}
     };
     const c=C[type]||C.rotate;
     o.type=c.tp;
@@ -685,6 +676,7 @@ function sfx(type,n=1){
     o.start(t); o.stop(t+c.d+.05);
   }catch(e){}
 }
+
 document.getElementById('sndbtn').addEventListener('click',function(){
   snd=!snd;this.textContent=snd?'🔊 SOUND ON':'🔇 SOUND OFF';
   this.classList.toggle('on',snd);if(snd)gAC();
@@ -1051,19 +1043,18 @@ function update(){
         eraseT=32;
         chain++;
         gState='ERASE';
-        sfx('erase',chain);
+        
+        // ★ 自作の可愛いキラキラ効果音を鳴らす
+        sfx('chain', chain);
         
         let cx = 0, cy = 0;
         eCells.forEach(c => { cx += c.c*CELL + CELL/2; cy += c.r*CELL + CELL/2; });
         cx /= eCells.length; cy /= eCells.length;
         
         const chainColor = chain === 1 ? '#ffd040' : chain === 2 ? '#ff6600' : chain === 3 ? '#ff3333' : '#cc00ff';
-        
-        // ★ 数字のみが増えていく統一フォーマット
         let txt = `${chain}れんさ₿⚡️`;
         
         fTexts.push(new FloatingText(cx, cy - 20, txt, chainColor, 34));
-        playVoice(chain); 
         
         shakeT = 10 + chain*2; shakeMag = 4 + chain*1.5;
         
