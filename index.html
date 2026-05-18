@@ -210,7 +210,6 @@ h1.logo .b{color:var(--gold);}
 .sbtn:hover{transform:scale(1.04);box-shadow:0 6px 14px rgba(0,0,0,.2);}
 .sbtn:active{transform:scale(.97);}
 
-/* リーダーボード用送信フォーム */
 #score-form input {
   padding: 10px; border-radius: 4px; border: 1px solid var(--panel-bdr); background: #fff;
   font-family: var(--font-mono); font-size: 0.9rem; text-align: center; margin-bottom: 12px; width: 200px;
@@ -282,7 +281,6 @@ h1.logo .b{color:var(--gold);}
 }
 .ln-addr:hover { background: rgba(0,0,0,0.1); color: var(--text-mid); }
 
-/* リーダーボード UI */
 .lb-row { display: flex; justify-content: space-between; font-size: 0.65rem; padding: 4px 0; border-bottom: 1px solid var(--panel-bdr); }
 .lb-row:last-child { border-bottom: none; }
 .lb-rank { color: var(--gold); font-weight: bold; width: 20px; font-family: var(--font-hud); }
@@ -295,9 +293,7 @@ footer {
   margin: 0 auto 40px;
   padding: 0 20px;
 }
-.rel-pnl {
-  background: var(--panel); border: 1px solid var(--panel-bdr); border-radius: 5px; padding: 24px; box-shadow: 0 4px 10px rgba(0,0,0,0.03);
-}
+.rel-pnl { background: var(--panel); border: 1px solid var(--panel-bdr); border-radius: 5px; padding: 24px; box-shadow: 0 4px 10px rgba(0,0,0,0.03); }
 .rel-pnl .lbl { font-size: 0.75rem; margin-bottom: 20px; justify-content: center; }
 .rel-links { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
 .rel-card {
@@ -417,12 +413,14 @@ footer {
         <div class="stitle" style="color:#ff4d4d">GAME OVER</div>
         <div class="sdesc">Mempool Overflow...</div>
         <div class="sscore" id="goscore" style="margin-bottom:10px;">0</div>
+        
         <div id="score-form">
           <input type="text" id="player-name" placeholder="Enter your name" maxlength="10">
           <br>
           <button class="sbtn" id="submit-score-btn">SUBMIT SCORE</button>
         </div>
         <div id="submit-msg">Score Submitted!</div>
+
         <button class="sbtn" id="restartbtn">PLAY AGAIN</button>
       </div>
     </div>
@@ -462,12 +460,14 @@ footer {
       <div class="vbig" id="mxchain">0</div>
       <div class="vsub">consecutive clears</div>
     </div>
+    
     <div class="pnl">
       <div class="lbl"><span class="ico">🏆</span>Leaderboard</div>
       <div id="leaderboard-list" style="display: flex; flex-direction: column; gap: 4px;">
         <div style="font-size: 0.65rem; color: var(--text-dim); text-align: center;">Loading...</div>
       </div>
     </div>
+
     <div class="pnl pc-only">
       <div class="lbl"><span class="ico">⌨</span>Controls</div>
       <div class="clist">
@@ -483,11 +483,16 @@ footer {
       <div class="lbl"><span class="ico">〜</span>TX Stream</div>
       <div id="txstream"></div>
     </div>
+    
     <div class="pnl" id="pnl-support">
       <div class="lbl"><span class="ico">♥</span>Support & Share</div>
       <div class="s-btns">
-        <a href="lightning:brashridge65@walletofsatoshi.com" class="sbtn-sm ln-btn"><span class="ico">⚡</span> Donate</a>
-        <a href="#" target="_blank" class="sbtn-sm x-btn" id="x-share-btn">𝕏 Share</a>
+        <a href="lightning:brashridge65@walletofsatoshi.com" class="sbtn-sm ln-btn">
+          <span class="ico">⚡</span> Donate
+        </a>
+        <a href="#" target="_blank" class="sbtn-sm x-btn" id="x-share-btn">
+          𝕏 Share
+        </a>
       </div>
       <div class="ln-addr" onclick="navigator.clipboard.writeText('brashridge65@walletofsatoshi.com');alert('Copied LN Address!')" title="Click to copy">
         brashridge65@walletofsatoshi.com
@@ -517,7 +522,6 @@ footer {
 </footer>
 
 <script>
-// ── GAS連携 API設定 ──────────────────────────
 const GAS_URL = "https://script.google.com/macros/s/AKfycbytecaHWkd8eyMP5yU_azLtsCuf_dly_Ot5COaLjdsc98Epv4YxbPz_iMJmmH368sx-/exec"; 
 
 async function loadLeaderboard() {
@@ -568,7 +572,6 @@ async function submitScore() {
   }
 }
 
-// ── 高解像度キャンバス設定 ──────────────────────────
 const COLS=6, ROWS=12;
 const CELL=60; 
 
@@ -592,7 +595,6 @@ const PUYO_COLORS = {
 const PUYO_IDS = ['red', 'orange', 'cyan', 'green', 'yellow'];
 const C_MAP = { red: '#ff5555', orange: '#ff8800', cyan: '#00ddff', green: '#55ff55', yellow: '#ffea00', dust: '#aaaaaa' };
 
-// ── STATE & EFFECTS ──────────────────────────
 let gameOn=false,gState='IDLE';
 let board=mkB();
 let hi=0, score=0;
@@ -604,8 +606,6 @@ let blockH=null,lastBMs=null;
 let snd=true,ws=null;
 let keys={},bs={l:0,r:0,d:0};
 let kdl=0,krp=0;
-
-// ★ 画面揺れ用変数
 let shakeT = 0, shakeMag = 0;
 
 try { hi = +localStorage.getItem('bphi4') || 0; } catch (e) {}
@@ -613,7 +613,7 @@ document.getElementById('hiscore').textContent=hi.toLocaleString();
 
 function mkB(){return Array.from({length:ROWS},()=>new Array(COLS).fill(null));}
 
-// ── AUDIO & VOICE (Web Speech API) ──────────────────────────
+// ★ ボイス（Web Speech API）の初期化と発声ロジック
 let AC=null;
 function gAC(){
   try{
@@ -623,7 +623,7 @@ function gAC(){
   return AC;
 }
 
-// ユーザーアクション時に音声合成を初期化（ブラウザ制限回避）
+// ユーザーアクション時に音声合成を初期化
 document.addEventListener('click', () => {
   if (!window.speechInitialized && window.speechSynthesis) {
     let u = new SpeechSynthesisUtterance(""); u.volume = 0;
@@ -632,15 +632,30 @@ document.addEventListener('click', () => {
   }
 }, {once:true});
 
+// ★ 連鎖ボイス（可愛い女の子風のアニメ声・数字のみ発声）
 function playVoice(c) {
   if (!snd || !window.speechSynthesis) return;
-  window.speechSynthesis.cancel(); // 連続で鳴らすために前をキャンセル
-  const txts = ["", "いちれんさ！", "にれんさ！", "さんれんさ！", "よんれんさ！", "ごれんさ！", "ろくれんさ！", "ななれんさ！", "はちれんさ！", "きゅうれんさ！"];
-  const t = txts[c] || `${c}れんさ！`;
+  window.speechSynthesis.cancel(); 
+  
+  // 数字のみの可愛い掛け声
+  const txts = ["", "いち！", "にっ！", "さん！", "よん！", "ごっ！", "ろく！", "なな！", "はち！", "きゅう！", "じゅう！"];
+  const t = txts[c] || `${c}！`;
+  
   let u = new SpeechSynthesisUtterance(t);
   u.lang = 'ja-JP';
-  u.rate = 1.6; // テンポよく
-  u.pitch = 1.0 + Math.min(1.0, c * 0.08); // 連鎖で声が高くなる
+  
+  // 環境に応じて、可能な限り女性の声を探索
+  const voices = window.speechSynthesis.getVoices();
+  const femaleVoice = voices.find(v => v.lang === 'ja-JP' && (
+      v.name.includes('Female') || v.name.includes('Kyoko') || 
+      v.name.includes('Haruka') || v.name.includes('Mei') || 
+      v.name.includes('Nanami') || v.name.includes('Siri')
+  ));
+  if (femaleVoice) u.voice = femaleVoice;
+  
+  u.rate = 1.4; // 元気なテンポ
+  u.pitch = 1.6 + Math.min(0.4, c * 0.05); // 高めの可愛いピッチ、連鎖でさらに上がる
+  
   window.speechSynthesis.speak(u);
 }
 
@@ -658,7 +673,8 @@ function sfx(type,n=1){
       boom:{tp:'sawtooth',f:[130,12],d:.55,v:.28},
     };
     const c=C[type]||C.rotate;
-    o.type=c.tp; o.frequency.setValueAtTime(c.f[0],t); o.frequency.exponentialRampToValueAtTime(c.f[1],t+c.d);
+    o.type=c.tp;
+    o.frequency.setValueAtTime(c.f[0],t); o.frequency.exponentialRampToValueAtTime(c.f[1],t+c.d);
     g.gain.setValueAtTime(c.v,t); g.gain.exponentialRampToValueAtTime(.001,t+c.d+.02);
     o.start(t); o.stop(t+c.d+.05);
   }catch(e){}
@@ -681,8 +697,8 @@ const TIERS=[
 function getTier(s){for(const t of TIERS)if(s>=t.min)return t;return TIERS[TIERS.length-1];}
 function txSats(tx){if(tx._s!==undefined)return tx._s;if(Array.isArray(tx.vout))return tx.vout.reduce((a,o)=>a+(o.value||0),0);return 0;}
 function fmtAmt(s){if(s>=1e8)return (s/1e8).toFixed(4)+' ₿';if(s>=1e5)return (s/1e5).toFixed(4)+' mBTC';return s.toLocaleString()+' sat';}
-function rCol(){return PUYO_IDS[Math.floor(Math.random()*PUYO_IDS.length)];}
 
+function rCol(){return PUYO_IDS[Math.floor(Math.random()*PUYO_IDS.length)];}
 function buildCells(tier){
   const sz=tier.size,c0=rCol(),col=t=>t.mono?c0:rCol();
   if(sz===1)return [{dr:0,dc:0,colorId:c0}];
@@ -821,8 +837,7 @@ bindM('mb-rl',null,()=>{if(gState==='PLAY')rot('ccw');});
 bindM('mb-rr',null,()=>{if(gState==='PLAY')rot('cw');});
 bindM('mb-drop',null,hardDrop);
 
-// ── EFFECTS CLASSES ──────────────────────────────────────────────────
-// ★ パーティクル（円、Bitcoinマーク、炎）
+// ── EFFECTS ──────────────────────────────────────────────────
 class Part {
   constructor(x,y,colId, type='circle'){
     this.x=x; this.y=y; this.type=type;
@@ -839,8 +854,7 @@ class Part {
       c.beginPath();c.arc(this.x,this.y,this.r,0,Math.PI*2);c.fill();
     } else if (this.type==='btc') {
       c.fillStyle='#ffd040'; c.shadowColor='#ffd040'; c.shadowBlur=15;
-      c.font = `900 ${this.r*4}px Orbitron`;
-      c.fillText('₿', this.x, this.y);
+      c.font = `900 ${this.r*4}px Orbitron`; c.fillText('₿', this.x, this.y);
     } else if (this.type==='fire') {
       c.fillStyle=`rgba(255, ${Math.random()*150+50}, 0, 1)`; c.shadowColor='#ff3300'; c.shadowBlur=15;
       c.beginPath();c.arc(this.x,this.y,this.r*1.5,0,Math.PI*2);c.fill();
@@ -849,36 +863,21 @@ class Part {
   }
 }
 
-// ★ 連鎖文字のポップアップアニメーション
 class FloatingText {
   constructor(x, y, text, color, size=30) {
     this.x = x; this.y = y; this.text = text; this.color = color;
     this.life = 60; this.vy = -2.0; this.size = size;
   }
-  step() { 
-    this.y += this.vy; this.vy *= 0.92; // 上にシュッと出てフワッと止まる
-    this.life--; 
-  }
+  step() { this.y += this.vy; this.vy *= 0.92; this.life--; }
   draw(c) {
-    c.save();
-    c.globalAlpha = Math.max(0, this.life/60);
-    // 出現時にボヨンと拡大するアニメーション
-    let scale = 1;
-    if(this.life > 50) scale = 1 + (this.life - 50) * 0.08;
-    
-    c.translate(this.x, this.y);
-    c.scale(scale, scale);
-    
+    c.save(); c.globalAlpha = Math.max(0, this.life/60);
+    let scale = 1; if(this.life > 50) scale = 1 + (this.life - 50) * 0.08;
+    c.translate(this.x, this.y); c.scale(scale, scale);
     c.textAlign = 'center'; c.textBaseline = 'middle';
     c.font = `900 ${this.size}px 'Zen Kaku Gothic New', sans-serif`;
-    
-    // ネオン発光＋太い黒フチで目立たせる
     c.shadowColor = this.color; c.shadowBlur = 20;
-    c.lineWidth = 6; c.strokeStyle = '#111';
-    c.strokeText(this.text, 0, 0);
-    
-    c.shadowBlur = 0; c.fillStyle = this.color;
-    c.fillText(this.text, 0, 0);
+    c.lineWidth = 6; c.strokeStyle = '#111'; c.strokeText(this.text, 0, 0);
+    c.shadowBlur = 0; c.fillStyle = this.color; c.fillText(this.text, 0, 0);
     c.restore();
   }
 }
@@ -934,18 +933,15 @@ function drawP(c,px,py,sz,colorId,nb={},al=1){
 function draw(){
   ctx.clearRect(0,0,canvas.width,canvas.height);
   
-  // ★ 画面揺れ (Screen Shake) 適用
   ctx.save();
   if (shakeT > 0) {
     const dx = (Math.random() - 0.5) * shakeMag;
     const dy = (Math.random() - 0.5) * shakeMag;
     ctx.translate(dx, dy);
-    shakeT--;
-    shakeMag *= 0.9; // だんだん収まる
+    shakeT--; shakeMag *= 0.9;
   }
   
-  ctx.strokeStyle='rgba(255, 255, 255, 0.04)';
-  ctx.lineWidth=2; ctx.beginPath();
+  ctx.strokeStyle='rgba(255, 255, 255, 0.04)'; ctx.lineWidth=2; ctx.beginPath();
   for(let x=0;x<=canvas.width;x+=CELL){ctx.moveTo(x,0);ctx.lineTo(x,canvas.height);}
   for(let y=0;y<=canvas.height;y+=CELL){ctx.moveTo(0,y);ctx.lineTo(canvas.width,y);}
   ctx.stroke();
@@ -955,13 +951,11 @@ function draw(){
     const isE=eSet.has(`${r},${c}`);
     let al=1, sx=1, sy=1;
     
-    // ★ 消去前のバウンシーアニメーション（ブルブル震えて潰れる）
     if(isE && gState==='ERASE') {
-      const prog = (32 - eraseT) / 32; // 0 to 1
+      const prog = (32 - eraseT) / 32; 
       const elastic = Math.sin(prog * Math.PI * 6) * (1 - prog);
-      sx = 1 + elastic * 0.4;
-      sy = 1 - elastic * 0.4;
-      al = 1 - Math.pow(prog, 4); // 最後だけフワッと消える
+      sx = 1 + elastic * 0.4; sy = 1 - elastic * 0.4;
+      al = 1 - Math.pow(prog, 4); 
     }
     
     ctx.save();
@@ -992,20 +986,14 @@ function draw(){
     active.abs().forEach(c=>{if(c.r>=0&&c.r<ROWS)drawP(ctx,c.c*CELL,c.r*CELL,CELL,c.colorId,nbM(c.r,c.c,c.colorId,pm));});
   }
   
-  ctx.restore(); // 画面揺れここまで
+  ctx.restore(); 
   
-  // ★ 稲妻エフェクト描画
   lightnings.forEach((l) => {
     ctx.beginPath(); ctx.moveTo(l.x, 0);
     let lx = l.x, ly = 0;
-    while(ly < canvas.height) {
-      lx += (Math.random()-0.5)*50; ly += Math.random()*40 + 10;
-      ctx.lineTo(lx, ly);
-    }
-    ctx.strokeStyle = `rgba(255, 255, 220, ${l.life/15})`;
-    ctx.lineWidth = Math.random()*8+3;
-    ctx.shadowColor = '#fff'; ctx.shadowBlur = 20;
-    ctx.stroke(); ctx.shadowBlur = 0;
+    while(ly < canvas.height) { lx += (Math.random()-0.5)*50; ly += Math.random()*40 + 10; ctx.lineTo(lx, ly); }
+    ctx.strokeStyle = `rgba(255, 255, 220, ${l.life/15})`; ctx.lineWidth = Math.random()*8+3;
+    ctx.shadowColor = '#fff'; ctx.shadowBlur = 20; ctx.stroke(); ctx.shadowBlur = 0;
   });
   
   parts.forEach(p=>p.draw(ctx));
@@ -1059,20 +1047,19 @@ function update(){
         gState='ERASE';
         sfx('erase',chain);
         
-        // ★ 連鎖文字ポップアップ ＆ ボイス ＆ 画面揺れ設定
         let cx = 0, cy = 0;
         eCells.forEach(c => { cx += c.c*CELL + CELL/2; cy += c.r*CELL + CELL/2; });
         cx /= eCells.length; cy /= eCells.length;
         
         const chainColor = chain === 1 ? '#ffd040' : chain === 2 ? '#ff6600' : chain === 3 ? '#ff3333' : '#cc00ff';
-        const chainTexts = ["", "1連鎖！ ₿⚡️", "2連鎖！ ❤⚡️", "3連鎖！ 🚀⚡️", "4連鎖！ 🔥⚡️", "5連鎖！ 💎⚡️"];
-        let txt = chainTexts[chain] || `${chain}連鎖！ 🌈⚡️`;
+        
+        // ★ 数字のみが変化する「○れんさ₿⚡️」フォーマット
+        let txt = `${chain}れんさ₿⚡️`;
         
         fTexts.push(new FloatingText(cx, cy - 20, txt, chainColor, 34));
-        playVoice(chain);
+        playVoice(chain); // ★ 可愛い声で発声
         
-        shakeT = 10 + chain*2;
-        shakeMag = 4 + chain*1.5;
+        shakeT = 10 + chain*2; shakeMag = 4 + chain*1.5;
         
       } else {
         chain=0;gState='PLAY';
@@ -1086,7 +1073,6 @@ function update(){
       if(chain>maxCh)maxCh=chain;
       if(score>hi){ hi=score; try{localStorage.setItem('bphi4',hi);}catch(e){} }
       
-      // ★ 消滅時に通常の破片とビットコイン破片を散らす
       eCells.forEach(c=>{
         for(let i=0;i<6;i++) parts.push(new Part(c.c*CELL+CELL/2, c.r*CELL+CELL/2, board[c.r][c.c], 'circle'));
         for(let i=0;i<2;i++) parts.push(new Part(c.c*CELL+CELL/2, c.r*CELL+CELL/2, board[c.r][c.c], 'btc'));
@@ -1096,11 +1082,7 @@ function update(){
     }
   }
 }
-function loop(){
-  update();
-  draw();
-  requestAnimationFrame(loop);
-}
+function loop(){ update(); draw(); requestAnimationFrame(loop); }
 
 function updateUI(){
   document.getElementById('score').textContent=score.toLocaleString();
@@ -1146,28 +1128,20 @@ function loadNext(){
   }
 }
 
-function showChain(n){
-  const el=document.getElementById('cpop');
-  const M=['','','2 CHAIN!!','3 CHAIN!!!','4 CHAIN!!!!','5 CHAIN!!!!!'];
-  el.textContent=n>=6?'🔥 FEVER!!!':(M[n]||n+' CHAIN!!');
-  el.classList.remove('show');void el.offsetWidth;el.classList.add('show');
-}
-
-// ★ ド派手なブロック爆発エフェクト
 function blockExplode(h){
   document.getElementById('flh').textContent='#'+h.toLocaleString();
   const fl=document.getElementById('bflash');fl.classList.remove('show');void fl.offsetWidth;fl.classList.add('show');
   sfx('boom');
   
-  shakeT = 40; shakeMag = 25; // 画面大揺れ
-  for(let i=0; i<8; i++) lightnings.push({ life: 15 + Math.random()*15, x: Math.random()*canvas.width }); // 稲妻
-  fTexts.push(new FloatingText(canvas.width/2, canvas.height/2, "BLOCK MINED!!", '#ff3333', 60)); // ドデカテキスト
+  shakeT = 40; shakeMag = 25; 
+  for(let i=0; i<8; i++) lightnings.push({ life: 15 + Math.random()*15, x: Math.random()*canvas.width }); 
+  fTexts.push(new FloatingText(canvas.width/2, canvas.height/2, "BLOCK MINED!!", '#ff3333', 60)); 
   
   let cl=0;
   for(let r=0;r<ROWS;r++)for(let c=0;c<COLS;c++)if(board[r][c]){cl++;
     for(let i=0;i<4;i++)parts.push(new Part(c*CELL+CELL/2,r*CELL+CELL/2,board[r][c], 'circle'));
-    for(let i=0;i<3;i++)parts.push(new Part(c*CELL+CELL/2,r*CELL+CELL/2,board[r][c], 'btc')); // ₿が飛び散る
-    for(let i=0;i<3;i++)parts.push(new Part(c*CELL+CELL/2,r*CELL+CELL/2,board[r][c], 'fire')); // 炎が吹き出る
+    for(let i=0;i<3;i++)parts.push(new Part(c*CELL+CELL/2,r*CELL+CELL/2,board[r][c], 'btc')); 
+    for(let i=0;i<3;i++)parts.push(new Part(c*CELL+CELL/2,r*CELL+CELL/2,board[r][c], 'fire')); 
     board[r][c]=null;
   }
   score+=cl*1000;
