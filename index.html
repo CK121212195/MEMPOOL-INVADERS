@@ -608,12 +608,19 @@ let keys={},bs={l:0,r:0,d:0};
 let kdl=0,krp=0;
 let shakeT = 0, shakeMag = 0;
 
+// ★ Web Speech APIの事前準備 (自然な声を見つける)
+let availableVoices = [];
+if (window.speechSynthesis) {
+  window.speechSynthesis.onvoiceschanged = () => {
+    availableVoices = window.speechSynthesis.getVoices();
+  };
+}
+
 try { hi = +localStorage.getItem('bphi4') || 0; } catch (e) {}
 document.getElementById('hiscore').textContent=hi.toLocaleString();
 
 function mkB(){return Array.from({length:ROWS},()=>new Array(COLS).fill(null));}
 
-// ★ ボイス（Web Speech API）の初期化と発声ロジック
 let AC=null;
 function gAC(){
   try{
@@ -623,7 +630,6 @@ function gAC(){
   return AC;
 }
 
-// ユーザーアクション時に音声合成を初期化
 document.addEventListener('click', () => {
   if (!window.speechInitialized && window.speechSynthesis) {
     let u = new SpeechSynthesisUtterance(""); u.volume = 0;
@@ -632,29 +638,29 @@ document.addEventListener('click', () => {
   }
 }, {once:true});
 
-// ★ 連鎖ボイス（可愛い女の子風のアニメ声・数字のみ発声）
+// ★ 【改善版】可愛いアニメ声・数字のみ発声ロジック
 function playVoice(c) {
   if (!snd || !window.speechSynthesis) return;
   window.speechSynthesis.cancel(); 
   
-  // 数字のみの可愛い掛け声
-  const txts = ["", "いち！", "にっ！", "さん！", "よん！", "ごっ！", "ろく！", "なな！", "はち！", "きゅう！", "じゅう！"];
+  // 数字のみの短い掛け声
+  const txts = ["", "いちっ！", "にっ！", "さんっ！", "よんっ！", "ごっ！", "ろくっ！", "ななっ！", "はちっ！", "きゅうっ！", "じゅうっ！"];
   const t = txts[c] || `${c}！`;
   
   let u = new SpeechSynthesisUtterance(t);
   u.lang = 'ja-JP';
   
-  // 環境に応じて、可能な限り女性の声を探索
-  const voices = window.speechSynthesis.getVoices();
-  const femaleVoice = voices.find(v => v.lang === 'ja-JP' && (
-      v.name.includes('Female') || v.name.includes('Kyoko') || 
-      v.name.includes('Haruka') || v.name.includes('Mei') || 
-      v.name.includes('Nanami') || v.name.includes('Siri')
+  // 自然な声を探す（Google, Microsoft, Siri等の中から女性らしい名前を優先）
+  if (availableVoices.length === 0) availableVoices = window.speechSynthesis.getVoices();
+  const femaleVoice = availableVoices.find(v => v.lang === 'ja-JP' && (
+      v.name.includes('Google') || v.name.includes('Microsoft') || v.name.includes('Siri') ||
+      v.name.includes('Kyoko') || v.name.includes('Haruka') || v.name.includes('Female') || v.name.includes('Mei') || v.name.includes('Nanami')
   ));
   if (femaleVoice) u.voice = femaleVoice;
   
-  u.rate = 1.4; // 元気なテンポ
-  u.pitch = 1.6 + Math.min(0.4, c * 0.05); // 高めの可愛いピッチ、連鎖でさらに上がる
+  // 早すぎず、適度に可愛いピッチとスピードに微調整
+  u.rate = 1.1; 
+  u.pitch = 1.1 + Math.min(0.2, c * 0.02); // やりすぎない自然な高さ
   
   window.speechSynthesis.speak(u);
 }
@@ -1053,11 +1059,11 @@ function update(){
         
         const chainColor = chain === 1 ? '#ffd040' : chain === 2 ? '#ff6600' : chain === 3 ? '#ff3333' : '#cc00ff';
         
-        // ★ 数字のみが変化する「○れんさ₿⚡️」フォーマット
+        // ★ 数字のみが増えていく統一フォーマット
         let txt = `${chain}れんさ₿⚡️`;
         
         fTexts.push(new FloatingText(cx, cy - 20, txt, chainColor, 34));
-        playVoice(chain); // ★ 可愛い声で発声
+        playVoice(chain); 
         
         shakeT = 10 + chain*2; shakeMag = 4 + chain*1.5;
         
@@ -1123,7 +1129,8 @@ function addTxLine(tx,isBlock=false){
 function loadNext(){
   if(!nextPiece && txQ.length>0){
     const idx=Math.floor(Math.random()*Math.min(txQ.length,5));
-    nextPiece = new Piece(txQ.splice(idx,1)[0]);
+    const tx = txQ.splice(idx,1)[0];
+    nextPiece = new Piece(tx);
     updateNextUI(); updateQ();
   }
 }
