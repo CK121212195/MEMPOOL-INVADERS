@@ -13,15 +13,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-<!-- ★タイトル・ディスクリプションの最適化（AI・SEO向け） -->
 <title>₿びっぷよ — Bitcoin Mempool 落ち物パズルゲーム</title>
 <meta name="description" content="ビットコインのmempool（未承認トランザクション）がリアルタイムに降ってくる落ち物パズルゲーム！トランザクションを4つつなげて連鎖を狙い、新ブロック採掘（マイニング）で盤面が全消去される爽快Web3ゲーム「₿びっぷよ」。">
 
-<!-- Favicon / Apple Touch Icon -->
 <link rel="icon" type="image/png" href="./favicon.png">
 <link rel="apple-touch-icon" href="./favicon.png">
 
-<!-- OGP設定 -->
 <meta property="og:title" content="₿びっぷよ — Bitcoin Mempool 落ち物パズルゲーム">
 <meta property="og:description" content="リアルタイムのBitcoin送金状況と連動！降ってくる未承認トランザクションをつなげて消す、新感覚の落ち物パズル。新ブロック採掘で一斉爆発！">
 <meta property="og:type" content="website">
@@ -29,13 +26,11 @@
 <meta property="og:image" content="https://ck121212195.github.io/BITPUYO/og-image.png">
 <meta property="og:site_name" content="₿びっぷよ - Bitcoin Falling Puzzle">
 
-<!-- Twitter Card設定 -->
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="₿びっぷよ — Bitcoin Mempool 落ち物パズル">
 <meta name="twitter:description" content="リアルタイムのBitcoin送金状況と連動！降ってくる未承認トランザクションをつなげて消す、新感覚の落ち物パズル。新ブロック採掘で一斉爆発！">
 <meta name="twitter:image" content="https://ck121212195.github.io/BITPUYO/og-image.png">
 
-<!-- ★AIボット・検索エンジン向けの構造化データ（JSON-LD） -->
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -97,7 +92,6 @@ header{
   padding:12px 20px 10px;
   border-bottom:1px solid var(--panel-bdr);
 }
-/* ★ SEOのため div から h1 に変更 */
 h1.logo{
   font-family:var(--font-hud);font-size:1.6rem;font-weight:900;
   letter-spacing:.1em;color:var(--amber); margin: 0;
@@ -216,6 +210,16 @@ h1.logo .b{color:var(--gold);}
 .sbtn:hover{transform:scale(1.04);box-shadow:0 6px 14px rgba(0,0,0,.2);}
 .sbtn:active{transform:scale(.97);}
 
+/* リーダーボード用送信フォーム */
+#score-form input {
+  padding: 10px; border-radius: 4px; border: 1px solid var(--panel-bdr); background: #fff;
+  font-family: var(--font-mono); font-size: 0.9rem; text-align: center; margin-bottom: 12px; width: 200px;
+}
+#submit-score-btn {
+  background: var(--green); padding: 12px 24px; font-size: 0.8rem; margin-bottom: 20px;
+}
+#submit-msg { font-family: var(--font-hud); font-size: 0.8rem; color: var(--green); margin-bottom: 20px; display: none; }
+
 #mctrl{display:none;flex-direction:column;gap:8px;width:100%;max-width:400px;}
 .mr{display:flex;gap:8px;justify-content:center;}
 .mb{
@@ -277,6 +281,13 @@ h1.logo .b{color:var(--gold);}
   padding: 4px; background: rgba(0,0,0,0.05); border-radius: 3px;
 }
 .ln-addr:hover { background: rgba(0,0,0,0.1); color: var(--text-mid); }
+
+/* リーダーボード UI CSS */
+.lb-row { display: flex; justify-content: space-between; font-size: 0.65rem; padding: 4px 0; border-bottom: 1px solid var(--panel-bdr); }
+.lb-row:last-child { border-bottom: none; }
+.lb-rank { color: var(--gold); font-weight: bold; width: 20px; font-family: var(--font-hud); }
+.lb-name { color: var(--text-mid); flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-family: var(--font-mono); font-weight: 700; }
+.lb-score { color: var(--text); font-family: var(--font-hud); }
 
 footer {
   position: relative; z-index: 10;
@@ -373,9 +384,7 @@ footer {
 
 <header>
   <div>
-    <!-- ★ SEOに強い <h1> を採用 -->
     <h1 class="logo"><span class="b">₿</span>びっぷよ</h1>
-    <!-- ★ PuyoPuyoという直接表現を避け、Falling Puzzleに変更 -->
     <div class="sub">Bitcoin TX Falling Puzzle / New Block → Explosion</div>
   </div>
   <div class="pill">
@@ -440,7 +449,6 @@ footer {
 
       <div id="ss" class="sov">
         <div class="stitle">₿びっぷよ</div>
-        <!-- ★ 説明文も汎用的な表現に変更 -->
         <div class="sdesc">
           同じ色を4個以上つなげて消そう！<br>
           Bitcoin送金がリアルタイムで降ってくる<br>
@@ -452,7 +460,16 @@ footer {
       <div id="gs" class="sov" style="display:none">
         <div class="stitle" style="color:#ff4d4d">GAME OVER</div>
         <div class="sdesc">Mempool Overflow...</div>
-        <div class="sscore" id="goscore">0</div>
+        <div class="sscore" id="goscore" style="margin-bottom:10px;">0</div>
+        
+        <!-- ★ リーダーボード送信フォーム（GAS連携準備） -->
+        <div id="score-form">
+          <input type="text" id="player-name" placeholder="Enter your name" maxlength="10">
+          <br>
+          <button class="sbtn" id="submit-score-btn">SUBMIT SCORE</button>
+        </div>
+        <div id="submit-msg">Score Submitted!</div>
+
         <button class="sbtn" id="restartbtn">PLAY AGAIN</button>
       </div>
     </div>
@@ -495,6 +512,15 @@ footer {
       <div class="vbig" id="mxchain">0</div>
       <div class="vsub">consecutive clears</div>
     </div>
+    
+    <!-- ★ リーダーボード表示パネル（GAS連携準備） -->
+    <div class="pnl">
+      <div class="lbl"><span class="ico">🏆</span>Leaderboard</div>
+      <div id="leaderboard-list" style="display: flex; flex-direction: column; gap: 4px;">
+        <div style="font-size: 0.65rem; color: var(--text-dim); text-align: center;">Loading...</div>
+      </div>
+    </div>
+
     <div class="pnl pc-only">
       <div class="lbl"><span class="ico">⌨</span>Controls</div>
       <div class="clist">
@@ -551,6 +577,72 @@ footer {
 </footer>
 
 <script>
+// ── GAS連携 API設定 (次回構築用) ──────────────────────────
+const GAS_URL = "YOUR_GAS_WEB_APP_URL_HERE"; // ※GASデプロイ後にここへURLを貼り付けます
+
+async function loadLeaderboard() {
+  const lbEl = document.getElementById('leaderboard-list');
+  if (GAS_URL === "YOUR_GAS_WEB_APP_URL_HERE") {
+    lbEl.innerHTML = '<div style="font-size: 0.6rem; color: var(--text-dim); text-align: center; padding: 10px 0;">GAS Backend<br>Not Connected Yet</div>';
+    return;
+  }
+  try {
+    const res = await fetch(GAS_URL + "?action=get");
+    const data = await res.json();
+    if (data && data.length > 0) {
+      lbEl.innerHTML = data.map((d, i) => `
+        <div class="lb-row">
+          <span class="lb-rank">${i+1}</span>
+          <span class="lb-name">${d.name}</span>
+          <span class="lb-score">${d.score.toLocaleString()}</span>
+        </div>
+      `).join('');
+    } else {
+      lbEl.innerHTML = '<div style="font-size: 0.65rem; color: var(--text-dim); text-align: center;">No scores yet</div>';
+    }
+  } catch(e) {
+    lbEl.innerHTML = '<div style="font-size: 0.65rem; color: #ff4d4d; text-align: center;">Failed to load</div>';
+  }
+}
+
+async function submitScore() {
+  if (score === 0) return;
+  const nameInput = document.getElementById('player-name');
+  const name = nameInput.value.trim() || 'Anonymous';
+  const btn = document.getElementById('submit-score-btn');
+  const msg = document.getElementById('submit-msg');
+  
+  btn.disabled = true;
+  btn.textContent = 'Submitting...';
+
+  if (GAS_URL === "YOUR_GAS_WEB_APP_URL_HERE") {
+    // GAS未接続時のモック動作（1秒後に完了表示）
+    setTimeout(() => {
+      document.getElementById('score-form').style.display = 'none';
+      msg.style.display = 'block';
+      msg.textContent = 'Demo: API Not Connected';
+    }, 1000);
+    return;
+  }
+
+  try {
+    await fetch(GAS_URL, {
+      method: "POST",
+      body: JSON.stringify({ name: name, score: score }),
+      headers: { "Content-Type": "application/x-www-form-urlencoded" }
+    });
+    document.getElementById('score-form').style.display = 'none';
+    msg.style.display = 'block';
+    msg.textContent = 'Score Submitted!';
+    loadLeaderboard(); // スコア送信後にランキングを再読み込み
+  } catch(e) {
+    btn.disabled = false;
+    btn.textContent = 'RETRY';
+    alert("Failed to submit score.");
+  }
+}
+
+// ── 高解像度キャンバス設定 ──────────────────────────
 const COLS=6, ROWS=12;
 const CELL=60; 
 
@@ -592,22 +684,6 @@ document.getElementById('hiscore').textContent=hi.toLocaleString();
 
 function mkB(){return Array.from({length:ROWS},()=>new Array(COLS).fill(null));}
 
-(function(){
-  const bg=document.getElementById('starfield');
-  for(let i=0;i<80;i++){
-    const el=document.createElement('div');el.className='s';
-    const sz=(Math.random()*1.8+0.8).toFixed(1);
-    const a1=(Math.random()*.1+.02).toFixed(2);
-    const dur=(Math.random()*6+3).toFixed(1);
-    const del=(Math.random()*7).toFixed(1);
-    el.style.cssText=`width:${sz}px;height:${sz}px;left:${Math.random()*100}%;top:${Math.random()*100}%;opacity:${a1};animation:twinkle ${dur}s ${del}s infinite alternate;`;
-    bg.appendChild(el);
-  }
-  const st=document.createElement('style');
-  st.textContent=`@keyframes twinkle{from{opacity:0}to{opacity:var(--a1, 0.2)}}`;
-  document.head.appendChild(st);
-})();
-
 let AC=null;
 function gAC(){
   try{
@@ -642,10 +718,11 @@ document.getElementById('sndbtn').addEventListener('click',function(){
   this.classList.toggle('on',snd);if(snd)gAC();
 });
 
+// ★ Tierの設定変更を反映
 const TIERS=[
   {min:1e10,size:8,name:'>100₿',  colorId:'red',    mono:true, label:'絶望 8blocks'},
-  {min:1e9, size:6,name:'>10₿',   colorId:'orange', mono:true, label:'巨大 6blocks'},
-  {min:1e8, size:5,name:'>1₿',    colorId:'yellow', mono:true, label:'大型 5blocks'},
+  {min:1e9, size:6,name:'>10₿',   colorId:'orange', mono:true, label:'横一文字 6blocks'},
+  {min:1e8, size:5,name:'>1₿',    colorId:'yellow', mono:false, label:'ランダム 5blocks'},
   {min:1e7, size:4,name:'>0.1₿',  colorId:'green',  mono:false,label:'4 blocks'},
   {min:5e6, size:3,name:'>0.05₿', colorId:'cyan',   mono:false,label:'3 blocks'},
   {min:1e4, size:2,name:'Normal',  colorId:'cyan',   mono:false,label:'2 blocks (pair)'},
@@ -657,6 +734,8 @@ function txSats(tx){if(tx._s!==undefined)return tx._s;if(Array.isArray(tx.vout))
 function fmtAmt(s){if(s>=1e8)return (s/1e8).toFixed(4)+' ₿';if(s>=1e5)return (s/1e5).toFixed(4)+' mBTC';return s.toLocaleString()+' sat';}
 
 function rCol(){return PUYO_IDS[Math.floor(Math.random()*PUYO_IDS.length)];}
+
+// ★ 5ブロックと6ブロックの形状を実装
 function buildCells(tier){
   const sz=tier.size,c0=rCol(),col=t=>t.mono?c0:rCol();
   if(sz===1)return [{dr:0,dc:0,colorId:c0}];
@@ -669,6 +748,22 @@ function buildCells(tier){
       [{dr:0,dc:0},{dr:0,dc:1},{dr:-1,dc:1},{dr:-1,dc:2}],
     ];
     return shapes[Math.floor(Math.random()*shapes.length)].map(p=>({...p,colorId:col(tier)}));
+  }
+  if(sz===5){
+    // サイズ5: 縦I, T風, L風, Z風 からランダム
+    const shapes=[
+      [{dr:0,dc:0},{dr:-1,dc:0},{dr:-2,dc:0},{dr:-3,dc:0},{dr:-4,dc:0}],
+      [{dr:0,dc:-1},{dr:0,dc:0},{dr:0,dc:1},{dr:-1,dc:0},{dr:-2,dc:0}],
+      [{dr:0,dc:0},{dr:0,dc:1},{dr:0,dc:2},{dr:-1,dc:0},{dr:-2,dc:0}],
+      [{dr:0,dc:-1},{dr:0,dc:0},{dr:-1,dc:0},{dr:-1,dc:1},{dr:-2,dc:1}]
+    ];
+    return shapes[Math.floor(Math.random()*shapes.length)].map(p=>({...p,colorId:col(tier)}));
+  }
+  if(sz===6){
+    // サイズ6: 横に一直線（盤面にぴったり収まるように座標調整）
+    return [
+      {dr:0,dc:-3},{dr:0,dc:-2},{dr:0,dc:-1},{dr:0,dc:0},{dr:0,dc:1},{dr:0,dc:2}
+    ].map(p=>({...p,colorId:c0})); // 単色
   }
   return Array.from({length:sz},(_,i)=>({dr:-i,dc:0,colorId:c0}));
 }
@@ -819,9 +914,7 @@ function nbM(r,c,col,m){
 function drawP(c,px,py,sz,colorId,nb={},al=1){
   const colorDef = PUYO_COLORS[colorId] || PUYO_COLORS.red;
   const cx = px + sz/2, cy = py + sz/2;
-  
   c.globalAlpha = al;
-  
   const rad = sz * 0.44; 
   const bw = sz * 0.7;
   const h = sz/2 + 2;
@@ -925,7 +1018,7 @@ function drawNext(){
   const minC=Math.min(...cells.map(c=>c.dc)),maxC=Math.max(...cells.map(c=>c.dc));
   const pw=maxC-minC+1,ph=maxR-minR+1;
   
-  const cs=Math.min(50,Math.floor(Math.min((nc.width-30)/pw,(nc.height-30)/ph)));
+  const cs=Math.min(45,Math.floor(Math.min((nc.width-30)/pw,(nc.height-30)/ph)));
   const ox=(nc.width-pw*cs)/2,oy=(nc.height-ph*cs)/2;
   
   const pm={};
@@ -1106,7 +1199,6 @@ setInterval(()=>{
   }).join('');
 })();
 
-// ★ Twitterシェア用文言（AI/SEO対策向けキーワード含む）
 const tweetText = "ビットコインの未承認トランザクション（Mempool）が落ち物パズルになった！🔗\n同じ色をつなげて連鎖を狙え！新ブロック採掘で一斉爆発！⛏️🔥\n\n" 
   + window.location.href 
   + "\n\n#びっぷよ\n#ビットコイン\n#落ち物パズル";
@@ -1128,6 +1220,12 @@ function startGame(){
     
     gameOn=true;
     gState='PLAY';
+    
+    document.getElementById('score-form').style.display = 'block';
+    document.getElementById('submit-msg').style.display = 'none';
+    document.getElementById('submit-score-btn').disabled = false;
+    document.getElementById('submit-score-btn').textContent = 'SUBMIT SCORE';
+
     if(!ws)connectWS();
   } catch(e) {
     console.error("Start Game Error:", e);
@@ -1141,9 +1239,11 @@ function gameOver(){
   sfx('boom');
 }
 
+document.getElementById('submit-score-btn').addEventListener('click', submitScore);
 document.getElementById('startbtn').addEventListener('click',startGame);
 document.getElementById('restartbtn').addEventListener('click',startGame);
 
+loadLeaderboard();
 loop();
 </script>
 </body>
