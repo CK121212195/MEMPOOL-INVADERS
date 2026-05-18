@@ -7,47 +7,62 @@
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
-
   gtag('config', 'G-71N3QXSFED');
 </script>
 
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-<!-- タイトルの変更 -->
-<title>₿びっぷよ — mempool PuyoPuyo</title>
+<!-- ★タイトル・ディスクリプションの最適化（AI・SEO向け） -->
+<title>₿びっぷよ — Bitcoin Mempool 落ち物パズルゲーム</title>
+<meta name="description" content="ビットコインのmempool（未承認トランザクション）がリアルタイムに降ってくる落ち物パズルゲーム！トランザクションを4つつなげて連鎖を狙い、新ブロック採掘（マイニング）で盤面が全消去される爽快Web3ゲーム「₿びっぷよ」。">
 
 <!-- Favicon / Apple Touch Icon -->
 <link rel="icon" type="image/png" href="./favicon.png">
 <link rel="apple-touch-icon" href="./favicon.png">
 
-<!-- OGP設定（絶対URLに変更） -->
-<meta name="description" content="Bitcoin TXが降ってくるぷよぷよ！新ブロック採掘で全消し！">
-<meta property="og:title" content="₿びっぷよ — mempool PuyoPuyo">
-<meta property="og:description" content="Bitcoin TXが降ってくるぷよぷよ！新ブロック採掘で全消し！">
+<!-- OGP設定 -->
+<meta property="og:title" content="₿びっぷよ — Bitcoin Mempool 落ち物パズルゲーム">
+<meta property="og:description" content="リアルタイムのBitcoin送金状況と連動！降ってくる未承認トランザクションをつなげて消す、新感覚の落ち物パズル。新ブロック採掘で一斉爆発！">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://ck121212195.github.io/BITPUYO/">
 <meta property="og:image" content="https://ck121212195.github.io/BITPUYO/og-image.png">
-<meta property="og:site_name" content="₿びっぷよ">
+<meta property="og:site_name" content="₿びっぷよ - Bitcoin Falling Puzzle">
 
-<!-- Twitter Card設定（絶対URLに変更） -->
+<!-- Twitter Card設定 -->
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="₿びっぷよ — mempool PuyoPuyo">
-<meta name="twitter:description" content="Bitcoin TXが降ってくるぷよぷよ！新ブロック採掘で全消し！">
+<meta name="twitter:title" content="₿びっぷよ — Bitcoin Mempool 落ち物パズル">
+<meta name="twitter:description" content="リアルタイムのBitcoin送金状況と連動！降ってくる未承認トランザクションをつなげて消す、新感覚の落ち物パズル。新ブロック採掘で一斉爆発！">
 <meta name="twitter:image" content="https://ck121212195.github.io/BITPUYO/og-image.png">
+
+<!-- ★AIボット・検索エンジン向けの構造化データ（JSON-LD） -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "VideoGame",
+  "name": "₿びっぷよ",
+  "alternateName": ["Bitpuyo", "Bitcoin Mempool Falling Puzzle"],
+  "description": "ビットコイン・ネットワークのmempool（未承認トランザクション）を可視化した落ち物パズルゲーム。世界中で発生しているBitcoinの送金がリアルタイムにブロックとなって落下し、同じ色を4つ以上つなげて消すことでスコアを獲得します。新しいBitcoinブロックがマイニング（採掘）されると、盤面上の全ブロックが爆発して消去されるリアルタイム連動型のWebブラウザゲームです。",
+  "genre": ["Puzzle Game", "Falling Block Puzzle", "Web3 Game", "Bitcoin"],
+  "applicationCategory": "GameApplication",
+  "operatingSystem": "Web Browser",
+  "url": "https://ck121212195.github.io/BITPUYO/",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  }
+}
+</script>
 
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&family=Zen+Kaku+Gothic+New:wght@700;900&display=swap');
 
 :root {
-  /* ARMANI風 上品なグレージュパレット */
   --bg:         #d4cec8;
   --panel:      #e8e4dc;
   --panel-bdr:  #b8b0a9;
-  
-  /* ネオン発光を最高に際立たせるため、ゲーム盤面は漆黒に近いディープグレー */
   --game-bg:    #110f0d; 
-  
   --text:       #423a31;
   --text-dim:   #756b62;
   --text-mid:   #5c5246;
@@ -57,7 +72,6 @@
   --gold:       #a8841a;
   --gold-glow:  rgba(168,132,26,0.25);
   --green:      #268a3c;
-  
   --font-hud:  'Orbitron', monospace;
   --font-mono: 'Share Tech Mono', monospace;
 }
@@ -73,11 +87,9 @@ body{
   position:relative;
 }
 
-/* 落ち着いたパーティクル（ダスト）背景 */
 #starfield{position:fixed;inset:0;z-index:0;pointer-events:none;}
 .s{position:absolute;border-radius:50%;background:var(--text-dim);}
 
-/* HEADER */
 header{
   position:relative;z-index:10;
   width:100%;max-width:1400px;
@@ -85,11 +97,12 @@ header{
   padding:12px 20px 10px;
   border-bottom:1px solid var(--panel-bdr);
 }
-.logo{
+/* ★ SEOのため div から h1 に変更 */
+h1.logo{
   font-family:var(--font-hud);font-size:1.6rem;font-weight:900;
-  letter-spacing:.1em;color:var(--amber);
+  letter-spacing:.1em;color:var(--amber); margin: 0;
 }
-.logo .b{color:var(--gold);}
+h1.logo .b{color:var(--gold);}
 .sub{font-size:.6rem;color:var(--text-dim);letter-spacing:.18em;margin-top:2px;}
 .pill{
   display:flex;align-items:center;gap:6px;
@@ -101,11 +114,9 @@ header{
 .dot.on{background:var(--green);box-shadow:0 0 8px var(--green);}
 .dot.err{background:#ff4d4d;}
 
-/* LAYOUT — Bitrisのようなスマートな配置 */
 #app{
   position:relative;z-index:10;
   display:grid;
-  /* PC用：左右パネルを固定、中央を可変にしつつ最大幅を制限 */
   grid-template-columns: 220px minmax(300px, 450px) 220px;
   grid-template-areas: 
     "lc cc next"
@@ -118,7 +129,6 @@ header{
   align-items: start;
 }
 
-/* PANEL */
 .pnl{
   background:var(--panel);
   border:1px solid var(--panel-bdr);
@@ -136,9 +146,7 @@ header{
 .vmid{font-family:var(--font-hud);font-size:1.2rem;font-weight:700;color:var(--amber);line-height:1.2;}
 .vsub{font-size:.62rem;color:var(--text-dim);margin-top:2px;}
 
-/* LEFT COL */
 #lc{grid-area:lc; display:flex;flex-direction:column;gap:12px;}
-
 .sleg{display:flex;flex-direction:column;gap:4px;margin-top:3px;}
 .srow{display:flex;align-items:center;gap:7px;font-size:.65rem;color:var(--text-mid);}
 .sw{width:26px;height:9px;border-radius:2px;flex-shrink:0;}
@@ -151,16 +159,10 @@ header{
 .fbar{height:5px;background:#c2bbb0;border-radius:2px;margin-top:6px;overflow:hidden;}
 .ffill{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--green),var(--gold),var(--amber),#ff4d4d);transition:width .6s;}
 
-/* CENTER COL (ゲーム盤面コンテナ) */
 #cc{
   grid-area:cc; 
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  gap:10px;
+  display:flex;flex-direction:column;align-items:center;gap:10px;
 }
-
-/* ★ゲーム盤面：自動で比率(1:2)を保ちつつ、無駄な余白を消す */
 #gw{
   position:relative;
   background:var(--game-bg);
@@ -168,21 +170,13 @@ header{
   border-radius:6px;
   box-shadow:0 0 35px rgba(0,0,0,.15),inset 0 0 50px rgba(0,0,0,.8);
   overflow: hidden;
-  
-  /* PCでは画面の高さに合わせてサイズを決定 */
   height: 70vh;
   min-height: 500px;
   max-height: 840px;
   aspect-ratio: 1 / 2;
   margin: 0 auto;
 }
-
-/* 内部の高解像度キャンバスをピタッと合わせる */
-#gc{
-  width: 100%;
-  height: 100%;
-  display: block;
-}
+#gc{width: 100%; height: 100%; display: block;}
 
 #bflash{
   position:absolute;inset:0;
@@ -222,7 +216,6 @@ header{
 .sbtn:hover{transform:scale(1.04);box-shadow:0 6px 14px rgba(0,0,0,.2);}
 .sbtn:active{transform:scale(.97);}
 
-/* MOBILE CTRL */
 #mctrl{display:none;flex-direction:column;gap:8px;width:100%;max-width:400px;}
 .mr{display:flex;gap:8px;justify-content:center;}
 .mb{
@@ -235,7 +228,6 @@ header{
 #mb-drop{flex:2;font-size:.8rem;letter-spacing:.14em;color:#fff;background:var(--amber);border-color:var(--amber-dim);}
 #mb-drop:active{background:var(--amber-dim);}
 
-/* NEXT PANEL */
 #pnl-next{grid-area:next; margin-bottom:-4px;}
 .next-split{display:block;}
 #nwrap{
@@ -247,9 +239,7 @@ header{
 }
 #nwrap canvas { width: 100%; height: 100%; object-fit: contain; }
 
-/* RIGHT COL */
 #rc{grid-area:rc; display:flex;flex-direction:column;gap:12px;}
-
 .clist{display:flex;flex-direction:column;gap:5px;}
 .cri{display:flex;align-items:center;gap:7px;font-size:.62rem;color:var(--text-dim);}
 .ck{
@@ -269,7 +259,6 @@ header{
 #txstream{display:flex;flex-direction:column;gap:3px;max-height:100px;overflow:hidden;}
 .txl{font-size:.6rem;color:var(--text-mid);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;animation:si .25s ease;}
 
-/* SUPPORT & SHARE */
 .s-btns { display: flex; gap: 8px; margin-top: 8px; }
 .sbtn-sm {
   flex: 1; text-align: center; padding: 8px 0; border-radius: 4px;
@@ -289,7 +278,6 @@ header{
 }
 .ln-addr:hover { background: rgba(0,0,0,0.1); color: var(--text-mid); }
 
-/* ---- RELATED SITES FOOTER ---- */
 footer {
   position: relative; z-index: 10;
   width: 100%; max-width: 1200px;
@@ -333,7 +321,6 @@ footer {
   font-family: var(--font-mono); font-size: 0.75rem; color: #a0978d;
 }
 
-/* ---- RESPONSIVE ---- */
 @media(max-width:960px){
   #app{
     grid-template-columns:190px auto 190px;
@@ -341,7 +328,6 @@ footer {
   }
 }
 
-/* スマホ用レイアウト */
 @media(max-width:768px){
   #app{
     grid-template-columns: 1fr;
@@ -375,7 +361,7 @@ footer {
 }
 
 @media(max-width:480px){
-  .logo{font-size:1.3rem;}
+  h1.logo{font-size:1.3rem;}
   header{padding:10px 14px;}
   #lc, #rc { grid-template-columns: 1fr; } 
 }
@@ -387,8 +373,10 @@ footer {
 
 <header>
   <div>
-    <div class="logo"><span class="b">₿</span>びっぷよ</div>
-    <div class="sub">Bitcoin TX → Puyo Puyo / New Block → Explosion</div>
+    <!-- ★ SEOに強い <h1> を採用 -->
+    <h1 class="logo"><span class="b">₿</span>びっぷよ</h1>
+    <!-- ★ PuyoPuyoという直接表現を避け、Falling Puzzleに変更 -->
+    <div class="sub">Bitcoin TX Falling Puzzle / New Block → Explosion</div>
   </div>
   <div class="pill">
     <div class="dot" id="wsdot"></div>
@@ -452,6 +440,7 @@ footer {
 
       <div id="ss" class="sov">
         <div class="stitle">₿びっぷよ</div>
+        <!-- ★ 説明文も汎用的な表現に変更 -->
         <div class="sdesc">
           同じ色を4個以上つなげて消そう！<br>
           Bitcoin送金がリアルタイムで降ってくる<br>
@@ -562,9 +551,8 @@ footer {
 </footer>
 
 <script>
-// ── 高解像度・固定アスペクト比設定 ──────────────────────────
 const COLS=6, ROWS=12;
-const CELL=60; // 内部解像度: 横360px × 縦720px
+const CELL=60; 
 
 const canvas=document.getElementById('gc');
 const ctx=canvas.getContext('2d');
@@ -576,7 +564,6 @@ const nctx=nc.getContext('2d');
 nc.width = 240; 
 nc.height = 240;
 
-// ★ 透明感・ネオン発光・中身の色の設定（innerを追加）
 const PUYO_COLORS = {
   red:    { base: 'rgba(255, 20,  20,  0.2)', glow: '#ff0033', edge: 'rgba(255, 120, 120, 1)', inner: 'rgba(220, 0,   0,   0.8)' },
   orange: { base: 'rgba(255, 100, 0,   0.2)', glow: '#ff6600', edge: 'rgba(255, 180, 80,  1)', inner: 'rgba(230, 80,  0,   0.8)' },
@@ -586,10 +573,8 @@ const PUYO_COLORS = {
   dust:   { base: 'rgba(150, 150, 150, 0.2)', glow: '#aaaaaa', edge: 'rgba(230, 230, 230, 1)', inner: 'rgba(120, 120, 120, 0.8)' }
 };
 const PUYO_IDS = ['red', 'orange', 'cyan', 'green', 'yellow'];
-// UIパネル用の色
 const C_MAP = { red: '#ff5555', orange: '#ff8800', cyan: '#00ddff', green: '#55ff55', yellow: '#ffea00', dust: '#aaaaaa' };
 
-// ── STATE ──────────────────────────────────────────────────────
 let gameOn=false,gState='IDLE';
 let board=mkB();
 let hi=0, score=0;
@@ -602,17 +587,11 @@ let snd=true,ws=null;
 let keys={},bs={l:0,r:0,d:0};
 let kdl=0,krp=0;
 
-// ★ localStorageエラーを回避
-try {
-  hi = +localStorage.getItem('bphi4') || 0;
-} catch (e) {
-  console.warn("localStorage is disabled. Best score won't be saved.");
-}
+try { hi = +localStorage.getItem('bphi4') || 0; } catch (e) {}
 document.getElementById('hiscore').textContent=hi.toLocaleString();
 
 function mkB(){return Array.from({length:ROWS},()=>new Array(COLS).fill(null));}
 
-// ── ダスト（パーティクル） ──────────────────────────────────────
 (function(){
   const bg=document.getElementById('starfield');
   for(let i=0;i<80;i++){
@@ -629,13 +608,10 @@ function mkB(){return Array.from({length:ROWS},()=>new Array(COLS).fill(null));}
   document.head.appendChild(st);
 })();
 
-// ── AUDIO ──────────────────────────────────────────────────────
 let AC=null;
 function gAC(){
   try{
-    if(!AC && (window.AudioContext||window.webkitAudioContext)){
-      AC=new(window.AudioContext||window.webkitAudioContext)();
-    }
+    if(!AC && (window.AudioContext||window.webkitAudioContext)) AC=new(window.AudioContext||window.webkitAudioContext)();
     if(AC && AC.state==='suspended')AC.resume();
   }catch(e){}
   return AC;
@@ -666,7 +642,6 @@ document.getElementById('sndbtn').addEventListener('click',function(){
   this.classList.toggle('on',snd);if(snd)gAC();
 });
 
-// ── TIERS ──────────────────────────────────────────────────────
 const TIERS=[
   {min:1e10,size:8,name:'>100₿',  colorId:'red',    mono:true, label:'絶望 8blocks'},
   {min:1e9, size:6,name:'>10₿',   colorId:'orange', mono:true, label:'巨大 6blocks'},
@@ -681,7 +656,6 @@ function getTier(s){for(const t of TIERS)if(s>=t.min)return t;return TIERS[TIERS
 function txSats(tx){if(tx._s!==undefined)return tx._s;if(Array.isArray(tx.vout))return tx.vout.reduce((a,o)=>a+(o.value||0),0);return 0;}
 function fmtAmt(s){if(s>=1e8)return (s/1e8).toFixed(4)+' ₿';if(s>=1e5)return (s/1e5).toFixed(4)+' mBTC';return s.toLocaleString()+' sat';}
 
-// ── PIECE ──────────────────────────────────────────────────────
 function rCol(){return PUYO_IDS[Math.floor(Math.random()*PUYO_IDS.length)];}
 function buildCells(tier){
   const sz=tier.size,c0=rCol(),col=t=>t.mono?c0:rCol();
@@ -722,10 +696,8 @@ function spawn(){
   active=nextPiece;  
   active.pr=1; active.pc=Math.floor(COLS/2);
   nextPiece=null;
-  
   loadNext();
   updateSide();
-  
   return canPlace(active.abs());
 }
 
@@ -734,7 +706,6 @@ function lock(){
   sfx('land');active=null;gState='FALL';
 }
 
-// ── PHYSICS ────────────────────────────────────────────────────
 function gravity(){
   let m=false;
   for(let c=0;c<COLS;c++)for(let r=ROWS-2;r>=0;r--)
@@ -760,7 +731,6 @@ function findGroups(){
   return out;
 }
 
-// ── INPUT ──────────────────────────────────────────────────────
 function mv(dr,dc){
   if(!active)return false;
   const nc2=active.abs().map(c=>({...c,r:c.r+dr,c:c.c+dc}));
@@ -786,37 +756,18 @@ window.addEventListener('keydown',e=>{
   if(e.code==='Space'){e.preventDefault();hardDrop();}
   if(e.code==='KeyZ'){e.preventDefault();rot('ccw');}
   if(e.code==='KeyX'||e.code==='ArrowUp'){e.preventDefault();rot('cw');}
-  
-  if(e.code==='ArrowLeft'){
-    e.preventDefault();
-    mv(0,-1);
-    kdl=10; krp=0;
-  }
-  if(e.code==='ArrowRight'){
-    e.preventDefault();
-    mv(0,1);
-    kdl=10; krp=0;
-  }
-  if(e.code==='ArrowDown'||e.code==='KeyS'){
-    e.preventDefault();
-  }
+  if(e.code==='ArrowLeft'){e.preventDefault(); mv(0,-1); kdl=10; krp=0; }
+  if(e.code==='ArrowRight'){e.preventDefault(); mv(0,1); kdl=10; krp=0; }
+  if(e.code==='ArrowDown'||e.code==='KeyS'){e.preventDefault();}
 });
 window.addEventListener('keyup',e=>{keys[e.code]=false;});
 
 function handleInput(){
   if(gState!=='PLAY'||!active)return false;
   const l=keys['ArrowLeft']||bs.l,r=keys['ArrowRight']||bs.r;
-  
   if(l||r){
-    if(kdl===0){
-      l?mv(0,-1):mv(0,1);
-      kdl=2; krp++;
-    }else{
-      kdl--;
-    }
-  }else{
-    kdl=0;krp=0;
-  }
+    if(kdl===0){ l?mv(0,-1):mv(0,1); kdl=2; krp++; } else { kdl--; }
+  } else { kdl=0; krp=0; }
   return !!(keys['ArrowDown']||keys['KeyS']||bs.d);
 }
 
@@ -824,13 +775,7 @@ function bindM(id,key,fn){
   const el=document.getElementById(id);if(!el)return;
   const dn=e=>{
     e.preventDefault();
-    if(key){
-      bs[key]=1;
-      if(active && gState==='PLAY'){
-        if(key==='l'){ mv(0,-1); kdl=10; krp=0; }
-        if(key==='r'){ mv(0,1); kdl=10; krp=0; }
-      }
-    }
+    if(key){ bs[key]=1; if(active && gState==='PLAY'){ if(key==='l'){ mv(0,-1); kdl=10; krp=0; } if(key==='r'){ mv(0,1); kdl=10; krp=0; } } }
     if(fn)fn();
   };
   const up=e=>{e.preventDefault();if(key)bs[key]=0;};
@@ -842,7 +787,6 @@ bindM('mb-rl',null,()=>{if(gState==='PLAY')rot('ccw');});
 bindM('mb-rr',null,()=>{if(gState==='PLAY')rot('cw');});
 bindM('mb-drop',null,hardDrop);
 
-// ── PARTICLES ──────────────────────────────────────────────────
 class Part{
   constructor(x,y,colId){
     this.x=x;this.y=y;
@@ -860,7 +804,6 @@ class Part{
   }
 }
 
-// ── DRAW PUYO (★完全塗りつぶし・スライム感＆ネオン枠) ────────────
 function getPM(cells){
   const m={};cells.forEach(c=>{if(!m[c.r])m[c.r]={};m[c.r][c.c]=c.colorId;});return m;
 }
@@ -880,28 +823,24 @@ function drawP(c,px,py,sz,colorId,nb={},al=1){
   c.globalAlpha = al;
   
   const rad = sz * 0.44; 
-  const bw = sz * 0.7; // スライムの接合部の太さ
+  const bw = sz * 0.7;
   const h = sz/2 + 2;
   
-  // 1. アウターグロー（スライムベース）
+  // 1. アウターグロー
   c.shadowBlur = 25;
   c.shadowColor = colorDef.glow;
   c.fillStyle = colorDef.base;
-  
   c.beginPath(); c.arc(cx, cy, rad, 0, Math.PI*2); c.fill(); c.fill();
-  
   if(nb.u) c.fillRect(cx - bw/2, py - 1, bw, h);
   if(nb.d) c.fillRect(cx - bw/2, cy - 1, bw, h);
   if(nb.l) c.fillRect(px - 1, cy - bw/2, h, bw);
   if(nb.r) c.fillRect(cx - 1, cy - bw/2, h, bw);
   
-  // 2. ブライトネオンエッジ（実際に光って見えるフチ）
+  // 2. ネオンエッジ
   c.shadowBlur = 10;
   c.fillStyle = colorDef.edge;
-  
   const irad = sz * 0.40;
   const ibw = sz * 0.55;
-  
   c.beginPath(); c.arc(cx, cy, irad, 0, Math.PI*2); c.fill();
   if(nb.u) c.fillRect(cx - ibw/2, py - 1, ibw, h);
   if(nb.d) c.fillRect(cx - ibw/2, cy - 1, ibw, h);
@@ -911,17 +850,15 @@ function drawP(c,px,py,sz,colorId,nb={},al=1){
   // 3. インナーコア（黒くくり抜かず、ぷよの色で中身を塗りつぶす）
   c.shadowBlur = 0;
   c.fillStyle = colorDef.inner;
-  
   const iirad = sz * 0.32;
   const iibw = sz * 0.44;
-  
   c.beginPath(); c.arc(cx, cy, iirad, 0, Math.PI*2); c.fill();
   if(nb.u) c.fillRect(cx - iibw/2, py - 1, iibw, h);
   if(nb.d) c.fillRect(cx - iibw/2, cy - 1, iibw, h);
   if(nb.l) c.fillRect(px - 1, cy - iibw/2, h, iibw);
   if(nb.r) c.fillRect(cx - 1, cy - iibw/2, h, iibw);
   
-  // 4. スライムの目
+  // 4. 目
   c.fillStyle = 'rgba(255,255,255,0.95)';
   c.beginPath(); c.ellipse(cx-sz*.14, cy-sz*.06, sz*.09, sz*.13, 0, 0, Math.PI*2); c.fill();
   c.beginPath(); c.ellipse(cx+sz*.14, cy-sz*.06, sz*.09, sz*.13, 0, 0, Math.PI*2); c.fill();
@@ -930,7 +867,7 @@ function drawP(c,px,py,sz,colorId,nb={},al=1){
   c.beginPath(); c.arc(cx-sz*.11, cy-sz*.04, sz*.05, 0, Math.PI*2); c.fill();
   c.beginPath(); c.arc(cx+sz*.17, cy-sz*.04, sz*.05, 0, Math.PI*2); c.fill();
 
-  // 5. ガラスのハイライト（反射光）
+  // 5. ガラスのハイライト
   c.fillStyle = 'rgba(255,255,255,0.6)';
   c.beginPath(); c.arc(cx - sz*.16, cy - sz*.18, sz*.06, 0, Math.PI*2); c.fill();
   c.beginPath(); c.arc(cx + sz*.16, cy + sz*.18, sz*.03, 0, Math.PI*2); c.fill();
@@ -941,7 +878,6 @@ function drawP(c,px,py,sz,colorId,nb={},al=1){
 function draw(){
   ctx.clearRect(0,0,canvas.width,canvas.height);
   
-  // ワイヤーフレーム背景に合う薄いグリッド線
   ctx.strokeStyle='rgba(255, 255, 255, 0.04)';
   ctx.lineWidth=2;
   ctx.beginPath();
@@ -1002,7 +938,6 @@ function drawNext(){
   });
 }
 
-// ── GAME LOOP ──────────────────────────────────────────────────
 function update(){
   AF++;
   for(let i=parts.length-1;i>=0;i--){parts[i].step();if(parts[i].life<=0)parts.splice(i,1);}
@@ -1044,7 +979,6 @@ function loop(){
   requestAnimationFrame(loop);
 }
 
-// ── UI ─────────────────────────────────────────────────────────
 function updateUI(){
   document.getElementById('score').textContent=score.toLocaleString();
   document.getElementById('hiscore').textContent=hi.toLocaleString();
@@ -1100,7 +1034,6 @@ function loadNext(){
   }
 }
 
-// CHAIN POPUP
 function showChain(n){
   const el=document.getElementById('cpop');
   const M=['','','2 CHAIN!!','3 CHAIN!!!','4 CHAIN!!!!','5 CHAIN!!!!!'];
@@ -1109,7 +1042,6 @@ function showChain(n){
   if(n>=3)sfx('chain',n);
 }
 
-// BLOCK EXPLOSION
 function blockExplode(h){
   document.getElementById('flh').textContent='#'+h.toLocaleString();
   const fl=document.getElementById('bflash');fl.classList.remove('show');void fl.offsetWidth;fl.classList.add('show');
@@ -1125,7 +1057,6 @@ function blockExplode(h){
   active=null;eCells=[];gState='PLAY';updateUI();
 }
 
-// ── WEBSOCKET ──────────────────────────────────────────────────
 function connectWS(){
   ws=new WebSocket('wss://mempool.space/api/v1/ws');
   ws.onopen=()=>{
@@ -1168,7 +1099,6 @@ setInterval(()=>{
     document.getElementById('bago').textContent=m>0?`${m}m ${s}s ago`:`${s}s ago`;}
 },1000);
 
-// PIECE SIZE LEGEND
 (function(){
   document.getElementById('sleg').innerHTML=TIERS.map(t=>{
     const c=C_MAP[t.colorId];
@@ -1176,13 +1106,12 @@ setInterval(()=>{
   }).join('');
 })();
 
-// ★ Twitterシェア用文言とURLの動的生成
-const tweetText = "ビットコインのMempoolがぷよぷよになった！？\n詰まったトランザクションを、ぷよっと繋げてブロックに叩き込め！\n大連鎖でハッシュレートをぶち上げろ！🚀\n\n" 
+// ★ Twitterシェア用文言（AI/SEO対策向けキーワード含む）
+const tweetText = "ビットコインの未承認トランザクション（Mempool）が落ち物パズルになった！🔗\n同じ色をつなげて連鎖を狙え！新ブロック採掘で一斉爆発！⛏️🔥\n\n" 
   + window.location.href 
-  + "\n\n#びっぷよ\n#Mempool\n#ぷよぷよ";
+  + "\n\n#びっぷよ\n#ビットコイン\n#落ち物パズル";
 document.getElementById('x-share-btn').href = "https://twitter.com/intent/tweet?text=" + encodeURIComponent(tweetText);
 
-// ── GAME FLOW ──────────────────────────────────────────────────
 function startGame(){
   try {
     document.getElementById('ss').style.display='none';
