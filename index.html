@@ -462,7 +462,7 @@ footer {
         <div class="sdesc">Mempool Overflow...</div>
         <div class="sscore" id="goscore" style="margin-bottom:10px;">0</div>
         
-        <!-- ★ リーダーボード送信フォーム（GAS連携準備） -->
+        <!-- ★ リーダーボード送信フォーム（GAS連携済） -->
         <div id="score-form">
           <input type="text" id="player-name" placeholder="Enter your name" maxlength="10">
           <br>
@@ -513,7 +513,7 @@ footer {
       <div class="vsub">consecutive clears</div>
     </div>
     
-    <!-- ★ リーダーボード表示パネル（GAS連携準備） -->
+    <!-- ★ リーダーボード表示パネル -->
     <div class="pnl">
       <div class="lbl"><span class="ico">🏆</span>Leaderboard</div>
       <div id="leaderboard-list" style="display: flex; flex-direction: column; gap: 4px;">
@@ -577,15 +577,11 @@ footer {
 </footer>
 
 <script>
-// ── GAS連携 API設定 (次回構築用) ──────────────────────────
-const GAS_URL = "YOUR_GAS_WEB_APP_URL_HERE"; // ※GASデプロイ後にここへURLを貼り付けます
+// ── ★GAS連携 API設定（公開済みのURL） ──────────────────────────
+const GAS_URL = "https://script.google.com/macros/s/AKfycbytecaHWkd8eyMP5yU_azLtsCuf_dly_Ot5COaLjdsc98Epv4YxbPz_iMJmmH368sx-/exec"; 
 
 async function loadLeaderboard() {
   const lbEl = document.getElementById('leaderboard-list');
-  if (GAS_URL === "YOUR_GAS_WEB_APP_URL_HERE") {
-    lbEl.innerHTML = '<div style="font-size: 0.6rem; color: var(--text-dim); text-align: center; padding: 10px 0;">GAS Backend<br>Not Connected Yet</div>';
-    return;
-  }
   try {
     const res = await fetch(GAS_URL + "?action=get");
     const data = await res.json();
@@ -615,22 +611,14 @@ async function submitScore() {
   btn.disabled = true;
   btn.textContent = 'Submitting...';
 
-  if (GAS_URL === "YOUR_GAS_WEB_APP_URL_HERE") {
-    // GAS未接続時のモック動作（1秒後に完了表示）
-    setTimeout(() => {
-      document.getElementById('score-form').style.display = 'none';
-      msg.style.display = 'block';
-      msg.textContent = 'Demo: API Not Connected';
-    }, 1000);
-    return;
-  }
-
   try {
+    // text/plain にすることで、GAS側でのCORSブロック（OPTIONSリクエスト）を回避します
     await fetch(GAS_URL, {
       method: "POST",
       body: JSON.stringify({ name: name, score: score }),
-      headers: { "Content-Type": "application/x-www-form-urlencoded" }
+      headers: { "Content-Type": "text/plain" }
     });
+    
     document.getElementById('score-form').style.display = 'none';
     msg.style.display = 'block';
     msg.textContent = 'Score Submitted!';
@@ -718,7 +706,6 @@ document.getElementById('sndbtn').addEventListener('click',function(){
   this.classList.toggle('on',snd);if(snd)gAC();
 });
 
-// ★ Tierの設定変更を反映
 const TIERS=[
   {min:1e10,size:8,name:'>100₿',  colorId:'red',    mono:true, label:'絶望 8blocks'},
   {min:1e9, size:6,name:'>10₿',   colorId:'orange', mono:true, label:'横一文字 6blocks'},
@@ -735,7 +722,6 @@ function fmtAmt(s){if(s>=1e8)return (s/1e8).toFixed(4)+' ₿';if(s>=1e5)return (
 
 function rCol(){return PUYO_IDS[Math.floor(Math.random()*PUYO_IDS.length)];}
 
-// ★ 5ブロックと6ブロックの形状を実装
 function buildCells(tier){
   const sz=tier.size,c0=rCol(),col=t=>t.mono?c0:rCol();
   if(sz===1)return [{dr:0,dc:0,colorId:c0}];
@@ -750,7 +736,6 @@ function buildCells(tier){
     return shapes[Math.floor(Math.random()*shapes.length)].map(p=>({...p,colorId:col(tier)}));
   }
   if(sz===5){
-    // サイズ5: 縦I, T風, L風, Z風 からランダム
     const shapes=[
       [{dr:0,dc:0},{dr:-1,dc:0},{dr:-2,dc:0},{dr:-3,dc:0},{dr:-4,dc:0}],
       [{dr:0,dc:-1},{dr:0,dc:0},{dr:0,dc:1},{dr:-1,dc:0},{dr:-2,dc:0}],
@@ -760,10 +745,9 @@ function buildCells(tier){
     return shapes[Math.floor(Math.random()*shapes.length)].map(p=>({...p,colorId:col(tier)}));
   }
   if(sz===6){
-    // サイズ6: 横に一直線（盤面にぴったり収まるように座標調整）
     return [
       {dr:0,dc:-3},{dr:0,dc:-2},{dr:0,dc:-1},{dr:0,dc:0},{dr:0,dc:1},{dr:0,dc:2}
-    ].map(p=>({...p,colorId:c0})); // 単色
+    ].map(p=>({...p,colorId:c0}));
   }
   return Array.from({length:sz},(_,i)=>({dr:-i,dc:0,colorId:c0}));
 }
